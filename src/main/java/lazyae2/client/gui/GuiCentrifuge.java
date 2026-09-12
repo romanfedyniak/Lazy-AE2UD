@@ -9,23 +9,23 @@ package lazyae2.client.gui;
 
 import net.minecraft.client.resources.I18n;
 
-import lazyae2.container.ContainerAggregator;
+import lazyae2.container.ContainerCentrifuge;
 
-public final class GuiAggregator extends GuiProcessor {
+public final class GuiCentrifuge extends GuiProcessor {
 
-    /** Where the arrow between the inputs and the output sits. */
-    private static final int ARROW_LEFT = 92;
+    /** Where the arrow between the input and the output sits. */
+    private static final int ARROW_LEFT = 80;
     private static final int ARROW_TOP = 36;
-    private static final int ARROW_WIDTH = 24;
+    private static final int ARROW_WIDTH = 22;
     private static final int ARROW_HEIGHT = 14;
 
-    public GuiAggregator(final ContainerAggregator container) {
-        super(container, "aggregator");
+    public GuiCentrifuge(final ContainerCentrifuge container) {
+        super(container, "centrifuge");
     }
 
     @Override
     protected String getScreenTitle() {
-        return I18n.format("tile.threng.machine.aggregator.name");
+        return I18n.format("tile.threng.machine.centrifuge.name");
     }
 
     @Override

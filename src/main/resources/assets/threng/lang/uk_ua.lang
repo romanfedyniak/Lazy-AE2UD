@@ -17,6 +17,7 @@ item.threng.material.spec_core_64.name=Ядро спекуляції (64x)
 item.threng.material.spec_processor.name=Спекулятивний процесор
 
 tile.threng.machine.aggregator.name=Мінливий агрегатор
+tile.threng.machine.centrifuge.name=Імпульсна центрифуга
 
 gui.threng.energy=%s / %s FE
 

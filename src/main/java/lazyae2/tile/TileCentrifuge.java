@@ -7,7 +7,6 @@
 
 package lazyae2.tile;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -22,9 +21,8 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 
 import lazyae2.block.BlockMachine;
 import lazyae2.core.LazyAE2Config;
-import lazyae2.recipe.AggregatorRecipe;
 import lazyae2.recipe.LazyRecipes;
-import lazyae2.recipe.TriItemRecipe;
+import lazyae2.recipe.PurifyRecipe;
 import lazyae2.util.IoMode;
 import appeng.tile.inventory.AppEngInternalInventory;
 import appeng.util.inv.InvOperation;
@@ -32,13 +30,14 @@ import appeng.util.inv.WrapperChainedItemHandler;
 import appeng.util.inv.WrapperFilteredItemHandler;
 
 /**
- * The Fluix Aggregator: the in-world crafting of three things thrown into a puddle, done in a machine.
+ * The Pulse Centrifuge: the in-world growing of a crystal seed, done in a machine, and the few other things
+ * the old mod let it shake apart.
  */
-public final class TileAggregator extends TileProcessor {
+public final class TileCentrifuge extends TileProcessor {
 
     public static final int UPGRADE_SLOTS = 8;
 
-    private final AppEngInternalInventory input = new AppEngInternalInventory(this, TriItemRecipe.SLOTS);
+    private final AppEngInternalInventory input = new AppEngInternalInventory(this, 1);
     private final AppEngInternalInventory output = new AppEngInternalInventory(this, 1);
     private final AppEngInternalInventory upgrades;
 
@@ -48,18 +47,18 @@ public final class TileAggregator extends TileProcessor {
     private final IItemHandler both;
 
     @Nullable
-    private AggregatorRecipe recipe;
+    private PurifyRecipe recipe;
 
-    public TileAggregator() {
-        super(LazyAE2Config.instance().getAggregator(), IoMode.NONE);
-        this.upgrades = new MachineUpgradeInventory(BlockMachine.Type.AGGREGATOR, this, UPGRADE_SLOTS);
+    public TileCentrifuge() {
+        super(LazyAE2Config.instance().getCentrifuge(), IoMode.NONE);
+        this.upgrades = new MachineUpgradeInventory(BlockMachine.Type.CENTRIFUGE, this, UPGRADE_SLOTS);
         this.inventory = new WrapperChainedItemHandler(this.input, this.output, this.upgrades);
         this.insertOnly = new WrapperFilteredItemHandler(this.input, SlotFilters.INSERT_ONLY);
         this.extractOnly = new WrapperFilteredItemHandler(this.output, SlotFilters.EXTRACT_ONLY);
         this.both = new WrapperChainedItemHandler(this.insertOnly, this.extractOnly);
     }
 
-    public IItemHandler getInputSlots() {
+    public IItemHandler getInputSlot() {
         return this.input;
     }
 
@@ -119,17 +118,9 @@ public final class TileAggregator extends TileProcessor {
         }
     }
 
-    private List<ItemStack> slots() {
-        final List<ItemStack> slots = new ArrayList<>(TriItemRecipe.SLOTS);
-        for (int slot = 0; slot < TriItemRecipe.SLOTS; slot++) {
-            slots.add(this.input.getStackInSlot(slot));
-        }
-        return slots;
-    }
-
     @Override
     protected boolean recomputeCanWork() {
-        final AggregatorRecipe found = LazyRecipes.findAggregator(this.slots());
+        final PurifyRecipe found = LazyRecipes.findCentrifuge(this.input.getStackInSlot(0));
         if (found == null) {
             this.recipe = null;
             return false;
@@ -147,10 +138,9 @@ public final class TileAggregator extends TileProcessor {
             return;
         }
 
-        final List<ItemStack> left = TriItemRecipe.consume(this.slots());
-        for (int slot = 0; slot < TriItemRecipe.SLOTS; slot++) {
-            this.input.setStackInSlot(slot, left.get(slot));
-        }
+        final ItemStack taken = this.input.getStackInSlot(0).copy();
+        taken.shrink(1);
+        this.input.setStackInSlot(0, taken.isEmpty() ? ItemStack.EMPTY : taken);
 
         final ItemStack made = this.recipe.getOutput();
         final ItemStack held = this.output.getStackInSlot(0);
@@ -166,7 +156,7 @@ public final class TileAggregator extends TileProcessor {
     @Override
     protected void readLegacyNBT(final NBTTagCompound data) {
         super.readLegacyNBT(data);
-        legacyInventory(this.input, data.getCompoundTag("InvInput"));
+        legacySlot(this.input, 0, data.getCompoundTag("SlotInput"));
         legacySlot(this.output, 0, data.getCompoundTag("SlotOutput"));
     }
 

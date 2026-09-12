@@ -18,30 +18,26 @@ import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 
-import lazyae2.recipe.TriItemRecipe;
-
 /**
  * One machine recipe as HEI reads it: every ingredient is a slot of its own, and each slot takes one item.
  */
-final class AggregatorRecipeWrapper implements IRecipeWrapper {
+final class MachineRecipe implements IRecipeWrapper {
 
-    private final TriItemRecipe recipe;
+    private final List<Ingredient> inputs;
+    private final ItemStack output;
 
-    AggregatorRecipeWrapper(final TriItemRecipe recipe) {
-        this.recipe = recipe;
-    }
-
-    int inputCount() {
-        return this.recipe.getInputs().size();
+    MachineRecipe(final List<Ingredient> inputs, final ItemStack output) {
+        this.inputs = inputs;
+        this.output = output;
     }
 
     @Override
     public void getIngredients(final IIngredients ingredients) {
-        final List<List<ItemStack>> inputs = new ArrayList<>(this.recipe.getInputs().size());
-        for (final Ingredient ingredient : this.recipe.getInputs()) {
-            inputs.add(Arrays.asList(ingredient.getMatchingStacks()));
+        final List<List<ItemStack>> stacks = new ArrayList<>(this.inputs.size());
+        for (final Ingredient ingredient : this.inputs) {
+            stacks.add(Arrays.asList(ingredient.getMatchingStacks()));
         }
-        ingredients.setInputLists(VanillaTypes.ITEM, inputs);
-        ingredients.setOutput(VanillaTypes.ITEM, this.recipe.getOutput());
+        ingredients.setInputLists(VanillaTypes.ITEM, stacks);
+        ingredients.setOutput(VanillaTypes.ITEM, this.output);
     }
 }

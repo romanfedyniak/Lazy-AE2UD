@@ -13,12 +13,14 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraftforge.oredict.OreIngredient;
 
 import lazyae2.item.ItemMaterial;
 import appeng.api.AEApi;
+import appeng.api.definitions.IItemDefinition;
 import appeng.api.definitions.IMaterials;
 
 /**
@@ -27,12 +29,27 @@ import appeng.api.definitions.IMaterials;
 public final class LazyRecipes {
 
     private static final List<AggregatorRecipe> AGGREGATOR = new ArrayList<>();
+    private static final List<PurifyRecipe> CENTRIFUGE = new ArrayList<>();
 
     private LazyRecipes() {
     }
 
     public static List<AggregatorRecipe> aggregator() {
         return AGGREGATOR;
+    }
+
+    public static List<PurifyRecipe> centrifuge() {
+        return CENTRIFUGE;
+    }
+
+    @Nullable
+    public static PurifyRecipe findCentrifuge(final ItemStack stack) {
+        for (final PurifyRecipe recipe : CENTRIFUGE) {
+            if (recipe.matches(stack)) {
+                return recipe;
+            }
+        }
+        return null;
     }
 
     @Nullable
@@ -66,6 +83,31 @@ public final class LazyRecipes {
                         add(Arrays.asList(exact(skyDust), exact(matterBall),
                                 exact(ItemMaterial.Type.STEEL_PROCESS_DUST.newStack(1))),
                                 ItemMaterial.Type.SPEC_CORE.newStack(1))));
+
+        registerCentrifuge(materials);
+    }
+
+    /**
+     * The crystals the centrifuge purifies, and the three things the old mod let it grind besides.
+     */
+    private static void registerCentrifuge(final IMaterials materials) {
+        purify(materials.certusQuartzCrystal(), materials.purifiedCertusQuartzCrystal(), 2);
+        purify(materials.fluixCrystal(), materials.purifiedFluixCrystal(), 2);
+        materials.purifiedNetherQuartzCrystal().maybeStack(2).ifPresent(purified ->
+                CENTRIFUGE.add(new PurifyRecipe(Ingredient.fromItem(Items.QUARTZ), purified)));
+
+        AEApi.instance().definitions().blocks().skyStoneBlock().maybeStack(1).ifPresent(skyStone ->
+                materials.skyDust().maybeStack(1).ifPresent(dust ->
+                        CENTRIFUGE.add(new PurifyRecipe(exact(skyStone), dust))));
+        materials.enderDust().maybeStack(1).ifPresent(dust ->
+                CENTRIFUGE.add(new PurifyRecipe(ore("enderpearl"), dust)));
+        materials.flour().maybeStack(1).ifPresent(flour ->
+                CENTRIFUGE.add(new PurifyRecipe(ore("cropWheat"), flour)));
+    }
+
+    private static void purify(final IItemDefinition crystal, final IItemDefinition purified, final int count) {
+        crystal.maybeStack(1).ifPresent(from ->
+                purified.maybeStack(count).ifPresent(to -> CENTRIFUGE.add(new PurifyRecipe(exact(from), to))));
     }
 
     private static void add(final List<Ingredient> inputs, final ItemStack output) {

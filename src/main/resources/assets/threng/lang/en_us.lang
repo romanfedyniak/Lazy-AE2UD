@@ -17,6 +17,7 @@ item.threng.material.spec_core_64.name=Speculation Core (64x)
 item.threng.material.spec_processor.name=Speculative Processor
 
 tile.threng.machine.aggregator.name=Fluix Aggregator
+tile.threng.machine.centrifuge.name=Pulse Centrifuge
 
 gui.threng.energy=%s / %s FE
 

@@ -17,8 +17,11 @@ import net.minecraftforge.fml.common.network.IGuiHandler;
 
 import lazyae2.block.BlockMachine;
 import lazyae2.client.gui.GuiAggregator;
+import lazyae2.client.gui.GuiCentrifuge;
 import lazyae2.container.ContainerAggregator;
+import lazyae2.container.ContainerCentrifuge;
 import lazyae2.tile.TileAggregator;
+import lazyae2.tile.TileCentrifuge;
 import appeng.container.AEBaseContainer;
 import appeng.container.ContainerOpenContext;
 
@@ -36,6 +39,9 @@ public final class ModGuiHandler implements IGuiHandler {
         if (BlockMachine.Type.of(id) == BlockMachine.Type.AGGREGATOR && tile instanceof TileAggregator) {
             return withContext(new ContainerAggregator(player.inventory, (TileAggregator) tile), world, x, y, z);
         }
+        if (BlockMachine.Type.of(id) == BlockMachine.Type.CENTRIFUGE && tile instanceof TileCentrifuge) {
+            return withContext(new ContainerCentrifuge(player.inventory, (TileCentrifuge) tile), world, x, y, z);
+        }
         return null;
     }
 
@@ -47,6 +53,10 @@ public final class ModGuiHandler implements IGuiHandler {
         if (BlockMachine.Type.of(id) == BlockMachine.Type.AGGREGATOR && tile instanceof TileAggregator) {
             return new GuiAggregator(
                     withContext(new ContainerAggregator(player.inventory, (TileAggregator) tile), world, x, y, z));
+        }
+        if (BlockMachine.Type.of(id) == BlockMachine.Type.CENTRIFUGE && tile instanceof TileCentrifuge) {
+            return new GuiCentrifuge(
+                    withContext(new ContainerCentrifuge(player.inventory, (TileCentrifuge) tile), world, x, y, z));
         }
         return null;
     }

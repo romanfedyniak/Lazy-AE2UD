@@ -20,6 +20,14 @@ All notable Lazy AE2 Unofficial Deconstructed changes are grouped by the version
   one per machine, and the old sections are then dropped.
 - Only the English and Ukrainian translations ship. The partial translations into other languages are removed.
 
+### Pulse Centrifuge
+
+- **The Pulse Centrifuge is back**, purifying certus, nether quartz and fluix crystals two at a time, and
+  grinding sky stone, ender pearls and wheat as it always did. A machine a world already holds keeps its
+  slots, its power, its work and its faces.
+- It takes the same eight Acceleration Cards in a column of their own, the same auto-export button and the
+  same map of faces as the Fluix Aggregator, and its recipes have a screen in HEI.
+
 ### Fluix Aggregator
 
 - **The Fluix Aggregator is back**, with the recipes it always had: fluix out of quartz, redstone and charged

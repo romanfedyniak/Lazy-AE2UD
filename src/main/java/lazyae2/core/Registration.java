@@ -28,6 +28,7 @@ import lazyae2.block.BlockMachine;
 import lazyae2.item.ItemBlockMachine;
 import lazyae2.item.ItemMaterial;
 import lazyae2.tile.TileAggregator;
+import lazyae2.tile.TileCentrifuge;
 import appeng.api.AEApi;
 import appeng.api.features.IInscriberRegistry;
 import appeng.api.features.InscriberProcessType;
@@ -62,6 +63,7 @@ public final class Registration {
 
         // The names the old mod's library gave its tiles, so a machine it placed loads into this one
         GameRegistry.registerTileEntity(TileAggregator.class, new ResourceLocation(Tags.MOD_ID, "TileAggregator"));
+        GameRegistry.registerTileEntity(TileCentrifuge.class, new ResourceLocation(Tags.MOD_ID, "TileCentrifuge"));
     }
 
     @SubscribeEvent

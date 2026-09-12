@@ -50,6 +50,9 @@ public abstract class GuiProcessor extends AEBaseGui {
     private static final int ENERGY_HEIGHT = 72;
 
     private static final String ENERGY_TEXTURE = "gui/component/energy.png";
+    /** Where the filled arrow was moved to in every machine's picture, out of the upgrade column's way. */
+    private static final int ARROW_U = 0;
+    private static final int ARROW_V = 200;
     /** The whole picture the bar is cut from; it is nothing like the 256 square the plain helper assumes. */
     private static final int ENERGY_TEXTURE_WIDTH = 6;
     private static final int ENERGY_TEXTURE_HEIGHT = 72;
@@ -79,6 +82,18 @@ public abstract class GuiProcessor extends AEBaseGui {
      * Whatever the machine draws over its background - a progress bar, usually.
      */
     protected void drawMachine(final int offsetX, final int offsetY) {
+    }
+
+    /**
+     * The arrow between a machine's slots, filled as far as the work has come. Every machine's picture keeps
+     * it out of the way of the upgrade column, at the same place.
+     */
+    protected void drawProgressArrow(final int offsetX, final int offsetY, final int left, final int top,
+            final int width, final int height) {
+        final int filled = Math.round(this.container.getWorkFraction() * width);
+        if (filled > 0) {
+            this.drawTexturedModalRect(offsetX + left, offsetY + top, ARROW_U, ARROW_V, filled, height);
+        }
     }
 
     @Override
