@@ -53,7 +53,7 @@ public final class TileEnergizer extends TileProcessor {
     private EnergizeRecipe recipe;
 
     public TileEnergizer() {
-        super(LazyAE2Config.instance().getEnergizer(), IoMode.NONE);
+        super(LazyAE2Config.instance().getEnergizer(), IoMode.OMNI);
         this.upgrades = new MachineUpgradeInventory(BlockMachine.Type.ENERGIZER, this, UPGRADE_SLOTS);
         this.inventory = new WrapperChainedItemHandler(this.input, this.output, this.upgrades);
         this.insertOnly = new WrapperFilteredItemHandler(this.input, SlotFilters.INSERT_ONLY);

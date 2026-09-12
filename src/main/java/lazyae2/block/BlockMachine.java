@@ -36,11 +36,17 @@ import net.minecraft.world.World;
 import lazyae2.LazyAE2;
 import lazyae2.core.LazyAE2Config;
 import lazyae2.core.LazyAE2Tab;
+import lazyae2.core.Registration;
 import lazyae2.tile.TileAggregator;
 import lazyae2.tile.TileCentrifuge;
 import lazyae2.tile.TileEnergizer;
+import lazyae2.tile.TilePau;
 import lazyae2.tile.TileEtcher;
-import lazyae2.tile.TileProcessor;
+import lazyae2.tile.IMachineTile;
+import appeng.api.util.AEPartLocation;
+import appeng.core.sync.GuiBridge;
+import appeng.items.tools.quartz.ToolQuartzCuttingKnife;
+import appeng.tile.AEBaseInvTile;
 import appeng.util.Platform;
 
 /**
@@ -62,14 +68,15 @@ public final class BlockMachine extends Block {
         AGGREGATOR(0, TileAggregator::new),
         CENTRIFUGE(1, TileCentrifuge::new),
         ETCHER(2, TileEtcher::new),
+        PAU(3, TilePau::new),
         ENERGIZER(5, TileEnergizer::new);
 
         private static final Type[] VALUES = values();
 
         private final int meta;
-        private final Supplier<TileProcessor> factory;
+        private final Supplier<AEBaseInvTile> factory;
 
-        Type(final int meta, final Supplier<TileProcessor> factory) {
+        Type(final int meta, final Supplier<AEBaseInvTile> factory) {
             this.meta = meta;
             this.factory = factory;
         }
@@ -78,12 +85,20 @@ public final class BlockMachine extends Block {
             return this.meta;
         }
 
+        /**
+         * @return this machine as an item, or nothing while the block is switched off in the config
+         */
+        public ItemStack newStack(final int count) {
+            return Registration.machine == null ? ItemStack.EMPTY
+                    : new ItemStack(Registration.machine, count, this.meta);
+        }
+
         @Override
         public String getName() {
             return this.name().toLowerCase(Locale.ROOT);
         }
 
-        public TileProcessor createTile() {
+        public AEBaseInvTile createTile() {
             return this.factory.get();
         }
 
@@ -137,10 +152,10 @@ public final class BlockMachine extends Block {
     @Override
     public IBlockState getActualState(final IBlockState state, final IBlockAccess world, final BlockPos pos) {
         final TileEntity tile = world.getTileEntity(pos);
-        if (!(tile instanceof TileProcessor)) {
+        if (!(tile instanceof IMachineTile)) {
             return state;
         }
-        final TileProcessor machine = (TileProcessor) tile;
+        final IMachineTile machine = (IMachineTile) tile;
         return state.withProperty(FACING, machine.getFront()).withProperty(ACTIVE, machine.isWorking());
     }
 
@@ -164,8 +179,8 @@ public final class BlockMachine extends Block {
     public void onBlockPlacedBy(final World world, final BlockPos pos, final IBlockState state,
             final EntityLivingBase placer, final ItemStack stack) {
         final TileEntity tile = world.getTileEntity(pos);
-        if (tile instanceof TileProcessor) {
-            ((TileProcessor) tile).setFront(placer.getHorizontalFacing().getOpposite());
+        if (tile instanceof IMachineTile) {
+            ((IMachineTile) tile).setFront(placer.getHorizontalFacing().getOpposite());
         }
     }
 
@@ -185,7 +200,13 @@ public final class BlockMachine extends Block {
         }
 
         final TileEntity tile = world.getTileEntity(pos);
-        if (tile instanceof TileProcessor) {
+        // The knife renames a machine here, as it renames AE2's own blocks
+        if (tile instanceof IMachineTile && held.getItem() instanceof ToolQuartzCuttingKnife) {
+            Platform.openGUI(player, tile, AEPartLocation.fromFacing(facing), GuiBridge.GUI_RENAMER);
+            return true;
+        }
+
+        if (tile instanceof IMachineTile) {
             player.openGui(LazyAE2.instance, state.getValue(TYPE).getMeta(), world, pos.getX(), pos.getY(), pos.getZ());
         }
         return true;
@@ -194,10 +215,10 @@ public final class BlockMachine extends Block {
     @Override
     public boolean rotateBlock(final World world, final BlockPos pos, final EnumFacing axis) {
         final TileEntity tile = world.getTileEntity(pos);
-        if (!(tile instanceof TileProcessor)) {
+        if (!(tile instanceof IMachineTile)) {
             return false;
         }
-        final TileProcessor machine = (TileProcessor) tile;
+        final IMachineTile machine = (IMachineTile) tile;
         if (axis == EnumFacing.UP) {
             machine.setFront(machine.getFront().rotateY());
         } else if (axis == EnumFacing.DOWN) {
@@ -217,9 +238,9 @@ public final class BlockMachine extends Block {
     @Override
     public void breakBlock(final World world, final BlockPos pos, final IBlockState state) {
         final TileEntity tile = world.getTileEntity(pos);
-        if (tile instanceof TileProcessor) {
+        if (tile instanceof AEBaseInvTile) {
             final NonNullList<ItemStack> drops = NonNullList.create();
-            ((TileProcessor) tile).getDrops(world, pos, drops);
+            ((AEBaseInvTile) tile).getDrops(world, pos, drops);
             for (final ItemStack drop : drops) {
                 Block.spawnAsEntity(world, pos, drop);
             }

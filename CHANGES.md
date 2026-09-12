@@ -20,9 +20,37 @@ All notable Lazy AE2 Unofficial Deconstructed changes are grouped by the version
   one per machine, and the old sections are then dropped.
 - Only the English and Ukrainian translations ship. The partial translations into other languages are removed.
 
+- **A freshly placed machine is open on every face**, taking items in and letting them out, where the old mod
+  started it closed. A closed machine is invisible to everything standing beside it: a hopper moves nothing, an
+  ME Interface and a Preemptive Assembly Unit read it as "Nothing" and cannot push into it. The map of faces is
+  still there to narrow that down, and a machine a world already holds keeps the map it was given.
+
 - **A machine's arrow opens its recipes in HEI.** Clicking the arrow between the slots shows what that machine
   makes, and the arrow says so when hovered - in HEI's own words, so it is already translated. Only with a
   recipe viewer installed.
+
+### Preemptive Assembly Unit
+
+- **The Preemptive Assembly Unit is back.** It offers the network the processing patterns it holds and hands
+  the ingredients to whatever machine stands against a face that lets items out. What that machine gives back
+  can be piped straight into the unit, which puts it into network storage - no import bus needed.
+- **It keeps taking work while it is busy**, which is the whole point of it: an interface tells the crafting
+  CPU to wait until what it holds has gone, while this one takes one more pattern as long as its buffer has
+  room, so a machine that queues a hundred operations is filled rather than fed one at a time. The old mod
+  did that by reaching into the CPU's private task list; here the CPU keeps pushing of its own accord, at the
+  rate its co-processors allow.
+- **Nine pattern slots, and a row more for each Pattern Expansion Card**, up to 36, exactly as an ME Interface
+  does it - the old mod had nine and nothing else. A card will not come out from under its patterns, so none
+  are ever spilled, and how many fit is a config line (`upgrades.cards`).
+- **Both pattern terminals know it**: the Pattern Access Terminal lists it beside the interfaces, with its
+  patterns editable from there, and a pattern encoded in a Pattern Terminal can be sent straight to it.
+- It offers **processing patterns** only: a crafting pattern belongs in an interface, where the Molecular
+  Assembler beside it reads the pattern itself.
+- In a terminal it is **named after the machine it stands against**, with that machine's picture beside it,
+  exactly as an ME Interface names itself - and a Quartz Cutting Knife renames it, which every machine of this
+  mod now takes. The name a player gives it wins over the machine's own, and the window wears it too. **A
+  picture can be chosen there as well**, in the same knife's window, exactly as an interface takes one.
+- A unit a world already holds keeps its patterns, both buffers, its faces and its place on the network.
 
 ### Crystal Energizer
 

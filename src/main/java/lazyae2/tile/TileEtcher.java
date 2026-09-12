@@ -52,7 +52,7 @@ public final class TileEtcher extends TileProcessor {
     private EtchRecipe recipe;
 
     public TileEtcher() {
-        super(LazyAE2Config.instance().getEtcher(), IoMode.NONE);
+        super(LazyAE2Config.instance().getEtcher(), IoMode.OMNI);
         this.input.setFilter(new EtchFilter());
         this.upgrades = new MachineUpgradeInventory(BlockMachine.Type.ETCHER, this, UPGRADE_SLOTS);
         this.inventory = new WrapperChainedItemHandler(this.input, this.output, this.upgrades);

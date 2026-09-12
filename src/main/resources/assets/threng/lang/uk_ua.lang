@@ -20,9 +20,13 @@ tile.threng.machine.aggregator.name=Мінливий агрегатор
 tile.threng.machine.centrifuge.name=Імпульсна центрифуга
 tile.threng.machine.etcher.name=Травильник схем ME
 tile.threng.machine.energizer.name=Кристалічний енергетик
+tile.threng.machine.pau.name=Блок попередньої збірки
 
 gui.threng.energy=%s / %s FE
 gui.threng.energy.cost=%s FE
+
+gui.threng.pau.toMachine=В машину
+gui.threng.pau.fromMachine=З машини
 
 gui.threng.side.front=Спереду
 gui.threng.side.back=Ззаду

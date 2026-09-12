@@ -19,14 +19,17 @@ import lazyae2.block.BlockMachine;
 import lazyae2.client.gui.GuiAggregator;
 import lazyae2.client.gui.GuiCentrifuge;
 import lazyae2.client.gui.GuiEnergizer;
+import lazyae2.client.gui.GuiPau;
 import lazyae2.client.gui.GuiEtcher;
 import lazyae2.container.ContainerAggregator;
 import lazyae2.container.ContainerCentrifuge;
 import lazyae2.container.ContainerEnergizer;
+import lazyae2.container.ContainerPau;
 import lazyae2.container.ContainerEtcher;
 import lazyae2.tile.TileAggregator;
 import lazyae2.tile.TileCentrifuge;
 import lazyae2.tile.TileEnergizer;
+import lazyae2.tile.TilePau;
 import lazyae2.tile.TileEtcher;
 import appeng.container.AEBaseContainer;
 import appeng.container.ContainerOpenContext;
@@ -54,6 +57,9 @@ public final class ModGuiHandler implements IGuiHandler {
         if (BlockMachine.Type.of(id) == BlockMachine.Type.ENERGIZER && tile instanceof TileEnergizer) {
             return withContext(new ContainerEnergizer(player.inventory, (TileEnergizer) tile), world, x, y, z);
         }
+        if (BlockMachine.Type.of(id) == BlockMachine.Type.PAU && tile instanceof TilePau) {
+            return withContext(new ContainerPau(player.inventory, (TilePau) tile), world, x, y, z);
+        }
         return null;
     }
 
@@ -77,6 +83,9 @@ public final class ModGuiHandler implements IGuiHandler {
         if (BlockMachine.Type.of(id) == BlockMachine.Type.ENERGIZER && tile instanceof TileEnergizer) {
             return new GuiEnergizer(
                     withContext(new ContainerEnergizer(player.inventory, (TileEnergizer) tile), world, x, y, z));
+        }
+        if (BlockMachine.Type.of(id) == BlockMachine.Type.PAU && tile instanceof TilePau) {
+            return new GuiPau(withContext(new ContainerPau(player.inventory, (TilePau) tile), world, x, y, z));
         }
         return null;
     }

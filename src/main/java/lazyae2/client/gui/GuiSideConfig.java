@@ -10,9 +10,14 @@ package lazyae2.client.gui;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 
+import lazyae2.Tags;
+import lazyae2.container.IMachineContainer;
 import lazyae2.util.IoMode;
 import lazyae2.util.RelativeSide;
 
@@ -39,6 +44,24 @@ public final class GuiSideConfig {
     private static final int CELL_SIZE = 5;
 
     private GuiSideConfig() {
+    }
+
+    /**
+     * The map itself, with a mark on every face that lets something through. The picture is 22 by 17, not
+     * the 256 square the plain helper assumes, so it is drawn with its own size given.
+     */
+    public static void draw(final int left, final int top, final IMachineContainer container) {
+        Minecraft.getMinecraft().getTextureManager()
+                .bindTexture(new ResourceLocation(Tags.MOD_ID, "textures/" + TEXTURE));
+        Gui.drawModalRectWithCustomSizedTexture(left, top, 0, 0, WIDTH, HEIGHT, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+
+        for (final RelativeSide side : CELLS) {
+            final IoMode mode = container.getFace(side);
+            if (mode != IoMode.NONE) {
+                Gui.drawModalRectWithCustomSizedTexture(left + cellLeft(side), top + cellTop(side), WIDTH,
+                        markTop(mode), CELL_SIZE, CELL_SIZE, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+            }
+        }
     }
 
     /**

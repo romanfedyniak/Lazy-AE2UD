@@ -14,7 +14,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-import lazyae2.container.ContainerProcessor;
+import lazyae2.container.IMachineContainer;
 import lazyae2.util.IoMode;
 import lazyae2.util.RelativeSide;
 
@@ -52,10 +52,10 @@ public final class PacketSideConfig implements IMessage {
         public IMessage onMessage(final PacketSideConfig message, final MessageContext context) {
             final EntityPlayerMP player = context.getServerHandler().player;
             player.getServerWorld().addScheduledTask(() -> {
-                if (!(player.openContainer instanceof ContainerProcessor)) {
+                if (!(player.openContainer instanceof IMachineContainer)) {
                     return;
                 }
-                final ContainerProcessor container = (ContainerProcessor) player.openContainer;
+                final IMachineContainer container = (IMachineContainer) player.openContainer;
                 final RelativeSide[] sides = RelativeSide.all();
                 if (message.side < 0 || message.side >= sides.length) {
                     return;

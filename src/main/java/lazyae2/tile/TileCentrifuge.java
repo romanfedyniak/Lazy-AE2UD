@@ -50,7 +50,7 @@ public final class TileCentrifuge extends TileProcessor {
     private PurifyRecipe recipe;
 
     public TileCentrifuge() {
-        super(LazyAE2Config.instance().getCentrifuge(), IoMode.NONE);
+        super(LazyAE2Config.instance().getCentrifuge(), IoMode.OMNI);
         this.upgrades = new MachineUpgradeInventory(BlockMachine.Type.CENTRIFUGE, this, UPGRADE_SLOTS);
         this.inventory = new WrapperChainedItemHandler(this.input, this.output, this.upgrades);
         this.insertOnly = new WrapperFilteredItemHandler(this.input, SlotFilters.INSERT_ONLY);

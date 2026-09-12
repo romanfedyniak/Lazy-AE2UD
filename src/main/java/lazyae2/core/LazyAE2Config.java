@@ -47,6 +47,9 @@ public final class LazyAE2Config extends Configuration {
     /** How many Acceleration Cards each machine takes, and the most upgrade points it counts. */
     private final Map<String, Integer> speedCards = new HashMap<>();
     private final Map<String, Integer> speedPoints = new HashMap<>();
+    /** The same for the Pattern Expansion Cards, which the machines holding patterns take instead. */
+    private final Map<String, Integer> patternCards = new HashMap<>();
+    private final Map<String, Integer> patternPoints = new HashMap<>();
 
     private final Processor aggregator;
     private final Processor centrifuge;
@@ -136,6 +139,8 @@ public final class LazyAE2Config extends Configuration {
             this.speedCards.put(machine, Math.max(0, this.get("upgrades.cards", "speed." + machine, 8).getInt()));
             this.speedPoints.put(machine, Math.max(0, this.get("upgrades.points", "speed." + machine, 0).getInt()));
         }
+        this.patternCards.put(PAU, Math.max(0, this.get("upgrades.cards", "patterns." + PAU, 3).getInt()));
+        this.patternPoints.put(PAU, Math.max(0, this.get("upgrades.points", "patterns." + PAU, 0).getInt()));
 
         this.dropLegacy();
     }
@@ -244,6 +249,14 @@ public final class LazyAE2Config extends Configuration {
 
     public int getSpeedPoints(final String machine) {
         return this.speedPoints.getOrDefault(machine, 0);
+    }
+
+    public int getPatternCards(final String machine) {
+        return this.patternCards.getOrDefault(machine, 0);
+    }
+
+    public int getPatternPoints(final String machine) {
+        return this.patternPoints.getOrDefault(machine, 0);
     }
 
     public boolean isCoalDustEnabled() {

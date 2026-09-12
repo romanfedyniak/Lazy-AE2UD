@@ -51,7 +51,7 @@ public final class TileAggregator extends TileProcessor {
     private AggregatorRecipe recipe;
 
     public TileAggregator() {
-        super(LazyAE2Config.instance().getAggregator(), IoMode.NONE);
+        super(LazyAE2Config.instance().getAggregator(), IoMode.OMNI);
         this.upgrades = new MachineUpgradeInventory(BlockMachine.Type.AGGREGATOR, this, UPGRADE_SLOTS);
         this.inventory = new WrapperChainedItemHandler(this.input, this.output, this.upgrades);
         this.insertOnly = new WrapperFilteredItemHandler(this.input, SlotFilters.INSERT_ONLY);

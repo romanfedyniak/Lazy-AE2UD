@@ -27,6 +27,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import lazyae2.core.LazyAE2Config;
 import lazyae2.util.IoMode;
@@ -46,7 +47,8 @@ import appeng.util.IConfigManagerHost;
  * A machine that turns a recipe into an item on power of its own. It is no part of an ME network: energy
  * arrives as Forge Energy through any face, and items move through whichever faces the player opened.
  */
-public abstract class TileProcessor extends AEBaseInvTile implements ITickable, IConfigManagerHost, IUpgradeableHost {
+public abstract class TileProcessor extends AEBaseInvTile
+        implements ITickable, IMachineTile, IConfigManagerHost, IUpgradeableHost {
 
     /** How often the machine hands what it made to the inventory beside it, in ticks. */
     private static final int EXPORT_INTERVAL = 16;
@@ -57,6 +59,9 @@ public abstract class TileProcessor extends AEBaseInvTile implements ITickable, 
     private final ProcessorEnergy energy;
 
     private EnumFacing front = EnumFacing.NORTH;
+    /** What the player renamed it to with the knife, or null. */
+    @Nullable
+    private String customName;
     private int work;
     private boolean working;
     /** Worked out once and kept until an upgrade card moves. */
@@ -66,6 +71,11 @@ public abstract class TileProcessor extends AEBaseInvTile implements ITickable, 
     @Nullable
     private Boolean canWork;
 
+    /**
+     * @param initialSides what a freshly placed machine lets through on every face. Open both ways, unlike
+     *            the old mod, where a machine started closed and was invisible to everything beside it -
+     *            a hopper, an ME Interface, a Preemptive Assembly Unit - until a face was set by hand.
+     */
     protected TileProcessor(final LazyAE2Config.Processor settings, final IoMode initialSides) {
         this.settings = settings;
         this.sides = new SideConfig(initialSides);
@@ -95,6 +105,7 @@ public abstract class TileProcessor extends AEBaseInvTile implements ITickable, 
      */
     protected abstract IItemHandler getAutomationInventory(IoMode mode);
 
+    @Override
     public SideConfig getSides() {
         return this.sides;
     }
@@ -107,6 +118,7 @@ public abstract class TileProcessor extends AEBaseInvTile implements ITickable, 
         return this.work;
     }
 
+    @Override
     public boolean isWorking() {
         return this.working;
     }
@@ -119,10 +131,12 @@ public abstract class TileProcessor extends AEBaseInvTile implements ITickable, 
         return this.config.getSetting(Settings.AUTO_EXPORT) == YesNo.YES;
     }
 
+    @Override
     public EnumFacing getFront() {
         return this.front;
     }
 
+    @Override
     public void setFront(final EnumFacing facing) {
         this.front = facing.getAxis().isHorizontal() ? facing : EnumFacing.NORTH;
         this.saveChanges();
@@ -275,6 +289,24 @@ public abstract class TileProcessor extends AEBaseInvTile implements ITickable, 
         }
     }
 
+
+    @Override
+    public String getCustomInventoryName() {
+        return this.customName == null ? "" : this.customName;
+    }
+
+    @Override
+    public boolean hasCustomInventoryName() {
+        return this.customName != null && !this.customName.isEmpty();
+    }
+
+    @Override
+    public void setCustomName(final String name) {
+        this.customName = name == null || name.isEmpty() ? null : name;
+        this.saveChanges();
+        this.markForUpdate();
+    }
+
     @Override
     public boolean canBeRotated() {
         return false; // the machine is turned by the face it was placed against, and a wrench turns it
@@ -343,6 +375,7 @@ public abstract class TileProcessor extends AEBaseInvTile implements ITickable, 
                     : EnumFacing.byName(data.getString("front"));
             this.config.readFromNBT(data);
         }
+        this.customName = data.hasKey("customName") ? data.getString("customName") : null;
         this.markUpgradesDirty();
     }
 
@@ -352,6 +385,9 @@ public abstract class TileProcessor extends AEBaseInvTile implements ITickable, 
         data.setInteger("work", this.work);
         data.setInteger("energy", this.energy.getEnergyStored());
         data.setString("front", this.front.getName());
+        if (this.customName != null) {
+            data.setString("customName", this.customName);
+        }
         final NBTTagCompound sideTag = new NBTTagCompound();
         this.sides.writeToNBT(sideTag);
         data.setTag("sides", sideTag);
@@ -426,6 +462,11 @@ public abstract class TileProcessor extends AEBaseInvTile implements ITickable, 
         this.work = data.readInt();
         this.energy.setEnergyStored(data.readInt());
         changed |= this.sides.readFromStream(data);
+        final String name = ByteBufUtils.readUTF8String(data);
+        if (!name.equals(this.getCustomInventoryName())) {
+            this.customName = name.isEmpty() ? null : name;
+            changed = true;
+        }
         return changed;
     }
 
@@ -437,6 +478,7 @@ public abstract class TileProcessor extends AEBaseInvTile implements ITickable, 
         data.writeInt(this.work);
         data.writeInt(this.energy.getEnergyStored());
         this.sides.writeToStream(data);
+        ByteBufUtils.writeUTF8String(data, this.getCustomInventoryName());
     }
 
     /**

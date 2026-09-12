@@ -20,9 +20,13 @@ tile.threng.machine.aggregator.name=Fluix Aggregator
 tile.threng.machine.centrifuge.name=Pulse Centrifuge
 tile.threng.machine.etcher.name=ME Circuit Etcher
 tile.threng.machine.energizer.name=Crystal Energizer
+tile.threng.machine.pau.name=Preemptive Assembly Unit
 
 gui.threng.energy=%s / %s FE
 gui.threng.energy.cost=%s FE
+
+gui.threng.pau.toMachine=To machine
+gui.threng.pau.fromMachine=From machine
 
 gui.threng.side.front=Front
 gui.threng.side.back=Back

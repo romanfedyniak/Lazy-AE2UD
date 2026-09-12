@@ -89,9 +89,15 @@ public abstract class GuiProcessor extends AEBaseGui {
     }
 
     /**
-     * The machine's own name, drawn at the top left.
+     * The machine's own name, drawn at the top left unless the player renamed it.
      */
     protected abstract String getScreenTitle();
+
+    private String getTitle() {
+        return this.container.getMachine().hasCustomInventoryName()
+                ? this.container.getMachine().getCustomInventoryName()
+                : this.getScreenTitle();
+    }
 
     /**
      * How far along the machine's work is drawn. The arrow alone, unless a machine has more to show.
@@ -136,12 +142,12 @@ public abstract class GuiProcessor extends AEBaseGui {
 
         this.drawProgress(offsetX, offsetY);
         this.drawEnergyBar(offsetX, offsetY);
-        this.drawSides(offsetX, offsetY);
+        GuiSideConfig.draw(offsetX + SIDES_LEFT, offsetY + SIDES_TOP, this.container);
     }
 
     @Override
     public void drawFG(final int offsetX, final int offsetY, final int mouseX, final int mouseY) {
-        this.fontRenderer.drawString(this.getScreenTitle(), 8, 6, LABEL_COLOR);
+        this.fontRenderer.drawString(this.getTitle(), 8, 6, LABEL_COLOR);
         this.fontRenderer.drawString(I18n.format("container.inventory"), 8, this.ySize - 96 + 3, LABEL_COLOR);
         this.autoExport.set(this.container.autoExport);
     }
@@ -156,23 +162,6 @@ public abstract class GuiProcessor extends AEBaseGui {
             final int top = ENERGY_HEIGHT - 2 - filled;
             Gui.drawModalRectWithCustomSizedTexture(offsetX + ENERGY_LEFT + 1, offsetY + ENERGY_TOP + 1 + top,
                     4, top, 2, filled, ENERGY_TEXTURE_WIDTH, ENERGY_TEXTURE_HEIGHT);
-        }
-    }
-
-    private void drawSides(final int offsetX, final int offsetY) {
-        this.bindTexture(Tags.MOD_ID, GuiSideConfig.TEXTURE);
-        Gui.drawModalRectWithCustomSizedTexture(offsetX + SIDES_LEFT, offsetY + SIDES_TOP, 0, 0,
-                GuiSideConfig.WIDTH, GuiSideConfig.HEIGHT, GuiSideConfig.TEXTURE_WIDTH, GuiSideConfig.TEXTURE_HEIGHT);
-
-        for (final RelativeSide side : GuiSideConfig.cells()) {
-            final IoMode mode = this.container.getFace(side);
-            if (mode == IoMode.NONE) {
-                continue;
-            }
-            Gui.drawModalRectWithCustomSizedTexture(offsetX + SIDES_LEFT + GuiSideConfig.cellLeft(side),
-                    offsetY + SIDES_TOP + GuiSideConfig.cellTop(side), GuiSideConfig.WIDTH, GuiSideConfig.markTop(mode),
-                    GuiSideConfig.markSize(), GuiSideConfig.markSize(),
-                    GuiSideConfig.TEXTURE_WIDTH, GuiSideConfig.TEXTURE_HEIGHT);
         }
     }
 

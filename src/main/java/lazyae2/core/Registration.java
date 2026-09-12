@@ -31,6 +31,7 @@ import lazyae2.tile.TileAggregator;
 import lazyae2.tile.TileCentrifuge;
 import lazyae2.tile.TileEnergizer;
 import lazyae2.tile.TileEtcher;
+import lazyae2.tile.TilePau;
 import appeng.api.AEApi;
 import appeng.api.features.IInscriberRegistry;
 import appeng.api.features.InscriberProcessType;
@@ -68,6 +69,7 @@ public final class Registration {
         GameRegistry.registerTileEntity(TileCentrifuge.class, new ResourceLocation(Tags.MOD_ID, "TileCentrifuge"));
         GameRegistry.registerTileEntity(TileEtcher.class, new ResourceLocation(Tags.MOD_ID, "TileEtcher"));
         GameRegistry.registerTileEntity(TileEnergizer.class, new ResourceLocation(Tags.MOD_ID, "TileEnergizer"));
+        GameRegistry.registerTileEntity(TilePau.class, new ResourceLocation(Tags.MOD_ID, "TileFastCraftingBus"));
     }
 
     @SubscribeEvent
@@ -97,8 +99,15 @@ public final class Registration {
             if (!type.isEnabled()) {
                 continue;
             }
-            support(upgrades, CardTraits.SPEED, new ItemStack(machine, 1, type.getMeta()),
-                    config.getSpeedCards(type.getName()), config.getSpeedPoints(type.getName()));
+            final ItemStack host = new ItemStack(machine, 1, type.getMeta());
+            if (type == BlockMachine.Type.PAU) {
+                // It has no work to speed up; its cards buy rows of patterns, as an interface's do
+                support(upgrades, CardTraits.PATTERN_EXPANSION, host, config.getPatternCards(type.getName()),
+                        config.getPatternPoints(type.getName()));
+            } else {
+                support(upgrades, CardTraits.SPEED, host, config.getSpeedCards(type.getName()),
+                        config.getSpeedPoints(type.getName()));
+            }
         }
     }
 

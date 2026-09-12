@@ -27,7 +27,7 @@ import appeng.util.Platform;
  * of nothing to a machine that is on no network, and in a window this size the box would sit on the upgrade
  * column.
  */
-public abstract class ContainerProcessor extends AEBaseContainer {
+public abstract class ContainerProcessor extends AEBaseContainer implements IMachineContainer {
 
     public static final int HEIGHT = 166;
     /** Where the column of upgrade slots runs, just right of the window. */
@@ -65,12 +65,9 @@ public abstract class ContainerProcessor extends AEBaseContainer {
      */
     protected abstract void setupSlots(TileProcessor machine);
 
+    @Override
     public TileProcessor getMachine() {
         return this.machine;
-    }
-
-    public IoMode getFace(final RelativeSide side) {
-        return this.machine.getSides().get(side);
     }
 
     public float getWorkFraction() {

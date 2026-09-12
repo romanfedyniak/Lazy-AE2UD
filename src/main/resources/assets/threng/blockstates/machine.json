@@ -16,6 +16,10 @@
       "model": "threng:machine_etcher",
       "y": 90
     },
+    "active=false,facing=east,type=pau": {
+      "model": "threng:machine_pau",
+      "y": 90
+    },
     "active=false,facing=north,type=aggregator": {
       "model": "threng:machine_aggregator"
     },
@@ -27,6 +31,9 @@
     },
     "active=false,facing=north,type=etcher": {
       "model": "threng:machine_etcher"
+    },
+    "active=false,facing=north,type=pau": {
+      "model": "threng:machine_pau"
     },
     "active=false,facing=south,type=aggregator": {
       "model": "threng:machine_aggregator",
@@ -42,6 +49,10 @@
     },
     "active=false,facing=south,type=etcher": {
       "model": "threng:machine_etcher",
+      "y": 180
+    },
+    "active=false,facing=south,type=pau": {
+      "model": "threng:machine_pau",
       "y": 180
     },
     "active=false,facing=west,type=aggregator": {
@@ -60,6 +71,10 @@
       "model": "threng:machine_etcher",
       "y": 270
     },
+    "active=false,facing=west,type=pau": {
+      "model": "threng:machine_pau",
+      "y": 270
+    },
     "active=true,facing=east,type=aggregator": {
       "model": "threng:machine_aggregator_active",
       "y": 90
@@ -76,6 +91,10 @@
       "model": "threng:machine_etcher_active",
       "y": 90
     },
+    "active=true,facing=east,type=pau": {
+      "model": "threng:machine_pau_active",
+      "y": 90
+    },
     "active=true,facing=north,type=aggregator": {
       "model": "threng:machine_aggregator_active"
     },
@@ -87,6 +106,9 @@
     },
     "active=true,facing=north,type=etcher": {
       "model": "threng:machine_etcher_active"
+    },
+    "active=true,facing=north,type=pau": {
+      "model": "threng:machine_pau_active"
     },
     "active=true,facing=south,type=aggregator": {
       "model": "threng:machine_aggregator_active",
@@ -104,6 +126,10 @@
       "model": "threng:machine_etcher_active",
       "y": 180
     },
+    "active=true,facing=south,type=pau": {
+      "model": "threng:machine_pau_active",
+      "y": 180
+    },
     "active=true,facing=west,type=aggregator": {
       "model": "threng:machine_aggregator_active",
       "y": 270
@@ -118,6 +144,10 @@
     },
     "active=true,facing=west,type=etcher": {
       "model": "threng:machine_etcher_active",
+      "y": 270
+    },
+    "active=true,facing=west,type=pau": {
+      "model": "threng:machine_pau_active",
       "y": 270
     }
   }
