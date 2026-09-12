@@ -7,6 +7,7 @@
 
 package lazyae2.integration.jei;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,14 +18,17 @@ import mezz.jei.api.IModRegistry;
 import mezz.jei.api.JEIPlugin;
 import mezz.jei.api.recipe.IRecipeCategoryRegistration;
 
+import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 
 import lazyae2.block.BlockMachine;
 import lazyae2.client.gui.GuiAggregator;
 import lazyae2.client.gui.GuiCentrifuge;
+import lazyae2.client.gui.GuiEnergizer;
 import lazyae2.client.gui.GuiEtcher;
 import lazyae2.core.Registration;
 import lazyae2.recipe.AggregatorRecipe;
+import lazyae2.recipe.EnergizeRecipe;
 import lazyae2.recipe.EtchRecipe;
 import lazyae2.recipe.LazyRecipes;
 import lazyae2.recipe.PurifyRecipe;
@@ -47,6 +51,11 @@ public final class LazyAE2JeiPlugin implements IModPlugin {
         final ItemStack etcher = machineStack(BlockMachine.Type.ETCHER);
         if (etcher != null) {
             registry.addRecipeCategories(new EtcherCategory(registry.getJeiHelpers().getGuiHelper(), etcher));
+        }
+
+        final ItemStack energizer = machineStack(BlockMachine.Type.ENERGIZER);
+        if (energizer != null) {
+            registry.addRecipeCategories(new EnergizerCategory(registry.getJeiHelpers().getGuiHelper(), energizer));
         }
     }
 
@@ -87,6 +96,25 @@ public final class LazyAE2JeiPlugin implements IModPlugin {
             registry.addRecipeClickArea(GuiEtcher.class, GuiEtcher.ARROW_LEFT, GuiEtcher.ARROW_TOP,
                     GuiEtcher.ARROW_WIDTH, GuiEtcher.ARROW_HEIGHT, EtcherCategory.UID);
         }
+
+        final ItemStack energizer = machineStack(BlockMachine.Type.ENERGIZER);
+        if (energizer != null) {
+            final List<MachineRecipe> recipes = new ArrayList<>();
+            for (final EnergizeRecipe recipe : LazyRecipes.energizer()) {
+                recipes.add(new MachineRecipe(recipe.getInputs(), recipe.getOutput(), cost(recipe.getEnergy())));
+            }
+            registry.addRecipes(recipes, EnergizerCategory.UID);
+            registry.addRecipeCatalyst(energizer, EnergizerCategory.UID);
+            registry.addRecipeClickArea(GuiEnergizer.class, GuiEnergizer.ARROW_LEFT, GuiEnergizer.ARROW_TOP,
+                    GuiEnergizer.ARROW_WIDTH, GuiEnergizer.ARROW_HEIGHT, EnergizerCategory.UID);
+        }
+    }
+
+    /**
+     * What one charge costs, written the way the player's own language groups digits.
+     */
+    private static String cost(final int energy) {
+        return I18n.format("gui.threng.energy.cost", NumberFormat.getIntegerInstance().format(energy));
     }
 
     /**
@@ -95,6 +123,6 @@ public final class LazyAE2JeiPlugin implements IModPlugin {
     @Nullable
     private static ItemStack machineStack(final BlockMachine.Type type) {
         return Registration.machine == null || !type.isEnabled() ? null
-                : new ItemStack(Registration.machine, 1, type.ordinal());
+                : new ItemStack(Registration.machine, 1, type.getMeta());
     }
 }

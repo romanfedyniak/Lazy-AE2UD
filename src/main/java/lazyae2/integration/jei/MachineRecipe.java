@@ -11,10 +11,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeWrapper;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 
@@ -23,12 +26,32 @@ import net.minecraft.item.crafting.Ingredient;
  */
 final class MachineRecipe implements IRecipeWrapper {
 
+    private static final int INFO_COLOR = 0x808080;
+
     private final List<Ingredient> inputs;
     private final ItemStack output;
+    /** What this recipe costs, for the one machine that prices each of them separately. */
+    @Nullable
+    private final String info;
 
     MachineRecipe(final List<Ingredient> inputs, final ItemStack output) {
+        this(inputs, output, null);
+    }
+
+    MachineRecipe(final List<Ingredient> inputs, final ItemStack output, @Nullable final String info) {
         this.inputs = inputs;
         this.output = output;
+        this.info = info;
+    }
+
+    @Override
+    public void drawInfo(final Minecraft minecraft, final int recipeWidth, final int recipeHeight, final int mouseX,
+            final int mouseY) {
+        if (this.info != null) {
+            minecraft.fontRenderer.drawString(this.info,
+                    (recipeWidth - minecraft.fontRenderer.getStringWidth(this.info)) / 2,
+                    recipeHeight - minecraft.fontRenderer.FONT_HEIGHT, INFO_COLOR);
+        }
     }
 
     @Override

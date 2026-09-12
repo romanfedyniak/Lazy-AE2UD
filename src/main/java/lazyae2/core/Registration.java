@@ -29,6 +29,7 @@ import lazyae2.item.ItemBlockMachine;
 import lazyae2.item.ItemMaterial;
 import lazyae2.tile.TileAggregator;
 import lazyae2.tile.TileCentrifuge;
+import lazyae2.tile.TileEnergizer;
 import lazyae2.tile.TileEtcher;
 import appeng.api.AEApi;
 import appeng.api.features.IInscriberRegistry;
@@ -66,6 +67,7 @@ public final class Registration {
         GameRegistry.registerTileEntity(TileAggregator.class, new ResourceLocation(Tags.MOD_ID, "TileAggregator"));
         GameRegistry.registerTileEntity(TileCentrifuge.class, new ResourceLocation(Tags.MOD_ID, "TileCentrifuge"));
         GameRegistry.registerTileEntity(TileEtcher.class, new ResourceLocation(Tags.MOD_ID, "TileEtcher"));
+        GameRegistry.registerTileEntity(TileEnergizer.class, new ResourceLocation(Tags.MOD_ID, "TileEnergizer"));
     }
 
     @SubscribeEvent
@@ -95,7 +97,7 @@ public final class Registration {
             if (!type.isEnabled()) {
                 continue;
             }
-            support(upgrades, CardTraits.SPEED, new ItemStack(machine, 1, type.ordinal()),
+            support(upgrades, CardTraits.SPEED, new ItemStack(machine, 1, type.getMeta()),
                     config.getSpeedCards(type.getName()), config.getSpeedPoints(type.getName()));
         }
     }

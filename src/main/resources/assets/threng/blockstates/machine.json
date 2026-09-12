@@ -8,6 +8,10 @@
       "model": "threng:machine_centrifuge",
       "y": 90
     },
+    "active=false,facing=east,type=energizer": {
+      "model": "threng:machine_energizer",
+      "y": 90
+    },
     "active=false,facing=east,type=etcher": {
       "model": "threng:machine_etcher",
       "y": 90
@@ -18,6 +22,9 @@
     "active=false,facing=north,type=centrifuge": {
       "model": "threng:machine_centrifuge"
     },
+    "active=false,facing=north,type=energizer": {
+      "model": "threng:machine_energizer"
+    },
     "active=false,facing=north,type=etcher": {
       "model": "threng:machine_etcher"
     },
@@ -27,6 +34,10 @@
     },
     "active=false,facing=south,type=centrifuge": {
       "model": "threng:machine_centrifuge",
+      "y": 180
+    },
+    "active=false,facing=south,type=energizer": {
+      "model": "threng:machine_energizer",
       "y": 180
     },
     "active=false,facing=south,type=etcher": {
@@ -41,6 +52,10 @@
       "model": "threng:machine_centrifuge",
       "y": 270
     },
+    "active=false,facing=west,type=energizer": {
+      "model": "threng:machine_energizer",
+      "y": 270
+    },
     "active=false,facing=west,type=etcher": {
       "model": "threng:machine_etcher",
       "y": 270
@@ -53,6 +68,10 @@
       "model": "threng:machine_centrifuge_active",
       "y": 90
     },
+    "active=true,facing=east,type=energizer": {
+      "model": "threng:machine_energizer_active",
+      "y": 90
+    },
     "active=true,facing=east,type=etcher": {
       "model": "threng:machine_etcher_active",
       "y": 90
@@ -62,6 +81,9 @@
     },
     "active=true,facing=north,type=centrifuge": {
       "model": "threng:machine_centrifuge_active"
+    },
+    "active=true,facing=north,type=energizer": {
+      "model": "threng:machine_energizer_active"
     },
     "active=true,facing=north,type=etcher": {
       "model": "threng:machine_etcher_active"
@@ -74,6 +96,10 @@
       "model": "threng:machine_centrifuge_active",
       "y": 180
     },
+    "active=true,facing=south,type=energizer": {
+      "model": "threng:machine_energizer_active",
+      "y": 180
+    },
     "active=true,facing=south,type=etcher": {
       "model": "threng:machine_etcher_active",
       "y": 180
@@ -84,6 +110,10 @@
     },
     "active=true,facing=west,type=centrifuge": {
       "model": "threng:machine_centrifuge_active",
+      "y": 270
+    },
+    "active=true,facing=west,type=energizer": {
+      "model": "threng:machine_energizer_active",
       "y": 270
     },
     "active=true,facing=west,type=etcher": {

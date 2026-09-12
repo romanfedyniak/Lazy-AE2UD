@@ -24,6 +24,17 @@ All notable Lazy AE2 Unofficial Deconstructed changes are grouped by the version
   makes, and the arrow says so when hovered - in HEI's own words, so it is already translated. Only with a
   recipe viewer installed.
 
+### Crystal Energizer
+
+- **The Crystal Energizer is back**, charging certus quartz crystals without a network, as many at a time as
+  its cards allow. A machine a world already holds keeps its slots, its power, its work and its faces.
+- **Each recipe carries its own price** - 12 000 FE for a charged certus crystal - rather than the machine
+  charging one flat rate for everything, and HEI's screen says what that price is. Switching the crystal in
+  the slot for one that costs something else now re-prices the work; the old mod kept charging the first
+  price until a card was moved.
+- It takes the same eight Acceleration Cards in a column of their own, the same auto-export button and the
+  same map of faces as the other machines.
+
 ### ME Circuit Etcher
 
 - **The ME Circuit Etcher is back**, pressing a processor out of gold, purified certus quartz, diamond, a

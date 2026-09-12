@@ -28,9 +28,13 @@ import appeng.api.definitions.IMaterials;
  */
 public final class LazyRecipes {
 
+    /** What charging one certus quartz crystal costs, as the old mod priced it. */
+    private static final int CHARGE_CERTUS = 12000;
+
     private static final List<AggregatorRecipe> AGGREGATOR = new ArrayList<>();
     private static final List<PurifyRecipe> CENTRIFUGE = new ArrayList<>();
     private static final List<EtchRecipe> ETCHER = new ArrayList<>();
+    private static final List<EnergizeRecipe> ENERGIZER = new ArrayList<>();
 
     private LazyRecipes() {
     }
@@ -45,6 +49,10 @@ public final class LazyRecipes {
 
     public static List<EtchRecipe> etcher() {
         return ETCHER;
+    }
+
+    public static List<EnergizeRecipe> energizer() {
+        return ENERGIZER;
     }
 
     @Nullable
@@ -89,6 +97,16 @@ public final class LazyRecipes {
         return false;
     }
 
+    @Nullable
+    public static EnergizeRecipe findEnergizer(final ItemStack stack) {
+        for (final EnergizeRecipe recipe : ENERGIZER) {
+            if (recipe.matches(stack)) {
+                return recipe;
+            }
+        }
+        return null;
+    }
+
     public static void registerDefaults() {
         final IMaterials materials = AEApi.instance().definitions().materials();
 
@@ -113,6 +131,10 @@ public final class LazyRecipes {
 
         registerCentrifuge(materials);
         registerEtcher(materials);
+
+        // Crystal charging, the one thing the energizer does
+        materials.certusQuartzCrystalCharged().maybeStack(1).ifPresent(charged ->
+                ENERGIZER.add(new EnergizeRecipe(ore("crystalCertusQuartz"), CHARGE_CERTUS, charged)));
     }
 
     /**

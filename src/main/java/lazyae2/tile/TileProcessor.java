@@ -171,6 +171,13 @@ public abstract class TileProcessor extends AEBaseInvTile implements ITickable, 
         this.canWork = null;
     }
 
+    /**
+     * For a machine whose price is the recipe's rather than the config's, when that recipe changes.
+     */
+    protected final void markEnergyCostDirty() {
+        this.energyPerTick = -1;
+    }
+
     protected void markUpgradesDirty() {
         this.maxWork = -1;
         this.energyPerTick = -1;

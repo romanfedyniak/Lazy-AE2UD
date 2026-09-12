@@ -29,6 +29,6 @@ public final class MachineUpgradeInventory extends UpgradeInventory {
 
     @Override
     public ItemStack getUpgradableItem() {
-        return Registration.machine == null ? ItemStack.EMPTY : new ItemStack(Registration.machine, 1, this.type.ordinal());
+        return Registration.machine == null ? ItemStack.EMPTY : new ItemStack(Registration.machine, 1, this.type.getMeta());
     }
 }

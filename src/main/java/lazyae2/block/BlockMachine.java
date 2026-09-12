@@ -38,6 +38,7 @@ import lazyae2.core.LazyAE2Config;
 import lazyae2.core.LazyAE2Tab;
 import lazyae2.tile.TileAggregator;
 import lazyae2.tile.TileCentrifuge;
+import lazyae2.tile.TileEnergizer;
 import lazyae2.tile.TileEtcher;
 import lazyae2.tile.TileProcessor;
 import appeng.util.Platform;
@@ -53,21 +54,28 @@ public final class BlockMachine extends Block {
     public static final PropertyBool ACTIVE = PropertyBool.create("active");
 
     /**
-     * The order is the one the old mod registered, because it is the metadata: a machine a world holds is
-     * found by its place in this list.
+     * Each machine keeps the metadata the old mod gave it, whatever order they are written in here: the
+     * metadata is how a machine a world holds is found again.
      */
     public enum Type implements IStringSerializable {
 
-        AGGREGATOR(TileAggregator::new),
-        CENTRIFUGE(TileCentrifuge::new),
-        ETCHER(TileEtcher::new);
+        AGGREGATOR(0, TileAggregator::new),
+        CENTRIFUGE(1, TileCentrifuge::new),
+        ETCHER(2, TileEtcher::new),
+        ENERGIZER(5, TileEnergizer::new);
 
         private static final Type[] VALUES = values();
 
+        private final int meta;
         private final Supplier<TileProcessor> factory;
 
-        Type(final Supplier<TileProcessor> factory) {
+        Type(final int meta, final Supplier<TileProcessor> factory) {
+            this.meta = meta;
             this.factory = factory;
+        }
+
+        public int getMeta() {
+            return this.meta;
         }
 
         @Override
@@ -83,8 +91,16 @@ public final class BlockMachine extends Block {
             return LazyAE2Config.instance().isEnabled(this.getName());
         }
 
+        /**
+         * A metadata no machine claims - one of this mod's own, not written yet - reads as the first.
+         */
         public static Type of(final int meta) {
-            return meta >= 0 && meta < VALUES.length ? VALUES[meta] : AGGREGATOR;
+            for (final Type type : VALUES) {
+                if (type.meta == meta) {
+                    return type;
+                }
+            }
+            return AGGREGATOR;
         }
 
         public static Type[] all() {
@@ -114,7 +130,7 @@ public final class BlockMachine extends Block {
 
     @Override
     public int getMetaFromState(final IBlockState state) {
-        return state.getValue(TYPE).ordinal();
+        return state.getValue(TYPE).getMeta();
     }
 
     @SuppressWarnings("deprecation")
@@ -170,7 +186,7 @@ public final class BlockMachine extends Block {
 
         final TileEntity tile = world.getTileEntity(pos);
         if (tile instanceof TileProcessor) {
-            player.openGui(LazyAE2.instance, state.getValue(TYPE).ordinal(), world, pos.getX(), pos.getY(), pos.getZ());
+            player.openGui(LazyAE2.instance, state.getValue(TYPE).getMeta(), world, pos.getX(), pos.getY(), pos.getZ());
         }
         return true;
     }
@@ -215,7 +231,7 @@ public final class BlockMachine extends Block {
     public void getSubBlocks(final CreativeTabs tab, final NonNullList<ItemStack> items) {
         for (final Type type : Type.all()) {
             if (type.isEnabled()) {
-                items.add(new ItemStack(this, 1, type.ordinal()));
+                items.add(new ItemStack(this, 1, type.getMeta()));
             }
         }
     }

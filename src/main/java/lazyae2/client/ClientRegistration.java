@@ -39,7 +39,7 @@ public final class ClientRegistration {
         if (Registration.machine != null) {
             final Item item = Item.getItemFromBlock(Registration.machine);
             for (final BlockMachine.Type type : BlockMachine.Type.all()) {
-                ModelLoader.setCustomModelResourceLocation(item, type.ordinal(),
+                ModelLoader.setCustomModelResourceLocation(item, type.getMeta(),
                         new ModelResourceLocation(new ResourceLocation(Tags.MOD_ID, "machine_" + type.getName()), "inventory"));
             }
         }
