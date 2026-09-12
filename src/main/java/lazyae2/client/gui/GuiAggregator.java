@@ -13,14 +13,14 @@ import lazyae2.container.ContainerAggregator;
 
 public final class GuiAggregator extends GuiProcessor {
 
-    /** Where the arrow between the inputs and the output sits. */
-    private static final int ARROW_LEFT = 92;
-    private static final int ARROW_TOP = 36;
-    private static final int ARROW_WIDTH = 24;
-    private static final int ARROW_HEIGHT = 14;
+    /** Where the arrow between the slots sits; HEI opens the machine's recipes from the same place. */
+    public static final int ARROW_LEFT = 92;
+    public static final int ARROW_TOP = 36;
+    public static final int ARROW_WIDTH = 24;
+    public static final int ARROW_HEIGHT = 14;
 
     public GuiAggregator(final ContainerAggregator container) {
-        super(container, "aggregator");
+        super(container, "aggregator", ARROW_LEFT, ARROW_TOP, ARROW_WIDTH, ARROW_HEIGHT);
     }
 
     @Override
@@ -28,8 +28,4 @@ public final class GuiAggregator extends GuiProcessor {
         return I18n.format("tile.threng.machine.aggregator.name");
     }
 
-    @Override
-    protected void drawMachine(final int offsetX, final int offsetY) {
-        this.drawProgressArrow(offsetX, offsetY, ARROW_LEFT, ARROW_TOP, ARROW_WIDTH, ARROW_HEIGHT);
-    }
 }

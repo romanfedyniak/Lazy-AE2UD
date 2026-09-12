@@ -20,6 +20,8 @@ import mezz.jei.api.recipe.IRecipeCategoryRegistration;
 import net.minecraft.item.ItemStack;
 
 import lazyae2.block.BlockMachine;
+import lazyae2.client.gui.GuiAggregator;
+import lazyae2.client.gui.GuiCentrifuge;
 import lazyae2.core.Registration;
 import lazyae2.recipe.AggregatorRecipe;
 import lazyae2.recipe.LazyRecipes;
@@ -51,6 +53,8 @@ public final class LazyAE2JeiPlugin implements IModPlugin {
             }
             registry.addRecipes(recipes, AggregatorCategory.UID);
             registry.addRecipeCatalyst(aggregator, AggregatorCategory.UID);
+            registry.addRecipeClickArea(GuiAggregator.class, GuiAggregator.ARROW_LEFT, GuiAggregator.ARROW_TOP,
+                    GuiAggregator.ARROW_WIDTH, GuiAggregator.ARROW_HEIGHT, AggregatorCategory.UID);
         }
 
         final ItemStack centrifuge = machineStack(BlockMachine.Type.CENTRIFUGE);
@@ -61,6 +65,8 @@ public final class LazyAE2JeiPlugin implements IModPlugin {
             }
             registry.addRecipes(recipes, CentrifugeCategory.UID);
             registry.addRecipeCatalyst(centrifuge, CentrifugeCategory.UID);
+            registry.addRecipeClickArea(GuiCentrifuge.class, GuiCentrifuge.ARROW_LEFT, GuiCentrifuge.ARROW_TOP,
+                    GuiCentrifuge.ARROW_WIDTH, GuiCentrifuge.ARROW_HEIGHT, CentrifugeCategory.UID);
         }
     }
 

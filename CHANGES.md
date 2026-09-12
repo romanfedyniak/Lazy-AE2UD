@@ -20,6 +20,10 @@ All notable Lazy AE2 Unofficial Deconstructed changes are grouped by the version
   one per machine, and the old sections are then dropped.
 - Only the English and Ukrainian translations ship. The partial translations into other languages are removed.
 
+- **A machine's arrow opens its recipes in HEI.** Clicking the arrow between the slots shows what that machine
+  makes, and the arrow says so when hovered - in HEI's own words, so it is already translated. Only with a
+  recipe viewer installed.
+
 ### Pulse Centrifuge
 
 - **The Pulse Centrifuge is back**, purifying certus, nether quartz and fluix crystals two at a time, and

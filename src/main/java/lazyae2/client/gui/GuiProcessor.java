@@ -18,6 +18,7 @@ import org.lwjgl.input.Mouse;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
+import net.minecraftforge.fml.common.Loader;
 
 import lazyae2.Tags;
 import lazyae2.container.ContainerProcessor;
@@ -50,6 +51,9 @@ public abstract class GuiProcessor extends AEBaseGui {
     private static final int ENERGY_HEIGHT = 72;
 
     private static final String ENERGY_TEXTURE = "gui/component/energy.png";
+    /** Whether a recipe viewer is there to open, which is the only reason to offer the arrow as a button. */
+    private static final boolean RECIPE_VIEWER = Loader.isModLoaded("jei");
+
     /** Where the filled arrow was moved to in every machine's picture, out of the upgrade column's way. */
     private static final int ARROW_U = 0;
     private static final int ARROW_V = 200;
@@ -59,14 +63,24 @@ public abstract class GuiProcessor extends AEBaseGui {
 
     private final ContainerProcessor container;
     private final String background;
+    private final Rectangle arrow;
     private GuiImgButton autoExport;
 
-    protected GuiProcessor(final ContainerProcessor container, final String background) {
+    protected GuiProcessor(final ContainerProcessor container, final String background, final int arrowLeft,
+            final int arrowTop, final int arrowWidth, final int arrowHeight) {
         super(container);
         this.container = container;
         this.background = "gui/" + background + ".png";
+        this.arrow = new Rectangle(arrowLeft, arrowTop, arrowWidth, arrowHeight);
         this.xSize = 176;
         this.ySize = ContainerProcessor.HEIGHT;
+    }
+
+    /**
+     * Where the arrow sits in the window, which is also where HEI opens the machine's recipes from.
+     */
+    public Rectangle getArrowArea() {
+        return this.arrow;
     }
 
     protected ContainerProcessor getContainer() {
@@ -79,20 +93,14 @@ public abstract class GuiProcessor extends AEBaseGui {
     protected abstract String getScreenTitle();
 
     /**
-     * Whatever the machine draws over its background - a progress bar, usually.
-     */
-    protected void drawMachine(final int offsetX, final int offsetY) {
-    }
-
-    /**
      * The arrow between a machine's slots, filled as far as the work has come. Every machine's picture keeps
      * it out of the way of the upgrade column, at the same place.
      */
-    protected void drawProgressArrow(final int offsetX, final int offsetY, final int left, final int top,
-            final int width, final int height) {
-        final int filled = Math.round(this.container.getWorkFraction() * width);
+    private void drawProgressArrow(final int offsetX, final int offsetY) {
+        final int filled = Math.round(this.container.getWorkFraction() * this.arrow.width);
         if (filled > 0) {
-            this.drawTexturedModalRect(offsetX + left, offsetY + top, ARROW_U, ARROW_V, filled, height);
+            this.drawTexturedModalRect(offsetX + this.arrow.x, offsetY + this.arrow.y, ARROW_U, ARROW_V, filled,
+                    this.arrow.height);
         }
     }
 
@@ -118,7 +126,7 @@ public abstract class GuiProcessor extends AEBaseGui {
         this.drawTexturedModalRect(offsetX + 177, offsetY, 177, 0, 35,
                 14 + this.container.getMachine().getUpgradeInventory().getSlots() * 18);
 
-        this.drawMachine(offsetX, offsetY);
+        this.drawProgressArrow(offsetX, offsetY);
         this.drawEnergyBar(offsetX, offsetY);
         this.drawSides(offsetX, offsetY);
     }
@@ -174,6 +182,12 @@ public abstract class GuiProcessor extends AEBaseGui {
                 && mouseY >= this.guiTop + ENERGY_TOP && mouseY < this.guiTop + ENERGY_TOP + ENERGY_HEIGHT) {
             this.drawHoveringText(Arrays.asList(I18n.format("gui.threng.energy",
                     this.container.getEnergyStored(), this.container.getMaxEnergyStored())), mouseX, mouseY);
+            return;
+        }
+
+        // HEI opens this machine's recipes from the arrow; the line is its own, so it is already translated
+        if (RECIPE_VIEWER && this.arrow.contains(mouseX - this.guiLeft, mouseY - this.guiTop)) {
+            this.drawHoveringText(Arrays.asList(I18n.format("jei.tooltip.show.recipes")), mouseX, mouseY);
         }
     }
 

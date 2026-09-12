@@ -13,14 +13,14 @@ import lazyae2.container.ContainerCentrifuge;
 
 public final class GuiCentrifuge extends GuiProcessor {
 
-    /** Where the arrow between the input and the output sits. */
-    private static final int ARROW_LEFT = 80;
-    private static final int ARROW_TOP = 36;
-    private static final int ARROW_WIDTH = 22;
-    private static final int ARROW_HEIGHT = 14;
+    /** Where the arrow between the slots sits; HEI opens the machine's recipes from the same place. */
+    public static final int ARROW_LEFT = 80;
+    public static final int ARROW_TOP = 36;
+    public static final int ARROW_WIDTH = 22;
+    public static final int ARROW_HEIGHT = 14;
 
     public GuiCentrifuge(final ContainerCentrifuge container) {
-        super(container, "centrifuge");
+        super(container, "centrifuge", ARROW_LEFT, ARROW_TOP, ARROW_WIDTH, ARROW_HEIGHT);
     }
 
     @Override
@@ -28,8 +28,4 @@ public final class GuiCentrifuge extends GuiProcessor {
         return I18n.format("tile.threng.machine.centrifuge.name");
     }
 
-    @Override
-    protected void drawMachine(final int offsetX, final int offsetY) {
-        this.drawProgressArrow(offsetX, offsetY, ARROW_LEFT, ARROW_TOP, ARROW_WIDTH, ARROW_HEIGHT);
-    }
 }
