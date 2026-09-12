@@ -56,7 +56,8 @@ public abstract class GuiProcessor extends AEBaseGui {
 
     /** Where the filled arrow was moved to in every machine's picture, out of the upgrade column's way. */
     private static final int ARROW_U = 0;
-    private static final int ARROW_V = 200;
+    /** The row every machine's picture keeps its moved sprites on. */
+    protected static final int SPRITE_V = 200;
     /** The whole picture the bar is cut from; it is nothing like the 256 square the plain helper assumes. */
     private static final int ENERGY_TEXTURE_WIDTH = 6;
     private static final int ENERGY_TEXTURE_HEIGHT = 72;
@@ -93,13 +94,20 @@ public abstract class GuiProcessor extends AEBaseGui {
     protected abstract String getScreenTitle();
 
     /**
-     * The arrow between a machine's slots, filled as far as the work has come. Every machine's picture keeps
+     * How far along the machine's work is drawn. The arrow alone, unless a machine has more to show.
+     */
+    protected void drawProgress(final int offsetX, final int offsetY) {
+        this.drawProgressArrow(offsetX, offsetY, this.container.getWorkFraction());
+    }
+
+    /**
+     * The arrow between a machine's slots, filled as far as the given fraction. Every machine's picture keeps
      * it out of the way of the upgrade column, at the same place.
      */
-    private void drawProgressArrow(final int offsetX, final int offsetY) {
-        final int filled = Math.round(this.container.getWorkFraction() * this.arrow.width);
+    protected final void drawProgressArrow(final int offsetX, final int offsetY, final float fraction) {
+        final int filled = Math.round(fraction * this.arrow.width);
         if (filled > 0) {
-            this.drawTexturedModalRect(offsetX + this.arrow.x, offsetY + this.arrow.y, ARROW_U, ARROW_V, filled,
+            this.drawTexturedModalRect(offsetX + this.arrow.x, offsetY + this.arrow.y, ARROW_U, SPRITE_V, filled,
                     this.arrow.height);
         }
     }
@@ -126,7 +134,7 @@ public abstract class GuiProcessor extends AEBaseGui {
         this.drawTexturedModalRect(offsetX + 177, offsetY, 177, 0, 35,
                 14 + this.container.getMachine().getUpgradeInventory().getSlots() * 18);
 
-        this.drawProgressArrow(offsetX, offsetY);
+        this.drawProgress(offsetX, offsetY);
         this.drawEnergyBar(offsetX, offsetY);
         this.drawSides(offsetX, offsetY);
     }

@@ -24,6 +24,17 @@ All notable Lazy AE2 Unofficial Deconstructed changes are grouped by the version
   makes, and the arrow says so when hovered - in HEI's own words, so it is already translated. Only with a
   recipe viewer installed.
 
+### ME Circuit Etcher
+
+- **The ME Circuit Etcher is back**, pressing a processor out of gold, purified certus quartz, diamond, a
+  resonating crystal or a 64x speculation core, between redstone above and silicon below. A machine a world
+  already holds keeps its slots, its power, its work and its faces.
+- **Each slot takes only what belongs in it**: the two pressing agents cannot be swapped, and the material
+  cannot be dropped in on top of them. Hoppers and pipes are held to the same rule.
+- It takes the same eight Acceleration Cards in a column of their own, the same auto-export button and the
+  same map of faces as the other machines, and its recipes have a screen in HEI. The presses still close over
+  the first half of the work and the arrow fills over the second, as they always did.
+
 ### Pulse Centrifuge
 
 - **The Pulse Centrifuge is back**, purifying certus, nether quartz and fluix crystals two at a time, and

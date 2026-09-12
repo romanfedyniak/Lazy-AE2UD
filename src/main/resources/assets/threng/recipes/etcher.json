@@ -1,0 +1,50 @@
+{
+  "conditions": [
+    {
+      "type": "threng:enabled",
+      "machine": "etcher"
+    }
+  ],
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "sip",
+    "gcg",
+    "lfe"
+  ],
+  "key": {
+    "i": {
+      "item": "appliedenergistics2:inscriber"
+    },
+    "g": {
+      "item": "appliedenergistics2:quartz_glass"
+    },
+    "c": {
+      "item": "threng:material",
+      "data": 4
+    },
+    "f": {
+      "item": "appliedenergistics2:material",
+      "data": 43
+    },
+    "s": {
+      "item": "appliedenergistics2:material",
+      "data": 19
+    },
+    "p": {
+      "item": "appliedenergistics2:material",
+      "data": 13
+    },
+    "l": {
+      "item": "appliedenergistics2:material",
+      "data": 15
+    },
+    "e": {
+      "item": "appliedenergistics2:material",
+      "data": 14
+    }
+  },
+  "result": {
+    "item": "threng:machine",
+    "data": 2
+  }
+}

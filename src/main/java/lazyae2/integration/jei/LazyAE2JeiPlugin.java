@@ -22,8 +22,10 @@ import net.minecraft.item.ItemStack;
 import lazyae2.block.BlockMachine;
 import lazyae2.client.gui.GuiAggregator;
 import lazyae2.client.gui.GuiCentrifuge;
+import lazyae2.client.gui.GuiEtcher;
 import lazyae2.core.Registration;
 import lazyae2.recipe.AggregatorRecipe;
+import lazyae2.recipe.EtchRecipe;
 import lazyae2.recipe.LazyRecipes;
 import lazyae2.recipe.PurifyRecipe;
 
@@ -40,6 +42,11 @@ public final class LazyAE2JeiPlugin implements IModPlugin {
         final ItemStack centrifuge = machineStack(BlockMachine.Type.CENTRIFUGE);
         if (centrifuge != null) {
             registry.addRecipeCategories(new CentrifugeCategory(registry.getJeiHelpers().getGuiHelper(), centrifuge));
+        }
+
+        final ItemStack etcher = machineStack(BlockMachine.Type.ETCHER);
+        if (etcher != null) {
+            registry.addRecipeCategories(new EtcherCategory(registry.getJeiHelpers().getGuiHelper(), etcher));
         }
     }
 
@@ -67,6 +74,18 @@ public final class LazyAE2JeiPlugin implements IModPlugin {
             registry.addRecipeCatalyst(centrifuge, CentrifugeCategory.UID);
             registry.addRecipeClickArea(GuiCentrifuge.class, GuiCentrifuge.ARROW_LEFT, GuiCentrifuge.ARROW_TOP,
                     GuiCentrifuge.ARROW_WIDTH, GuiCentrifuge.ARROW_HEIGHT, CentrifugeCategory.UID);
+        }
+
+        final ItemStack etcher = machineStack(BlockMachine.Type.ETCHER);
+        if (etcher != null) {
+            final List<MachineRecipe> recipes = new ArrayList<>();
+            for (final EtchRecipe recipe : LazyRecipes.etcher()) {
+                recipes.add(new MachineRecipe(recipe.getInputs(), recipe.getOutput()));
+            }
+            registry.addRecipes(recipes, EtcherCategory.UID);
+            registry.addRecipeCatalyst(etcher, EtcherCategory.UID);
+            registry.addRecipeClickArea(GuiEtcher.class, GuiEtcher.ARROW_LEFT, GuiEtcher.ARROW_TOP,
+                    GuiEtcher.ARROW_WIDTH, GuiEtcher.ARROW_HEIGHT, EtcherCategory.UID);
         }
     }
 

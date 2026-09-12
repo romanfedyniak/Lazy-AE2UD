@@ -8,11 +8,18 @@
       "model": "threng:machine_centrifuge",
       "y": 90
     },
+    "active=false,facing=east,type=etcher": {
+      "model": "threng:machine_etcher",
+      "y": 90
+    },
     "active=false,facing=north,type=aggregator": {
       "model": "threng:machine_aggregator"
     },
     "active=false,facing=north,type=centrifuge": {
       "model": "threng:machine_centrifuge"
+    },
+    "active=false,facing=north,type=etcher": {
+      "model": "threng:machine_etcher"
     },
     "active=false,facing=south,type=aggregator": {
       "model": "threng:machine_aggregator",
@@ -20,6 +27,10 @@
     },
     "active=false,facing=south,type=centrifuge": {
       "model": "threng:machine_centrifuge",
+      "y": 180
+    },
+    "active=false,facing=south,type=etcher": {
+      "model": "threng:machine_etcher",
       "y": 180
     },
     "active=false,facing=west,type=aggregator": {
@@ -30,6 +41,10 @@
       "model": "threng:machine_centrifuge",
       "y": 270
     },
+    "active=false,facing=west,type=etcher": {
+      "model": "threng:machine_etcher",
+      "y": 270
+    },
     "active=true,facing=east,type=aggregator": {
       "model": "threng:machine_aggregator_active",
       "y": 90
@@ -38,11 +53,18 @@
       "model": "threng:machine_centrifuge_active",
       "y": 90
     },
+    "active=true,facing=east,type=etcher": {
+      "model": "threng:machine_etcher_active",
+      "y": 90
+    },
     "active=true,facing=north,type=aggregator": {
       "model": "threng:machine_aggregator_active"
     },
     "active=true,facing=north,type=centrifuge": {
       "model": "threng:machine_centrifuge_active"
+    },
+    "active=true,facing=north,type=etcher": {
+      "model": "threng:machine_etcher_active"
     },
     "active=true,facing=south,type=aggregator": {
       "model": "threng:machine_aggregator_active",
@@ -52,12 +74,20 @@
       "model": "threng:machine_centrifuge_active",
       "y": 180
     },
+    "active=true,facing=south,type=etcher": {
+      "model": "threng:machine_etcher_active",
+      "y": 180
+    },
     "active=true,facing=west,type=aggregator": {
       "model": "threng:machine_aggregator_active",
       "y": 270
     },
     "active=true,facing=west,type=centrifuge": {
       "model": "threng:machine_centrifuge_active",
+      "y": 270
+    },
+    "active=true,facing=west,type=etcher": {
+      "model": "threng:machine_etcher_active",
       "y": 270
     }
   }

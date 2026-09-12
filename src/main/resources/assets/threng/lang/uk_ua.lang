@@ -18,6 +18,7 @@ item.threng.material.spec_processor.name=Спекулятивний процес
 
 tile.threng.machine.aggregator.name=Мінливий агрегатор
 tile.threng.machine.centrifuge.name=Імпульсна центрифуга
+tile.threng.machine.etcher.name=Травильник схем ME
 
 gui.threng.energy=%s / %s FE
 

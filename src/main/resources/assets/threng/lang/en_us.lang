@@ -18,6 +18,7 @@ item.threng.material.spec_processor.name=Speculative Processor
 
 tile.threng.machine.aggregator.name=Fluix Aggregator
 tile.threng.machine.centrifuge.name=Pulse Centrifuge
+tile.threng.machine.etcher.name=ME Circuit Etcher
 
 gui.threng.energy=%s / %s FE
 

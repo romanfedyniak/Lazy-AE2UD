@@ -30,6 +30,7 @@ public final class LazyRecipes {
 
     private static final List<AggregatorRecipe> AGGREGATOR = new ArrayList<>();
     private static final List<PurifyRecipe> CENTRIFUGE = new ArrayList<>();
+    private static final List<EtchRecipe> ETCHER = new ArrayList<>();
 
     private LazyRecipes() {
     }
@@ -40,6 +41,10 @@ public final class LazyRecipes {
 
     public static List<PurifyRecipe> centrifuge() {
         return CENTRIFUGE;
+    }
+
+    public static List<EtchRecipe> etcher() {
+        return ETCHER;
     }
 
     @Nullable
@@ -60,6 +65,28 @@ public final class LazyRecipes {
             }
         }
         return null;
+    }
+
+    @Nullable
+    public static EtchRecipe findEtcher(final List<ItemStack> slots) {
+        for (final EtchRecipe recipe : ETCHER) {
+            if (recipe.matches(slots)) {
+                return recipe;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Whether any etching recipe reads that item out of that slot, which is what the slot lets in.
+     */
+    public static boolean isEtchable(final int slot, final ItemStack stack) {
+        for (final EtchRecipe recipe : ETCHER) {
+            if (recipe.accepts(slot, stack)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static void registerDefaults() {
@@ -85,6 +112,25 @@ public final class LazyRecipes {
                                 ItemMaterial.Type.SPEC_CORE.newStack(1))));
 
         registerCentrifuge(materials);
+        registerEtcher(materials);
+    }
+
+    /**
+     * The processors the etcher prints, each pressed between redstone and silicon.
+     */
+    private static void registerEtcher(final IMaterials materials) {
+        etch(ore("ingotGold"), materials.logicProcessor());
+        etch(ore("crystalPureCertusQuartz"), materials.calcProcessor());
+        etch(ore("gemDiamond"), materials.engProcessor());
+        ETCHER.add(new EtchRecipe(ore("dustRedstone"), ore("itemSilicon"),
+                exact(ItemMaterial.Type.SPACE_GEM.newStack(1)), ItemMaterial.Type.PARALLEL_PROCESSOR.newStack(1)));
+        ETCHER.add(new EtchRecipe(ore("dustRedstone"), ore("itemSilicon"),
+                exact(ItemMaterial.Type.SPEC_CORE_64.newStack(1)), ItemMaterial.Type.SPEC_PROCESSOR.newStack(1)));
+    }
+
+    private static void etch(final Ingredient material, final IItemDefinition output) {
+        output.maybeStack(1).ifPresent(made ->
+                ETCHER.add(new EtchRecipe(ore("dustRedstone"), ore("itemSilicon"), material, made)));
     }
 
     /**

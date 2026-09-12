@@ -38,6 +38,7 @@ import lazyae2.core.LazyAE2Config;
 import lazyae2.core.LazyAE2Tab;
 import lazyae2.tile.TileAggregator;
 import lazyae2.tile.TileCentrifuge;
+import lazyae2.tile.TileEtcher;
 import lazyae2.tile.TileProcessor;
 import appeng.util.Platform;
 
@@ -58,7 +59,8 @@ public final class BlockMachine extends Block {
     public enum Type implements IStringSerializable {
 
         AGGREGATOR(TileAggregator::new),
-        CENTRIFUGE(TileCentrifuge::new);
+        CENTRIFUGE(TileCentrifuge::new),
+        ETCHER(TileEtcher::new);
 
         private static final Type[] VALUES = values();
 
