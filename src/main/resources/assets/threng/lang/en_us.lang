@@ -1,0 +1,17 @@
+itemGroup.threng=Lazy AE2
+
+item.threng.material.fluix_steel.name=Fluix Steel Ingot
+item.threng.material.steel_process_dust.name=Carbonic Fluix Complex
+item.threng.material.steel_process_ingot.name=Fluix-Plated Iron Ingot
+item.threng.material.coal_dust.name=Coal Dust
+item.threng.material.machine_core.name=Fluix Logic Unit
+item.threng.material.space_gem.name=Resonating Crystal
+item.threng.material.parallel_processor.name=Massively Parallel Processor
+item.threng.material.spec_core.name=Speculation Core (1x)
+item.threng.material.spec_core_2.name=Speculation Core (2x)
+item.threng.material.spec_core_4.name=Speculation Core (4x)
+item.threng.material.spec_core_8.name=Speculation Core (8x)
+item.threng.material.spec_core_16.name=Speculation Core (16x)
+item.threng.material.spec_core_32.name=Speculation Core (32x)
+item.threng.material.spec_core_64.name=Speculation Core (64x)
+item.threng.material.spec_processor.name=Speculative Processor

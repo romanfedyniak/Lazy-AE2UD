@@ -1,0 +1,17 @@
+itemGroup.threng=Lazy AE2
+
+item.threng.material.fluix_steel.name=Злиток мінливої сталі
+item.threng.material.steel_process_dust.name=Вуглецево-мінлива сполука
+item.threng.material.steel_process_ingot.name=Залізний злиток у мінливому покритті
+item.threng.material.coal_dust.name=Вугільний пил
+item.threng.material.machine_core.name=Мінливий логічний блок
+item.threng.material.space_gem.name=Резонансний кристал
+item.threng.material.parallel_processor.name=Масивно-паралельний процесор
+item.threng.material.spec_core.name=Ядро спекуляції (1x)
+item.threng.material.spec_core_2.name=Ядро спекуляції (2x)
+item.threng.material.spec_core_4.name=Ядро спекуляції (4x)
+item.threng.material.spec_core_8.name=Ядро спекуляції (8x)
+item.threng.material.spec_core_16.name=Ядро спекуляції (16x)
+item.threng.material.spec_core_32.name=Ядро спекуляції (32x)
+item.threng.material.spec_core_64.name=Ядро спекуляції (64x)
+item.threng.material.spec_processor.name=Спекулятивний процесор

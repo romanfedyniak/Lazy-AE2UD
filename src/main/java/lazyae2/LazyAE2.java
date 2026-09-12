@@ -11,9 +11,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 import lazyae2.core.LazyAE2Config;
+import lazyae2.core.Registration;
 
 @Mod(modid = Tags.MOD_ID, name = Tags.MOD_NAME, version = Tags.VERSION, dependencies = LazyAE2.DEPENDENCIES)
 public final class LazyAE2 {
@@ -29,5 +31,11 @@ public final class LazyAE2 {
     @Mod.EventHandler
     public void preInit(final FMLPreInitializationEvent event) {
         LazyAE2Config.init(event.getModConfigurationDirectory());
+    }
+
+    @Mod.EventHandler
+    public void init(final FMLInitializationEvent event) {
+        Registration.registerOres();
+        Registration.registerRecipes();
     }
 }

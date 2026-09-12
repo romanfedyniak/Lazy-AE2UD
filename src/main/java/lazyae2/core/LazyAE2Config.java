@@ -24,6 +24,7 @@ import net.minecraftforge.common.config.Property;
  */
 public final class LazyAE2Config extends Configuration {
 
+    public static final String MATERIALS = "materials";
     public static final String AGGREGATOR = "aggregator";
     public static final String CENTRIFUGE = "centrifuge";
     public static final String ETCHER = "etcher";
@@ -38,6 +39,8 @@ public final class LazyAE2Config extends Configuration {
     private static final String LEGACY_ASSEMBLER = "general.massassembler";
 
     private static LazyAE2Config instance;
+
+    private final boolean coalDust;
 
     private final Processor aggregator;
     private final Processor centrifuge;
@@ -63,6 +66,11 @@ public final class LazyAE2Config extends Configuration {
 
     private LazyAE2Config(final File file) {
         super(file);
+
+        this.coalDust = this.get(MATERIALS, "coalDust", true,
+                "Whether this mod's Coal Dust is offered. Switched off, it is hidden and nothing of ours is "
+                        + "registered as dustCoal, so coal dust comes from another mod instead - and with no such "
+                        + "mod installed there is no way to make fluix steel.").getBoolean();
 
         this.aggregator = this.readProcessor(AGGREGATOR, "aggregator", "Fluix Aggregator", true);
         this.centrifuge = this.readProcessor(CENTRIFUGE, "centrifuge", "Pulse Centrifuge", true);
@@ -213,6 +221,10 @@ public final class LazyAE2Config extends Configuration {
             default:
                 return false;
         }
+    }
+
+    public boolean isCoalDustEnabled() {
+        return this.coalDust;
     }
 
     public Processor getAggregator() {
