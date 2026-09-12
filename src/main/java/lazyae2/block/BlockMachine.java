@@ -40,6 +40,7 @@ import lazyae2.core.Registration;
 import lazyae2.tile.TileAggregator;
 import lazyae2.tile.TileCentrifuge;
 import lazyae2.tile.TileEnergizer;
+import lazyae2.tile.TileLevelMaintainer;
 import lazyae2.tile.TilePau;
 import lazyae2.tile.TileEtcher;
 import lazyae2.tile.IMachineTile;
@@ -65,20 +66,28 @@ public final class BlockMachine extends Block {
      */
     public enum Type implements IStringSerializable {
 
-        AGGREGATOR(0, TileAggregator::new),
-        CENTRIFUGE(1, TileCentrifuge::new),
-        ETCHER(2, TileEtcher::new),
-        PAU(3, TilePau::new),
-        ENERGIZER(5, TileEnergizer::new);
+        AGGREGATOR(0, LazyAE2Config.AGGREGATOR, TileAggregator::new),
+        CENTRIFUGE(1, LazyAE2Config.CENTRIFUGE, TileCentrifuge::new),
+        ETCHER(2, LazyAE2Config.ETCHER, TileEtcher::new),
+        PAU(3, LazyAE2Config.PAU, TilePau::new),
+        LEVEL_MAINTAINER(4, LazyAE2Config.LEVEL_MAINTAINER, TileLevelMaintainer::new),
+        ENERGIZER(5, LazyAE2Config.ENERGIZER, TileEnergizer::new);
 
         private static final Type[] VALUES = values();
 
         private final int meta;
+        /** The section this machine is tuned in, which is not always what the block is called. */
+        private final String config;
         private final Supplier<AEBaseInvTile> factory;
 
-        Type(final int meta, final Supplier<AEBaseInvTile> factory) {
+        Type(final int meta, final String config, final Supplier<AEBaseInvTile> factory) {
             this.meta = meta;
+            this.config = config;
             this.factory = factory;
+        }
+
+        public String getConfigKey() {
+            return this.config;
         }
 
         public int getMeta() {
@@ -103,7 +112,7 @@ public final class BlockMachine extends Block {
         }
 
         public boolean isEnabled() {
-            return LazyAE2Config.instance().isEnabled(this.getName());
+            return LazyAE2Config.instance().isEnabled(this.config);
         }
 
         /**

@@ -22,5 +22,6 @@ public final class ModNetwork {
 
     public static void init() {
         CHANNEL.registerMessage(PacketSideConfig.Handler.class, PacketSideConfig.class, 0, Side.SERVER);
+        CHANNEL.registerMessage(PacketMaintainerRow.Handler.class, PacketMaintainerRow.class, 1, Side.SERVER);
     }
 }

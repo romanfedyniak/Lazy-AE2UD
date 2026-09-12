@@ -15,6 +15,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 import lazyae2.container.IMachineContainer;
+import lazyae2.tile.ISidedMachineTile;
 import lazyae2.util.IoMode;
 import lazyae2.util.RelativeSide;
 
@@ -57,12 +58,14 @@ public final class PacketSideConfig implements IMessage {
                 }
                 final IMachineContainer container = (IMachineContainer) player.openContainer;
                 final RelativeSide[] sides = RelativeSide.all();
-                if (message.side < 0 || message.side >= sides.length) {
+                if (message.side < 0 || message.side >= sides.length
+                        || !(container.getMachine() instanceof ISidedMachineTile)) {
                     return;
                 }
-                if (container.getMachine().getSides().set(sides[message.side], IoMode.of(message.mode))) {
-                    container.getMachine().saveChanges();
-                    container.getMachine().markForUpdate();
+                final ISidedMachineTile machine = (ISidedMachineTile) container.getMachine();
+                if (machine.getSides().set(sides[message.side], IoMode.of(message.mode))) {
+                    machine.saveChanges();
+                    machine.markForUpdate();
                 }
             });
             return null;

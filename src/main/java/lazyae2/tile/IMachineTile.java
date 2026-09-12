@@ -9,13 +9,12 @@ package lazyae2.tile;
 
 import net.minecraft.util.EnumFacing;
 
-import lazyae2.util.SideConfig;
 import appeng.helpers.ICustomNameObject;
 
 /**
  * What every machine of this mod's block has, whether it runs on Forge Energy of its own or sits on an ME
- * network: a face it is turned towards, a lit look while it is doing something, and a map of which faces let
- * items through.
+ * network: a face it is turned towards, a lit look while it is doing something, and a name a player may give
+ * it. A machine that moves items has a map of faces too; see {@link ISidedMachineTile}.
  */
 public interface IMachineTile extends ICustomNameObject {
 
@@ -27,8 +26,6 @@ public interface IMachineTile extends ICustomNameObject {
      * Whether the block wears its lit texture.
      */
     boolean isWorking();
-
-    SideConfig getSides();
 
     void saveChanges();
 

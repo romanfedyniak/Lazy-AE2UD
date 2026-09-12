@@ -84,7 +84,7 @@ import appeng.util.inv.WrapperFilteredItemHandler;
  * pushing, at the rate its co-processors allow.
  */
 public final class TilePau extends AENetworkInvTile
-        implements IMachineTile, IGridTickable, ICraftingProvider, ICraftingMedium, IPatternContainer,
+        implements ISidedMachineTile, IGridTickable, ICraftingProvider, ICraftingMedium, IPatternContainer,
         ICustomIconObject, ISegmentedInventory {
 
     /** Nine to a row, as in an interface: the row it is born with, plus one for every expansion card. */
@@ -536,6 +536,21 @@ public final class TilePau extends AENetworkInvTile
 
     @MENetworkEventSubscribe
     public void onChannelsChanged(final MENetworkChannelsChanged event) {
+        this.updateActive();
+    }
+
+    /**
+     * The look of the block follows the network, and the events that carry that only fire once something
+     * changes - so the state is also read the moment the machine joins a grid.
+     */
+    @Override
+    public void onReady() {
+        super.onReady();
+        this.updateActive();
+    }
+
+    @Override
+    public void gridChanged() {
         this.updateActive();
     }
 

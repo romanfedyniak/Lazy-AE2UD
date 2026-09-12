@@ -21,12 +21,18 @@ tile.threng.machine.centrifuge.name=Pulse Centrifuge
 tile.threng.machine.etcher.name=ME Circuit Etcher
 tile.threng.machine.energizer.name=Crystal Energizer
 tile.threng.machine.pau.name=Preemptive Assembly Unit
+tile.threng.machine.level_maintainer.name=ME Level Maintainer
 
 gui.threng.energy=%s / %s FE
 gui.threng.energy.cost=%s FE
 
 gui.threng.pau.toMachine=To machine
 gui.threng.pau.fromMachine=From machine
+gui.threng.maintainer.batch=Amount to order at a time
+gui.threng.maintainer.keeping=Keeping %s
+gui.threng.maintainer.on=On - click to switch this row off
+gui.threng.maintainer.off=Off - click to switch this row on
+gui.threng.maintainer.wheel=Scroll on the slot to set how much to keep
 
 gui.threng.side.front=Front
 gui.threng.side.back=Back

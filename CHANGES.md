@@ -29,6 +29,30 @@ All notable Lazy AE2 Unofficial Deconstructed changes are grouped by the version
   makes, and the arrow says so when hovered - in HEI's own words, so it is already translated. Only with a
   recipe viewer installed.
 
+### ME Level Maintainer
+
+- **The ME Level Maintainer is back**, with five rows: each names something the network should always have
+  some of, how much to keep, and how much to order at a time. It watches the network rather than counting for
+  itself, so it only acts when an amount actually moves, and it slows down while there is nothing to do.
+- **A row stands for anything the network can hold**, not only an item. A fluid, or anything an addon
+  registers a key type for, is kept to a level the same way - drag it into the row from a recipe screen or
+  drop it in from the network.
+- **No result slots.** The old mod caught what a craft made in five slots of its own and put it into the
+  network from there, which meant a full slot could stall the row and the items could be lost on a break. What
+  the job makes now stays in network storage, which is where it was wanted. Whatever the old slots still held
+  is handed to the network the first time the machine ticks.
+- **A whole batch is ordered at a time.** The old mod ordered exactly what was missing, so taking three items
+  out of the network started a crafting job for three. A row now orders its batch the moment the level drops
+  below what it keeps, and the level may end up a little over.
+- **A row can be switched off** with the button beside it, and keeps everything it says while it is: what to
+  keep, how much to order. Whatever it had ordered is called off with it.
+- **The slot itself says how much to keep**, drawn on it in that thing's own units - buckets for a fluid -
+  the way a level emitter wears its threshold, and the exact number is in the row's tooltip, since a slot has
+  room for a rounded one only. The wheel over the slot steps it and a middle click types it - the same
+  gestures, and the same steps, that every filter slot in AE2 answers to. The field beside it is that step, which is also how much the row orders at
+  once; the tick beside the field lights up as soon as the number differs from the machine's, and saves it -
+  as does Enter.
+
 ### Preemptive Assembly Unit
 
 - **The Preemptive Assembly Unit is back.** It offers the network the processing patterns it holds and hands

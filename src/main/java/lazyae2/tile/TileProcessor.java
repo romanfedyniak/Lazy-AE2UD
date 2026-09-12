@@ -48,7 +48,7 @@ import appeng.util.IConfigManagerHost;
  * arrives as Forge Energy through any face, and items move through whichever faces the player opened.
  */
 public abstract class TileProcessor extends AEBaseInvTile
-        implements ITickable, IMachineTile, IConfigManagerHost, IUpgradeableHost {
+        implements ITickable, ISidedMachineTile, IConfigManagerHost, IUpgradeableHost {
 
     /** How often the machine hands what it made to the inventory beside it, in ticks. */
     private static final int EXPORT_INTERVAL = 16;

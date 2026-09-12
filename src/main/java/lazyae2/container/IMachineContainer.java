@@ -8,6 +8,7 @@
 package lazyae2.container;
 
 import lazyae2.tile.IMachineTile;
+import lazyae2.tile.ISidedMachineTile;
 import lazyae2.util.IoMode;
 import lazyae2.util.RelativeSide;
 
@@ -19,7 +20,12 @@ public interface IMachineContainer {
 
     IMachineTile getMachine();
 
+    /**
+     * @return what that face lets through, or nothing at all for a machine with no faces to speak of
+     */
     default IoMode getFace(final RelativeSide side) {
-        return this.getMachine().getSides().get(side);
+        final IMachineTile machine = this.getMachine();
+        return machine instanceof ISidedMachineTile ? ((ISidedMachineTile) machine).getSides().get(side)
+                : IoMode.NONE;
     }
 }

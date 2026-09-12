@@ -16,6 +16,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 import lazyae2.core.LazyAE2Config;
+import lazyae2.core.ModGuiBridges;
 import lazyae2.core.ModGuiHandler;
 import lazyae2.core.Registration;
 import lazyae2.network.ModNetwork;
@@ -41,6 +42,7 @@ public final class LazyAE2 {
     @Mod.EventHandler
     public void init(final FMLInitializationEvent event) {
         NetworkRegistry.INSTANCE.registerGuiHandler(this, new ModGuiHandler());
+        ModGuiBridges.init();
         Registration.registerOres();
         Registration.registerUpgrades();
         Registration.registerRecipes();

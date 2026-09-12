@@ -21,12 +21,18 @@ tile.threng.machine.centrifuge.name=Імпульсна центрифуга
 tile.threng.machine.etcher.name=Травильник схем ME
 tile.threng.machine.energizer.name=Кристалічний енергетик
 tile.threng.machine.pau.name=Блок попередньої збірки
+tile.threng.machine.level_maintainer.name=Підтримка рівня ME
 
 gui.threng.energy=%s / %s FE
 gui.threng.energy.cost=%s FE
 
 gui.threng.pau.toMachine=В машину
 gui.threng.pau.fromMachine=З машини
+gui.threng.maintainer.batch=Скільки замовляти за раз
+gui.threng.maintainer.keeping=Тримає %s
+gui.threng.maintainer.on=Увімкнено - клік вимикає рядок
+gui.threng.maintainer.off=Вимкнено - клік вмикає рядок
+gui.threng.maintainer.wheel=Коліщатком на слоті - скільки тримати
 
 gui.threng.side.front=Спереду
 gui.threng.side.back=Ззаду
