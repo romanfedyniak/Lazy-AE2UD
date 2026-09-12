@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "active=false,facing=east,type=aggregator": {
+      "model": "threng:machine_aggregator",
+      "y": 90
+    },
+    "active=false,facing=north,type=aggregator": {
+      "model": "threng:machine_aggregator"
+    },
+    "active=false,facing=south,type=aggregator": {
+      "model": "threng:machine_aggregator",
+      "y": 180
+    },
+    "active=false,facing=west,type=aggregator": {
+      "model": "threng:machine_aggregator",
+      "y": 270
+    },
+    "active=true,facing=east,type=aggregator": {
+      "model": "threng:machine_aggregator_active",
+      "y": 90
+    },
+    "active=true,facing=north,type=aggregator": {
+      "model": "threng:machine_aggregator_active"
+    },
+    "active=true,facing=south,type=aggregator": {
+      "model": "threng:machine_aggregator_active",
+      "y": 180
+    },
+    "active=true,facing=west,type=aggregator": {
+      "model": "threng:machine_aggregator_active",
+      "y": 270
+    }
+  }
+}

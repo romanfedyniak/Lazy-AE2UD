@@ -15,3 +15,19 @@ item.threng.material.spec_core_16.name=Speculation Core (16x)
 item.threng.material.spec_core_32.name=Speculation Core (32x)
 item.threng.material.spec_core_64.name=Speculation Core (64x)
 item.threng.material.spec_processor.name=Speculative Processor
+
+tile.threng.machine.aggregator.name=Fluix Aggregator
+
+gui.threng.energy=%s / %s FE
+
+gui.threng.side.front=Front
+gui.threng.side.back=Back
+gui.threng.side.up=Top
+gui.threng.side.down=Bottom
+gui.threng.side.left=Left
+gui.threng.side.right=Right
+
+gui.threng.io.none=Closed
+gui.threng.io.input=Takes items in
+gui.threng.io.output=Lets items out
+gui.threng.io.omni=Both ways

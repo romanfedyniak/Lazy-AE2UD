@@ -15,3 +15,19 @@ item.threng.material.spec_core_16.name=Ядро спекуляції (16x)
 item.threng.material.spec_core_32.name=Ядро спекуляції (32x)
 item.threng.material.spec_core_64.name=Ядро спекуляції (64x)
 item.threng.material.spec_processor.name=Спекулятивний процесор
+
+tile.threng.machine.aggregator.name=Мінливий агрегатор
+
+gui.threng.energy=%s / %s FE
+
+gui.threng.side.front=Спереду
+gui.threng.side.back=Ззаду
+gui.threng.side.up=Зверху
+gui.threng.side.down=Знизу
+gui.threng.side.left=Зліва
+gui.threng.side.right=Справа
+
+gui.threng.io.none=Закрито
+gui.threng.io.input=Приймає предмети
+gui.threng.io.output=Віддає предмети
+gui.threng.io.omni=В обидва боки

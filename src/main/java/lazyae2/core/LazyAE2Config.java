@@ -8,6 +8,8 @@
 package lazyae2.core;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.annotation.Nullable;
 
@@ -41,6 +43,10 @@ public final class LazyAE2Config extends Configuration {
     private static LazyAE2Config instance;
 
     private final boolean coalDust;
+
+    /** How many Acceleration Cards each machine takes, and the most upgrade points it counts. */
+    private final Map<String, Integer> speedCards = new HashMap<>();
+    private final Map<String, Integer> speedPoints = new HashMap<>();
 
     private final Processor aggregator;
     private final Processor centrifuge;
@@ -121,6 +127,15 @@ public final class LazyAE2Config extends Configuration {
         this.massAssemblerWorkPerTickUpgrade = Math.max(1, this.get(MASS_ASSEMBLER, "workPerTickUpgrade",
                 this.legacyInt(LEGACY_ASSEMBLER, "workPerTickUpgrade", 3),
                 "How much work each co-processor adds to a tick.").getInt());
+
+        this.setCategoryComment("upgrades.cards", "How many cards of a kind fit in each machine. Zero refuses "
+                + "the card there outright.");
+        this.setCategoryComment("upgrades.points", "The most points of an upgrade a machine counts, however many "
+                + "its cards carry. Zero lets it take them all.");
+        for (final String machine : new String[] { AGGREGATOR, CENTRIFUGE, ETCHER, ENERGIZER }) {
+            this.speedCards.put(machine, Math.max(0, this.get("upgrades.cards", "speed." + machine, 8).getInt()));
+            this.speedPoints.put(machine, Math.max(0, this.get("upgrades.points", "speed." + machine, 0).getInt()));
+        }
 
         this.dropLegacy();
     }
@@ -221,6 +236,14 @@ public final class LazyAE2Config extends Configuration {
             default:
                 return false;
         }
+    }
+
+    public int getSpeedCards(final String machine) {
+        return this.speedCards.getOrDefault(machine, 0);
+    }
+
+    public int getSpeedPoints(final String machine) {
+        return this.speedPoints.getOrDefault(machine, 0);
     }
 
     public boolean isCoalDustEnabled() {

@@ -11,20 +11,29 @@ import java.util.Collections;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.block.Block;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 
 import lazyae2.Tags;
+import lazyae2.block.BlockMachine;
+import lazyae2.item.ItemBlockMachine;
 import lazyae2.item.ItemMaterial;
+import lazyae2.tile.TileAggregator;
 import appeng.api.AEApi;
 import appeng.api.features.IInscriberRegistry;
 import appeng.api.features.InscriberProcessType;
+import appeng.api.upgrades.CardTrait;
+import appeng.api.upgrades.CardTraits;
+import appeng.api.upgrades.IUpgradeRegistry;
 
 /**
  * The blocks and items of every machine the config leaves switched on. A machine switched off is never
@@ -34,11 +43,25 @@ import appeng.api.features.InscriberProcessType;
 public final class Registration {
 
     public static final String MATERIAL = "material";
+    public static final String MACHINE = "machine";
 
     @Nullable
     public static ItemMaterial material;
+    @Nullable
+    public static BlockMachine machine;
 
     private Registration() {
+    }
+
+    @SubscribeEvent
+    public static void registerBlocks(final RegistryEvent.Register<Block> event) {
+        machine = new BlockMachine();
+        machine.setRegistryName(Tags.MOD_ID, MACHINE);
+        machine.setTranslationKey(Tags.MOD_ID + "." + MACHINE);
+        event.getRegistry().register(machine);
+
+        // The names the old mod's library gave its tiles, so a machine it placed loads into this one
+        GameRegistry.registerTileEntity(TileAggregator.class, new ResourceLocation(Tags.MOD_ID, "TileAggregator"));
     }
 
     @SubscribeEvent
@@ -48,6 +71,39 @@ public final class Registration {
         material.setRegistryName(Tags.MOD_ID, MATERIAL);
         material.setTranslationKey(Tags.MOD_ID + "." + MATERIAL);
         event.getRegistry().register(material);
+
+        if (machine != null) {
+            event.getRegistry().register(new ItemBlockMachine(machine).setRegistryName(machine.getRegistryName()));
+        }
+    }
+
+    /**
+     * Which cards fit which machine. Nothing goes in a machine until it is named here.
+     */
+    public static void registerUpgrades() {
+        if (machine == null) {
+            return;
+        }
+        final IUpgradeRegistry upgrades = AEApi.instance().registries().upgrades();
+        final LazyAE2Config config = LazyAE2Config.instance();
+
+        for (final BlockMachine.Type type : BlockMachine.Type.all()) {
+            if (!type.isEnabled()) {
+                continue;
+            }
+            support(upgrades, CardTraits.SPEED, new ItemStack(machine, 1, type.ordinal()),
+                    config.getSpeedCards(type.getName()), config.getSpeedPoints(type.getName()));
+        }
+    }
+
+    private static void support(final IUpgradeRegistry upgrades, final CardTrait trait, final ItemStack host,
+            final int cards, final int points) {
+        if (cards > 0) {
+            upgrades.addTraitSupport(trait, host, cards);
+        }
+        if (points > 0) {
+            upgrades.setTraitLimit(trait, host, points);
+        }
     }
 
     public static void registerOres() {
