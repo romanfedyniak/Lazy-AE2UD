@@ -1,19 +1,25 @@
-# JetBrains stuff
-/.idea/
+# eclipse
+bin
+*.launch
+.settings
+.metadata
+.classpath
+.project
+
+# idea
+out
 *.ipr
+*.iws
 *.iml
+.idea
 
-# Compilation output
-/target/
-/build/
-/out/
-/classes/
+# gradle
+build
+.gradle
 
-# Gradle stuff
-/.gradle/
-gradle.properties
+# kate
+*.kate-swp
 
-# MinecraftForge
-/eclipse/
-/run/
-/libs/
+# other
+eclipse
+run
