@@ -16,6 +16,8 @@ item.threng.material.spec_core_32.name=Speculation Core (32x)
 item.threng.material.spec_core_64.name=Speculation Core (64x)
 item.threng.material.spec_processor.name=Speculative Processor
 
+item.threng.part.level_maintainer_terminal.name=ME Level Maintainer Terminal
+
 tile.threng.machine.aggregator.name=Fluix Aggregator
 tile.threng.machine.centrifuge.name=Pulse Centrifuge
 tile.threng.machine.etcher.name=ME Circuit Etcher
@@ -33,6 +35,12 @@ gui.threng.maintainer.keeping=Keeping %s
 gui.threng.maintainer.on=On - click to switch this row off
 gui.threng.maintainer.off=Off - click to switch this row on
 gui.threng.maintainer.wheel=Scroll on the slot to set how much to keep
+gui.threng.maintainer_terminal.name=ME Level Maintainer Terminal
+gui.threng.maintainer.type=Click to type another number
+gui.threng.maintainer.highlight=Show where this maintainer is
+gui.threng.maintainer.highlighted=The maintainer is marked at X: %s Y: %s Z: %s
+gui.threng.maintainer.otherDimension=That maintainer is in another world (%s), where nothing can be marked from here
+gui.threng.wirelessMode.levelMaintainer=Level Maintainer
 
 gui.threng.side.front=Front
 gui.threng.side.back=Back

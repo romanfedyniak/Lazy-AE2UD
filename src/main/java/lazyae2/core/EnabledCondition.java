@@ -17,12 +17,17 @@ import net.minecraftforge.common.crafting.JsonContext;
 
 /**
  * {@code threng:enabled}: true while the machine named by {@code machine} is switched on in the config.
+ * {@code levelMaintainerTerminal} is not a machine but is named the same way, being a thing the config
+ * takes away on its own.
  */
 public final class EnabledCondition implements IConditionFactory {
 
     @Override
     public BooleanSupplier parse(final JsonContext context, final JsonObject json) {
-        final boolean enabled = LazyAE2Config.instance().isEnabled(JsonUtils.getString(json, "machine"));
+        final String machine = JsonUtils.getString(json, "machine");
+        final boolean enabled = "levelMaintainerTerminal".equals(machine)
+                ? LazyAE2Config.instance().isLevelMaintainerTerminalEnabled()
+                : LazyAE2Config.instance().isEnabled(machine);
         return () -> enabled;
     }
 }

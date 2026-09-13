@@ -89,7 +89,7 @@ public final class GuiLevelMaintainer extends AEBaseGui implements IJEIGhostIngr
             final MEGuiTextField field = new MEGuiTextField(this.fontRenderer, STEP_LEFT,
                     FIELD_TOP + ContainerLevelMaintainer.ROW_HEIGHT * row, FIELD_WIDTH, FIELD_HEIGHT);
             field.setEnableBackgroundDrawing(false);
-            field.setMaxStringLength(12);
+            field.setMaxStringLength(TileLevelMaintainer.BATCH_DIGITS);
             field.setTextColor(MEGuiTextField.TEXT_COLOR);
             field.setVisible(true);
             field.setText(Long.toString(this.container.getBatch(row)));
@@ -261,8 +261,9 @@ public final class GuiLevelMaintainer extends AEBaseGui implements IJEIGhostIngr
             final int top = this.guiTop + FIELD_TOP + ContainerLevelMaintainer.ROW_HEIGHT * row;
             if (this.isIn(this.guiLeft + TOGGLE_LEFT, this.guiTop + TOGGLE_TOP
                     + ContainerLevelMaintainer.ROW_HEIGHT * row, TOGGLE_SIZE, mouseX, mouseY)) {
+                this.container.showRowEnabled(row, !this.container.isRowEnabled(row));
                 ModNetwork.CHANNEL.sendToServer(new PacketMaintainerRow(row, this.container.getTarget(row),
-                        this.container.getBatch(row), !this.container.isRowEnabled(row)));
+                        this.container.getBatch(row), this.container.isRowEnabled(row)));
                 return;
             }
 
@@ -311,6 +312,7 @@ public final class GuiLevelMaintainer extends AEBaseGui implements IJEIGhostIngr
         }
         ModNetwork.CHANNEL.sendToServer(new PacketMaintainerRow(row, this.container.getTarget(row), step,
                 this.container.isRowEnabled(row)));
+        this.container.showBatch(row, step);
     }
 
     /**

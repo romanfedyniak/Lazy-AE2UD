@@ -37,6 +37,7 @@ public final class LazyAE2 {
     public void preInit(final FMLPreInitializationEvent event) {
         LazyAE2Config.init(event.getModConfigurationDirectory());
         ModNetwork.init();
+        Registration.registerTerminal();
     }
 
     @Mod.EventHandler

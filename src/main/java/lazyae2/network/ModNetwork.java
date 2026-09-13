@@ -23,5 +23,9 @@ public final class ModNetwork {
     public static void init() {
         CHANNEL.registerMessage(PacketSideConfig.Handler.class, PacketSideConfig.class, 0, Side.SERVER);
         CHANNEL.registerMessage(PacketMaintainerRow.Handler.class, PacketMaintainerRow.class, 1, Side.SERVER);
+        CHANNEL.registerMessage(PacketTerminalUpdate.Handler.class, PacketTerminalUpdate.class, 2, Side.CLIENT);
+        CHANNEL.registerMessage(PacketTerminalRow.Handler.class, PacketTerminalRow.class, 3, Side.SERVER);
+        CHANNEL.registerMessage(PacketTerminalAmount.Handler.class, PacketTerminalAmount.class, 4, Side.SERVER);
+        CHANNEL.registerMessage(PacketTerminalFilter.Handler.class, PacketTerminalFilter.class, 5, Side.SERVER);
     }
 }

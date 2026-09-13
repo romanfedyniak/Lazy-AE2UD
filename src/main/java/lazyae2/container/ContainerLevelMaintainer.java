@@ -99,6 +99,33 @@ public final class ContainerLevelMaintainer extends AEBaseContainer implements I
         }
     }
 
+    /**
+     * What the window shows for a row until the server has caught up with what was asked of it. The server
+     * writes these fields from the machine every tick, so its word is the one that lasts.
+     */
+    public void showBatch(final int row, final long batch) {
+        switch (row) {
+            case 0:
+                this.batch0 = batch;
+                break;
+            case 1:
+                this.batch1 = batch;
+                break;
+            case 2:
+                this.batch2 = batch;
+                break;
+            case 3:
+                this.batch3 = batch;
+                break;
+            default:
+                this.batch4 = batch;
+        }
+    }
+
+    public void showRowEnabled(final int row, final boolean on) {
+        this.enabledRows = on ? this.enabledRows | 1 << row : this.enabledRows & ~(1 << row);
+    }
+
     public boolean isRowEnabled(final int row) {
         return (this.enabledRows & 1 << row) != 0;
     }

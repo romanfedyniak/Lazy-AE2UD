@@ -1,0 +1,8 @@
+{
+    "parent": "appliedenergistics2:part/display_off",
+    "textures": {
+        "lightsBright": "threng:parts/level_maintainer_terminal_bright",
+        "lightsMedium": "threng:parts/level_maintainer_terminal_medium",
+        "lightsDark": "threng:parts/level_maintainer_terminal_dark"
+    }
+}

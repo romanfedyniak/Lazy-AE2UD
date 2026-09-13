@@ -27,6 +27,8 @@ import lazyae2.Tags;
 import lazyae2.block.BlockMachine;
 import lazyae2.item.ItemBlockMachine;
 import lazyae2.item.ItemMaterial;
+import lazyae2.item.ItemPartTerminal;
+import lazyae2.part.PartLevelMaintainerTerminal;
 import lazyae2.tile.TileAggregator;
 import lazyae2.tile.TileCentrifuge;
 import lazyae2.tile.TileEnergizer;
@@ -35,6 +37,7 @@ import lazyae2.tile.TileLevelMaintainer;
 import lazyae2.tile.TilePau;
 import appeng.api.AEApi;
 import appeng.api.features.IInscriberRegistry;
+import appeng.api.features.IWirelessTerminalModeRegistry;
 import appeng.api.features.InscriberProcessType;
 import appeng.api.upgrades.CardTrait;
 import appeng.api.upgrades.CardTraits;
@@ -49,11 +52,14 @@ public final class Registration {
 
     public static final String MATERIAL = "material";
     public static final String MACHINE = "machine";
+    public static final String TERMINAL = "level_maintainer_terminal";
 
     @Nullable
     public static ItemMaterial material;
     @Nullable
     public static BlockMachine machine;
+    @Nullable
+    public static ItemPartTerminal terminal;
 
     private Registration() {
     }
@@ -86,6 +92,30 @@ public final class Registration {
         if (machine != null) {
             event.getRegistry().register(new ItemBlockMachine(machine).setRegistryName(machine.getRegistryName()));
         }
+
+        if (LazyAE2Config.instance().isLevelMaintainerTerminalEnabled()) {
+            terminal = new ItemPartTerminal();
+            terminal.setRegistryName(Tags.MOD_ID, TERMINAL);
+            terminal.setTranslationKey(Tags.MOD_ID + ".part." + TERMINAL);
+            event.getRegistry().register(terminal);
+        }
+    }
+
+    /**
+     * What the terminal looks like on a cable, and the face the wireless terminal can be switched to. Both
+     * are asked for while the mod is still starting: a model registered later is never baked, and a mode
+     * registered later has nothing to unlock it.
+     */
+    public static void registerTerminal() {
+        if (!LazyAE2Config.instance().isLevelMaintainerTerminalEnabled()) {
+            return;
+        }
+
+        AEApi.instance().registries().partModels().registerModels(PartLevelMaintainerTerminal.MODEL_OFF,
+                PartLevelMaintainerTerminal.MODEL_ON);
+
+        final IWirelessTerminalModeRegistry modes = AEApi.instance().registries().wirelessTerminalModes();
+        modes.register(new LevelMaintainerTerminalMode());
     }
 
     /**

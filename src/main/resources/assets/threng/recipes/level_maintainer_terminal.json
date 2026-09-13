@@ -1,0 +1,31 @@
+{
+  "conditions": [
+    {
+      "type": "threng:enabled",
+      "machine": "levelMaintainerTerminal"
+    }
+  ],
+  "type": "forge:ore_shaped",
+  "pattern": [
+    " s ",
+    "ctc",
+    " s "
+  ],
+  "key": {
+    "s": {
+      "type": "forge:ore_dict",
+      "ore": "ingotFluixSteel"
+    },
+    "t": {
+      "item": "appliedenergistics2:part",
+      "data": 380
+    },
+    "c": {
+      "item": "threng:material",
+      "data": 4
+    }
+  },
+  "result": {
+    "item": "threng:level_maintainer_terminal"
+  }
+}

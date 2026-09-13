@@ -60,6 +60,7 @@ public final class LazyAE2Config extends Configuration {
     private final double pauIdlePower;
 
     private final boolean levelMaintainerEnabled;
+    private final boolean levelMaintainerTerminalEnabled;
     private final double levelMaintainerIdlePower;
     private final int levelMaintainerSleepMin;
     private final int levelMaintainerSleepMax;
@@ -94,6 +95,10 @@ public final class LazyAE2Config extends Configuration {
 
         this.levelMaintainerEnabled = this.get(LEVEL_MAINTAINER, "enabled", true,
                 "Whether the ME Level Maintainer and its recipe exist at all.").getBoolean();
+        this.levelMaintainerTerminalEnabled = this.get(LEVEL_MAINTAINER, "terminal", true,
+                "Whether the ME Level Maintainer Terminal, its recipe and the wireless mode it unlocks exist "
+                        + "at all. A terminal is no use without maintainers, so switching the machine off "
+                        + "takes the terminal with it either way.").getBoolean();
         this.levelMaintainerIdlePower = Math.max(0, this.get(LEVEL_MAINTAINER, "idlePower",
                 this.legacyDouble(LEGACY_DEVICES, "levelMaintainerIdlePower", 3D),
                 "Power the maintainer draws while doing nothing (AE/t).").getDouble());
@@ -289,6 +294,10 @@ public final class LazyAE2Config extends Configuration {
 
     public boolean isLevelMaintainerEnabled() {
         return this.levelMaintainerEnabled;
+    }
+
+    public boolean isLevelMaintainerTerminalEnabled() {
+        return this.levelMaintainerEnabled && this.levelMaintainerTerminalEnabled;
     }
 
     public double getLevelMaintainerIdlePower() {

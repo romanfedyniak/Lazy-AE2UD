@@ -29,6 +29,26 @@ All notable Lazy AE2 Unofficial Deconstructed changes are grouped by the version
   makes, and the arrow says so when hovered - in HEI's own words, so it is already translated. Only with a
   recipe viewer installed.
 
+### ME Level Maintainer Terminal
+
+- **A window that lists every ME Level Maintainer on the network**, each with its five rows under it, all of
+  them editable from where you stand: what a row keeps, how much it orders at a time, and whether it is
+  switched on. The old mod had no such thing; the idea is ME Requester's terminal
+  (`AlmostReliable/merequester`), which does the same for its requesters.
+- **A row here answers the gestures it answers on the machine's own window**: the wheel over the slot steps
+  how much to keep, Ctrl halves or doubles it, a middle click types it, and anything dropped in - by hand or
+  dragged out of HEI, item or fluid - becomes what that row watches.
+- **Click a number to type it.** How much a row orders at a time is drawn where it stands, and a click turns
+  that into a field with a tick beside it; Enter or the tick saves it, and going anywhere else gives up on it.
+- **Two search boxes**: one asks the rows what they keep, in the grammar the terminals use, and dims every row
+  that does not answer while marking the ones that do; the other asks the machines their name. Both are
+  remembered while the window is closed.
+- **The button beside a machine's name marks it in the world** and turns the player towards it, the way a
+  Pattern Access Terminal points at an interface.
+- **It is a part on a cable and a face of the wireless terminal.** Crafting the part into a wireless terminal
+  unlocks the mode, which then has a button in the terminal and a key of its own, exactly like AE2's own
+  terminals. Both can be taken away in `config/lazy_ae2.cfg` (`levelMaintainer.terminal`).
+
 ### ME Level Maintainer
 
 - **The ME Level Maintainer is back**, with five rows: each names something the network should always have

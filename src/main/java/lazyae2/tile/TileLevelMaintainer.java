@@ -75,6 +75,13 @@ public final class TileLevelMaintainer extends AENetworkInvTile
 
     public static final int ROWS = 5;
 
+    /**
+     * How many digits a batch takes, in either window that types one. Fifteen is past anything a network
+     * will ever craft, still short of where a long stops counting, and the most that fits in the narrower
+     * of the two fields.
+     */
+    public static final int BATCH_DIGITS = 15;
+
     /** An amount nobody has looked up yet. */
     private static final long UNKNOWN = -1;
 
