@@ -255,7 +255,9 @@ public final class GuiLevelMaintainer extends AEBaseGui implements IJEIGhostIngr
         if (state != RowState.NONE) {
             lines.add(state.tone() + I18n.format(state.nameKey()));
         }
-        this.drawHoveringText(lines, x, y, this.fontRenderer);
+        // Through AE2's own drawing, so that what a click on this slot would do is said here as it is said
+        // on every other filter slot of the mod - and always as the last lines
+        this.drawSlotTooltip(lines, x, y);
     }
 
     /**

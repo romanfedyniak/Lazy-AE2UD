@@ -74,6 +74,9 @@ All notable Lazy AE2 Unofficial Deconstructed changes are grouped by the version
   gestures, and the same steps, that every filter slot in AE2 answers to. The field beside it is that step, which is also how much the row orders at
   once; the tick beside the field lights up as soon as the number differs from the machine's, and saves it -
   as does Enter.
+- **A row's tooltip says what a click on it would do**, in AE2's own wording: that a middle click types how
+  much to keep, and with something in hand, which button would set the row to it. Both windows hand their
+  tooltips to AE2 to finish rather than drawing them past it.
 - **Every row says what it is doing.** The strip under a row is green while the network holds as much as
   the row keeps, blue while a plan is being worked out, yellow while the job runs, orange while every
   crafting processor is busy, and red when nothing on the network makes that thing or the network turned the

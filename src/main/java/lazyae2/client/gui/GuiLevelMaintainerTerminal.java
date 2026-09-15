@@ -745,7 +745,19 @@ public class GuiLevelMaintainerTerminal extends AEBaseGui implements IJEIGhostIn
         if (state != RowState.NONE) {
             lines.add(state.tone() + I18n.format(state.nameKey()));
         }
-        this.drawHoveringText(lines, x, y, this.fontRenderer);
+        // Through AE2's own drawing, so that what a click on this slot would do is said here as it is said
+        // on every other filter slot of the mod - and always as the last lines
+        this.drawSlotTooltip(lines, x, y);
+    }
+
+    /**
+     * A middle click on a row types how much it keeps, as it does on the machine's own window. AE2 answers
+     * this for a disconnected slot only in its own Interface Configuration Terminal, since it is the one
+     * the server will type an amount for - this window types its own, through a packet of ours.
+     */
+    @Override
+    protected boolean allowsTypedAmount(final Slot slot) {
+        return this.rowOf(slot) != null && slot.getHasStack();
     }
 
     // ---- what the window sends back ------------------------------------------------------------------
