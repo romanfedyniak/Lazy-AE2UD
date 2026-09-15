@@ -72,6 +72,15 @@ All notable Lazy AE2 Unofficial Deconstructed changes are grouped by the version
   gestures, and the same steps, that every filter slot in AE2 answers to. The field beside it is that step, which is also how much the row orders at
   once; the tick beside the field lights up as soon as the number differs from the machine's, and saves it -
   as does Enter.
+- **A maintainer with no channel does nothing at all.** AE2 asks a machine to work whether or not it has a
+  channel, and this one went on planning and ordering crafts without one.
+- **A row the network cannot fill stops asking.** The machine looks before it plans: with nothing on the
+  network able to make that thing, or with every crafting processor busy, no plan is worked out at all. A
+  plan that came back a simulation, or a job the network turned down, puts that row on a wait
+  (`levelMaintainer.retryTicks`, 200 ticks) instead of being worked out again a few ticks later - one row
+  nobody could fill used to keep its machine running at full speed for as long as it stood. Editing the row,
+  a change in what it watches, or opening a window that shows it ends the wait at once. Looking before
+  planning is how GTNH's Level Maintainer does it (`GTNewHorizons/AE2FluidCraft-Rework`).
 
 ### Preemptive Assembly Unit
 

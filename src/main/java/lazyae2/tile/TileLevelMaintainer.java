@@ -35,6 +35,7 @@ import appeng.api.config.Actionable;
 import appeng.api.networking.GridFlags;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
+import appeng.api.networking.crafting.ICraftingCPU;
 import appeng.api.networking.crafting.ICraftingGrid;
 import appeng.api.networking.crafting.ICraftingLink;
 import appeng.api.networking.crafting.ICraftingRequester;
@@ -91,6 +92,8 @@ public final class TileLevelMaintainer extends AENetworkInvTile
     private final long[] known = new long[ROWS];
     /** A row switched off keeps what it says and orders nothing. */
     private final boolean[] enabled = new boolean[ROWS];
+    /** Ticks a row still waits before planning again, after the network turned its last plan down. */
+    private final int[] retryIn = new int[ROWS];
 
     private final CraftTracker crafter = new CraftTracker(this, ROWS);
     private final IActionSource source = new MachineSource(this);
@@ -141,6 +144,7 @@ public final class TileLevelMaintainer extends AENetworkInvTile
             return;
         }
         this.enabled[row] = on;
+        this.retryIn[row] = 0;
         if (!on) {
             this.crafter.clear(row);
         }
@@ -160,6 +164,7 @@ public final class TileLevelMaintainer extends AENetworkInvTile
             return;
         }
         this.targets[row] = target;
+        this.retryIn[row] = 0;
         this.saveChanges();
         this.wake();
     }
@@ -172,6 +177,7 @@ public final class TileLevelMaintainer extends AENetworkInvTile
             return;
         }
         this.batches[row] = batch;
+        this.retryIn[row] = 0;
         this.saveChanges();
         this.wake();
     }
@@ -205,6 +211,7 @@ public final class TileLevelMaintainer extends AENetworkInvTile
             this.targets[slot] = 1;
         }
         this.known[slot] = UNKNOWN;
+        this.retryIn[slot] = 0;
         this.resetWatcher();
         this.saveChanges();
         this.wake();
@@ -221,6 +228,12 @@ public final class TileLevelMaintainer extends AENetworkInvTile
 
     @Override
     public TickRateModulation tickingRequest(final IGridNode node, final int ticksSinceLastCall) {
+        // The tick manager knows nothing of channels, so a machine that has none is still asked to work.
+        // Without one it is not on the network at all and has no business ordering anything.
+        if (!this.getProxy().isActive()) {
+            return TickRateModulation.IDLE;
+        }
+
         boolean worked = this.returnLegacyResults();
 
         try {
@@ -228,6 +241,10 @@ public final class TileLevelMaintainer extends AENetworkInvTile
             // The network's own tally, not a fresh count of every cell on it
             final KeyCounter stock = this.getProxy().getStorage().getCachedInventory();
             final ICraftingGrid crafting = this.getProxy().getCrafting();
+
+            // Asked for at most once a pass, and only by a row that actually wants to plan: the answer
+            // costs a walk of the network's processors
+            Boolean cpuFree = null;
 
             for (int row = 0; row < ROWS; row++) {
                 final AEKey what = this.keyOf(row);
@@ -240,13 +257,38 @@ public final class TileLevelMaintainer extends AENetworkInvTile
                     worked = true;
                 }
 
+                if (this.retryIn[row] > 0) {
+                    this.retryIn[row] -= ticksSinceLastCall;
+                    continue;
+                }
+
                 // A whole batch is ordered the moment the level drops below what the row keeps, rather than
                 // exactly what is missing: ordering the three that were taken out would start a crafting job
                 // for three. Asked every time, not only when something is missing, because a plan already
                 // being worked out still has to be picked up and submitted once it is ready.
                 final long order = this.known[row] < this.targets[row] ? this.batches[row] : 0;
-                if (this.crafter.request(row, what, order, this.world, grid, crafting, this.source)) {
-                    worked = true;
+
+                boolean mayPlan = false;
+                if (order > 0) {
+                    // Nothing on the network makes this, so a plan could only come back a simulation; and a
+                    // plan worked out while every processor is busy is a plan thrown away at the door
+                    if (crafting.isCraftable(what)) {
+                        if (cpuFree == null) {
+                            cpuFree = anyFreeCpu(crafting);
+                        }
+                        mayPlan = cpuFree;
+                    }
+                }
+
+                switch (this.crafter.request(row, what, order, mayPlan, this.world, grid, crafting, this.source)) {
+                    case WORKING:
+                        worked = true;
+                        break;
+                    case REFUSED:
+                        this.retryIn[row] = LazyAE2Config.instance().getLevelMaintainerRetryTicks();
+                        break;
+                    default:
+                        break;
                 }
             }
         } catch (final GridAccessException offline) {
@@ -254,6 +296,25 @@ public final class TileLevelMaintainer extends AENetworkInvTile
         }
 
         return worked ? TickRateModulation.FASTER : TickRateModulation.SLOWER;
+    }
+
+    private static boolean anyFreeCpu(final ICraftingGrid crafting) {
+        for (final ICraftingCPU cpu : crafting.getCpus()) {
+            if (!cpu.isBusy()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Every row tries again at once, whatever it was waiting out. Called when somebody opens a window that
+     * shows this machine: what is on the screen should be what the machine thinks now, not what it settled
+     * on before it went to sleep.
+     */
+    public void retryNow() {
+        Arrays.fill(this.retryIn, 0);
+        this.wake();
     }
 
     /**
@@ -315,6 +376,7 @@ public final class TileLevelMaintainer extends AENetworkInvTile
         for (int row = 0; row < ROWS; row++) {
             if (what.equals(this.keyOf(row))) {
                 this.known[row] = amount;
+                this.retryIn[row] = 0;
                 if (amount < this.targets[row]) {
                     this.wake();
                 }

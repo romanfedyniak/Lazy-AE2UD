@@ -64,6 +64,7 @@ public final class LazyAE2Config extends Configuration {
     private final double levelMaintainerIdlePower;
     private final int levelMaintainerSleepMin;
     private final int levelMaintainerSleepMax;
+    private final int levelMaintainerRetryTicks;
 
     private final boolean massAssemblerEnabled;
     private final double massAssemblerIdlePower;
@@ -110,6 +111,11 @@ public final class LazyAE2Config extends Configuration {
                 this.legacyInt(LEGACY_DEVICES, "levelMaintainerSleepMax", 200),
                 "The longest interval between work ticks, in ticks. The maintainer slows down while something "
                         + "stops it making progress.").getInt());
+        this.levelMaintainerRetryTicks = Math.max(0, this.get(LEVEL_MAINTAINER, "retryTicks", 200,
+                "How long a row waits before planning again after the network turned it down, in ticks. "
+                        + "Without it a row asking for something nothing can supply plans a job every work "
+                        + "tick for as long as the machine stands. Editing the row, a change in what it "
+                        + "watches, or opening a window that shows it ends the wait at once.").getInt());
 
         this.massAssemblerEnabled = this.get(MASS_ASSEMBLER, "enabled", true,
                 "Whether the Mass Assembly Chamber's blocks and their recipes exist at all.").getBoolean();
@@ -310,6 +316,10 @@ public final class LazyAE2Config extends Configuration {
 
     public int getLevelMaintainerSleepMax() {
         return this.levelMaintainerSleepMax;
+    }
+
+    public int getLevelMaintainerRetryTicks() {
+        return this.levelMaintainerRetryTicks;
     }
 
     public boolean isMassAssemblerEnabled() {

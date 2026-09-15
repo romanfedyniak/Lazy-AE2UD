@@ -71,6 +71,11 @@ public final class ContainerLevelMaintainer extends AEBaseContainer implements I
         super(ip, machine, null);
         this.machine = machine;
 
+        if (Platform.isServer()) {
+            // Whatever the machine had settled on, it looks again now that somebody is watching
+            machine.retryNow();
+        }
+
         for (int row = 0; row < TileLevelMaintainer.ROWS; row++) {
             this.addSlotToContainer(new SlotFakeTypeOnly(machine.getRequests(), row, FILTER_LEFT,
                     ROW_TOP + ROW_HEIGHT * row));

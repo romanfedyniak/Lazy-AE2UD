@@ -158,6 +158,8 @@ public class ContainerLevelMaintainerTerminal extends AEBaseContainer {
             for (final IGridNode node : this.grid.getMachines(TileLevelMaintainer.class)) {
                 if (node.isActive()) {
                     final TileLevelMaintainer machine = (TileLevelMaintainer) node.getMachine();
+                    // Whatever a machine had settled on, it looks again now that somebody is watching
+                    machine.retryNow();
                     final Tracker tracker = new Tracker(machine);
                     this.byMachine.put(machine, tracker);
                     this.byId.put(tracker.id, tracker);
