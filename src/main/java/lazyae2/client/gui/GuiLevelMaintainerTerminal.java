@@ -34,6 +34,7 @@ import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidUtil;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.math.BlockPos;
@@ -1081,7 +1082,15 @@ public class GuiLevelMaintainerTerminal extends AEBaseGui implements IJEIGhostIn
             return new GenericStack(AEFluidKey.of(fluid), fluid.amount);
         }
         if (ingredient instanceof ItemStack && !((ItemStack) ingredient).isEmpty()) {
-            return GenericStack.resolveItemStack((ItemStack) ingredient);
+            final ItemStack dropped = (ItemStack) ingredient;
+            // The same rule as a filter slot of AE2's own: dropped with the left button the row watches
+            // what the container holds, with the right the container itself. Without this a bucket could
+            // only ever set a row to the bucket, and a fluid row could not be filled from a recipe at all.
+            final FluidStack contents = FluidUtil.getFluidContained(dropped);
+            if (contents != null && !dropsContainerItself()) {
+                return new GenericStack(AEFluidKey.of(contents), contents.amount);
+            }
+            return GenericStack.resolveItemStack(dropped);
         }
         return null;
     }

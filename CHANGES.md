@@ -38,6 +38,9 @@ All notable Lazy AE2 Unofficial Deconstructed changes are grouped by the version
 - **A row here answers the gestures it answers on the machine's own window**: the wheel over the slot steps
   how much to keep, Ctrl halves or doubles it, a middle click types it, and anything dropped in - by hand or
   dragged out of HEI, item or fluid - becomes what that row watches.
+- **A container dropped from HEI follows the same rule as everywhere else**: dropped with the left button
+  the row watches what it holds, with the right the container itself. The terminal used to take the
+  container whichever button ended the drag, so a row could not be pointed at a fluid from a recipe at all.
 - **Click a number to type it.** How much a row orders at a time is drawn where it stands, and a click turns
   that into a field with a tick beside it; Enter or the tick saves it, and going anywhere else gives up on it.
 - **Two search boxes**: one asks the rows what they keep, in the grammar the terminals use, and dims every row
