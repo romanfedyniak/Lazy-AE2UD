@@ -12,6 +12,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
 import lazyae2.core.ModGuiBridges;
+import lazyae2.tile.RowState;
 import lazyae2.tile.TileLevelMaintainer;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.stacks.AEKey;
@@ -66,6 +67,13 @@ public final class ContainerLevelMaintainer extends AEBaseContainer implements I
     /** Which rows are switched on, one bit each. */
     @GuiSync(30)
     public int enabledRows;
+
+    /**
+     * What each row is doing, three bits each. Zero is {@link RowState#NONE}, so the frames drawn before the
+     * first answer arrives say nothing rather than claiming the rows are stocked.
+     */
+    @GuiSync(31)
+    public int rowStates;
 
     public ContainerLevelMaintainer(final InventoryPlayer ip, final TileLevelMaintainer machine) {
         super(ip, machine, null);
@@ -129,6 +137,10 @@ public final class ContainerLevelMaintainer extends AEBaseContainer implements I
 
     public void showRowEnabled(final int row, final boolean on) {
         this.enabledRows = on ? this.enabledRows | 1 << row : this.enabledRows & ~(1 << row);
+    }
+
+    public RowState getRowState(final int row) {
+        return RowState.byIndex(this.rowStates >> row * 3 & 7);
     }
 
     public boolean isRowEnabled(final int row) {
@@ -229,6 +241,12 @@ public final class ContainerLevelMaintainer extends AEBaseContainer implements I
                 }
             }
             this.enabledRows = rows;
+
+            int states = 0;
+            for (int row = 0; row < TileLevelMaintainer.ROWS; row++) {
+                states |= this.machine.getRowState(row).ordinal() << row * 3;
+            }
+            this.rowStates = states;
         }
 
         super.detectAndSendChanges();

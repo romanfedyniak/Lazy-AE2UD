@@ -43,6 +43,8 @@ All notable Lazy AE2 Unofficial Deconstructed changes are grouped by the version
 - **Two search boxes**: one asks the rows what they keep, in the grammar the terminals use, and dims every row
   that does not answer while marking the ones that do; the other asks the machines their name. Both are
   remembered while the window is closed.
+- **A row wears what it is doing here too**, as a mark in the corner of its item in the colour the
+  machine's own window gives it, with the words in the item's tooltip.
 - **The button beside a machine's name marks it in the world** and turns the player towards it, the way a
   Pattern Access Terminal points at an interface.
 - **It is a part on a cable and a face of the wireless terminal.** Crafting the part into a wireless terminal
@@ -72,6 +74,11 @@ All notable Lazy AE2 Unofficial Deconstructed changes are grouped by the version
   gestures, and the same steps, that every filter slot in AE2 answers to. The field beside it is that step, which is also how much the row orders at
   once; the tick beside the field lights up as soon as the number differs from the machine's, and saves it -
   as does Enter.
+- **Every row says what it is doing.** The strip under a row is green while the network holds as much as
+  the row keeps, blue while a plan is being worked out, yellow while the job runs, orange while every
+  crafting processor is busy, and red when nothing on the network makes that thing or the network turned the
+  job down. Hovering the strip, or the row's item, says which in words. GTNH's Level Maintainer marks its
+  rows the same way (`GTNewHorizons/AE2FluidCraft-Rework`).
 - **A maintainer with no channel does nothing at all.** AE2 asks a machine to work whether or not it has a
   channel, and this one went on planning and ordering crafts without one.
 - **A row the network cannot fill stops asking.** The machine looks before it plans: with nothing on the

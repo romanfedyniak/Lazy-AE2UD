@@ -40,6 +40,12 @@ gui.threng.maintainer.type=Click to type another number
 gui.threng.maintainer.highlight=Show where this maintainer is
 gui.threng.maintainer.highlighted=The maintainer is marked at X: %s Y: %s Z: %s
 gui.threng.maintainer.otherDimension=That maintainer is in another world (%s), where nothing can be marked from here
+gui.threng.maintainer_state.stocked=The network has enough
+gui.threng.maintainer_state.planning=Working out a plan
+gui.threng.maintainer_state.crafting=Being crafted
+gui.threng.maintainer_state.waiting=Waiting for a crafting processor
+gui.threng.maintainer_state.no_recipe=Nothing on the network makes this
+gui.threng.maintainer_state.refused=The network turned this down
 gui.threng.wirelessMode.levelMaintainer=Level Maintainer
 
 gui.threng.side.front=Front

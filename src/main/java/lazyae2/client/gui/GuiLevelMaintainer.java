@@ -28,6 +28,7 @@ import lazyae2.Tags;
 import lazyae2.container.ContainerLevelMaintainer;
 import lazyae2.network.ModNetwork;
 import lazyae2.network.PacketMaintainerRow;
+import lazyae2.tile.RowState;
 import lazyae2.tile.TileLevelMaintainer;
 import appeng.api.stacks.AEKey;
 import appeng.api.stacks.AmountFormat;
@@ -57,6 +58,13 @@ public final class GuiLevelMaintainer extends AEBaseGui implements IJEIGhostIngr
     private static final int TOGGLE_OFF_COLOR = 0xFF4A4A4A;
     private static final int TOGGLE_HOVER_COLOR = 0x40FFFFFF;
     private static final int FIELD_HEIGHT = 13;
+
+    /** The strip under a row that says what it is doing, in the gap the next row leaves free. */
+    private static final int STATE_TOP = 35;
+    private static final int STATE_HEIGHT = 3;
+    /** Three pixels are nothing to aim at, so the whole gap between two rows answers for the strip. */
+    private static final int STATE_HOVER_TOP = 34;
+    private static final int STATE_HOVER_HEIGHT = 7;
 
     /** The tick beside each number, which takes what was typed just as Enter does. */
     private static final int SUBMIT_LEFT = 147;
@@ -109,6 +117,13 @@ public final class GuiLevelMaintainer extends AEBaseGui implements IJEIGhostIngr
                     this.container.isRowEnabled(row) ? TOGGLE_ON_COLOR : TOGGLE_OFF_COLOR);
             if (this.isIn(left, top, TOGGLE_SIZE, mouseX, mouseY)) {
                 drawRect(left + 1, top + 1, left + TOGGLE_SIZE - 1, top + TOGGLE_SIZE - 1, TOGGLE_HOVER_COLOR);
+            }
+        }
+        for (int row = 0; row < TileLevelMaintainer.ROWS; row++) {
+            final int color = this.container.getRowState(row).color();
+            if (color != 0) {
+                final int top = offsetY + STATE_TOP + ContainerLevelMaintainer.ROW_HEIGHT * row;
+                drawRect(offsetX + STEP_LEFT, top, offsetX + STEP_LEFT + FIELD_WIDTH, top + STATE_HEIGHT, color);
             }
         }
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -210,6 +225,12 @@ public final class GuiLevelMaintainer extends AEBaseGui implements IJEIGhostIngr
                         I18n.format("gui.threng.maintainer.wheel")), mouseX, mouseY);
                 return;
             }
+            final RowState state = this.container.getRowState(row);
+            if (state != RowState.NONE && this.isIn(this.guiLeft + STEP_LEFT, this.guiTop + STATE_HOVER_TOP
+                    + ContainerLevelMaintainer.ROW_HEIGHT * row, FIELD_WIDTH, STATE_HOVER_HEIGHT, mouseX, mouseY)) {
+                this.drawHoveringText(Arrays.asList(state.tone() + I18n.format(state.nameKey())), mouseX, mouseY);
+                return;
+            }
         }
     }
 
@@ -229,6 +250,11 @@ public final class GuiLevelMaintainer extends AEBaseGui implements IJEIGhostIngr
         final List<String> lines = this.getItemToolTip(stack);
         lines.add(TextFormatting.GRAY + I18n.format("gui.threng.maintainer.keeping",
                 filter.what().formatAmount(this.container.getTarget(row), AmountFormat.FULL)));
+
+        final RowState state = this.container.getRowState(row);
+        if (state != RowState.NONE) {
+            lines.add(state.tone() + I18n.format(state.nameKey()));
+        }
         this.drawHoveringText(lines, x, y, this.fontRenderer);
     }
 
@@ -283,7 +309,12 @@ public final class GuiLevelMaintainer extends AEBaseGui implements IJEIGhostIngr
     }
 
     private boolean isIn(final int left, final int top, final int size, final int mouseX, final int mouseY) {
-        return mouseX >= left && mouseX < left + size && mouseY >= top && mouseY < top + size;
+        return this.isIn(left, top, size, size, mouseX, mouseY);
+    }
+
+    private boolean isIn(final int left, final int top, final int width, final int height, final int mouseX,
+            final int mouseY) {
+        return mouseX >= left && mouseX < left + width && mouseY >= top && mouseY < top + height;
     }
 
     @Override

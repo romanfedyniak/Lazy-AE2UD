@@ -124,6 +124,16 @@ final class CraftTracker {
                 || error == CraftingSubmitErrorCode.CPU_OFFLINE;
     }
 
+    /** Whether a job that row ordered is running. */
+    boolean isRunning(final int row) {
+        return this.links[row] != null;
+    }
+
+    /** Whether a plan for that row is still being worked out. */
+    boolean isPlanning(final int row) {
+        return this.plans[row] != null;
+    }
+
     /**
      * @return the row that ordered that job, or -1
      */

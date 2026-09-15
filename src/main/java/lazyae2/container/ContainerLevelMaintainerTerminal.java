@@ -23,6 +23,7 @@ import lazyae2.core.ModGuiBridges;
 import lazyae2.network.ModNetwork;
 import lazyae2.network.PacketTerminalUpdate;
 import lazyae2.part.PartLevelMaintainerTerminal;
+import lazyae2.tile.RowState;
 import lazyae2.tile.TileLevelMaintainer;
 import appeng.api.behaviors.ContainerItemStrategies;
 import appeng.api.config.SecurityPermissions;
@@ -203,6 +204,7 @@ public class ContainerLevelMaintainerTerminal extends AEBaseContainer {
         saved.setLong("t", tracker.machine.getTarget(row));
         saved.setLong("b", tracker.machine.getBatch(row));
         saved.setBoolean("e", tracker.machine.isRowEnabled(row));
+        saved.setByte("s", (byte) tracker.machine.getRowState(row).ordinal());
 
         tag.setTag(Integer.toString(row), saved);
         tracker.remember(row);
@@ -343,6 +345,7 @@ public class ContainerLevelMaintainerTerminal extends AEBaseContainer {
         private final long[] targets = new long[TileLevelMaintainer.ROWS];
         private final long[] batches = new long[TileLevelMaintainer.ROWS];
         private final boolean[] enabled = new boolean[TileLevelMaintainer.ROWS];
+        private final RowState[] states = new RowState[TileLevelMaintainer.ROWS];
         private String sentName = "";
 
         private Tracker(final TileLevelMaintainer machine) {
@@ -351,6 +354,7 @@ public class ContainerLevelMaintainerTerminal extends AEBaseContainer {
             this.sortBy = ((long) pos.getZ() << 24) ^ ((long) pos.getX() << 8) ^ pos.getY();
             for (int row = 0; row < TileLevelMaintainer.ROWS; row++) {
                 this.filters[row] = ItemStack.EMPTY;
+                this.states[row] = RowState.NONE;
             }
         }
 
@@ -366,6 +370,7 @@ public class ContainerLevelMaintainerTerminal extends AEBaseContainer {
             return this.targets[row] != this.machine.getTarget(row)
                     || this.batches[row] != this.machine.getBatch(row)
                     || this.enabled[row] != this.machine.isRowEnabled(row)
+                    || this.states[row] != this.machine.getRowState(row)
                     || !ItemStack.areItemStacksEqual(this.filters[row],
                             this.machine.getRequests().getStackInSlot(row));
         }
@@ -374,6 +379,7 @@ public class ContainerLevelMaintainerTerminal extends AEBaseContainer {
             this.targets[row] = this.machine.getTarget(row);
             this.batches[row] = this.machine.getBatch(row);
             this.enabled[row] = this.machine.isRowEnabled(row);
+            this.states[row] = this.machine.getRowState(row);
             this.filters[row] = this.machine.getRequests().getStackInSlot(row).copy();
         }
     }

@@ -94,6 +94,8 @@ public final class TileLevelMaintainer extends AENetworkInvTile
     private final boolean[] enabled = new boolean[ROWS];
     /** Ticks a row still waits before planning again, after the network turned its last plan down. */
     private final int[] retryIn = new int[ROWS];
+    /** What each row is doing, for the windows that show it. Worked out here, never saved. */
+    private final RowState[] states = new RowState[ROWS];
 
     private final CraftTracker crafter = new CraftTracker(this, ROWS);
     private final IActionSource source = new MachineSource(this);
@@ -113,6 +115,7 @@ public final class TileLevelMaintainer extends AENetworkInvTile
     private final List<ItemStack> legacyResults = new ArrayList<>();
 
     public TileLevelMaintainer() {
+        Arrays.fill(this.states, RowState.NONE);
         Arrays.fill(this.batches, 1);
         Arrays.fill(this.enabled, true);
         Arrays.fill(this.known, UNKNOWN);
@@ -134,6 +137,10 @@ public final class TileLevelMaintainer extends AENetworkInvTile
 
     public boolean isRowEnabled(final int row) {
         return this.enabled[row];
+    }
+
+    public RowState getRowState(final int row) {
+        return this.states[row];
     }
 
     /**
@@ -231,6 +238,7 @@ public final class TileLevelMaintainer extends AENetworkInvTile
         // The tick manager knows nothing of channels, so a machine that has none is still asked to work.
         // Without one it is not on the network at all and has no business ordering anything.
         if (!this.getProxy().isActive()) {
+            Arrays.fill(this.states, RowState.NONE);
             return TickRateModulation.IDLE;
         }
 
@@ -249,6 +257,7 @@ public final class TileLevelMaintainer extends AENetworkInvTile
             for (int row = 0; row < ROWS; row++) {
                 final AEKey what = this.keyOf(row);
                 if (what == null || !this.enabled[row] || this.targets[row] <= 0 || this.batches[row] <= 0) {
+                    this.states[row] = RowState.NONE;
                     continue;
                 }
 
@@ -258,6 +267,7 @@ public final class TileLevelMaintainer extends AENetworkInvTile
                 }
 
                 if (this.retryIn[row] > 0) {
+                    // A row waiting out a refusal keeps saying what it was refused for
                     this.retryIn[row] -= ticksSinceLastCall;
                     continue;
                 }
@@ -268,19 +278,15 @@ public final class TileLevelMaintainer extends AENetworkInvTile
                 // being worked out still has to be picked up and submitted once it is ready.
                 final long order = this.known[row] < this.targets[row] ? this.batches[row] : 0;
 
-                boolean mayPlan = false;
-                if (order > 0) {
-                    // Nothing on the network makes this, so a plan could only come back a simulation; and a
-                    // plan worked out while every processor is busy is a plan thrown away at the door
-                    if (crafting.isCraftable(what)) {
-                        if (cpuFree == null) {
-                            cpuFree = anyFreeCpu(crafting);
-                        }
-                        mayPlan = cpuFree;
-                    }
+                // Nothing on the network makes this, so a plan could only come back a simulation; and a
+                // plan worked out while every processor is busy is a plan thrown away at the door
+                final boolean craftable = order > 0 && crafting.isCraftable(what);
+                if (craftable && cpuFree == null) {
+                    cpuFree = anyFreeCpu(crafting);
                 }
+                final boolean free = craftable && cpuFree;
 
-                switch (this.crafter.request(row, what, order, mayPlan, this.world, grid, crafting, this.source)) {
+                switch (this.crafter.request(row, what, order, free, this.world, grid, crafting, this.source)) {
                     case WORKING:
                         worked = true;
                         break;
@@ -290,12 +296,38 @@ public final class TileLevelMaintainer extends AENetworkInvTile
                     default:
                         break;
                 }
+
+                this.states[row] = this.stateOf(row, order, craftable, free);
             }
         } catch (final GridAccessException offline) {
             return TickRateModulation.IDLE;
         }
 
         return worked ? TickRateModulation.FASTER : TickRateModulation.SLOWER;
+    }
+
+    /**
+     * What to make of a row once its step has been carried: a job of its own first, then the reasons it has
+     * none. Asked after the step, so a plan started this very tick already reads as one.
+     */
+    private RowState stateOf(final int row, final long order, final boolean craftable, final boolean free) {
+        if (this.crafter.isRunning(row)) {
+            return RowState.CRAFTING;
+        }
+        if (this.crafter.isPlanning(row)) {
+            return RowState.PLANNING;
+        }
+        if (order <= 0) {
+            return RowState.STOCKED;
+        }
+        if (!craftable) {
+            return RowState.NO_RECIPE;
+        }
+        if (!free) {
+            return RowState.WAITING;
+        }
+        // Short of it, the network can make it, a processor was free - and still nothing was started
+        return RowState.REFUSED;
     }
 
     private static boolean anyFreeCpu(final ICraftingGrid crafting) {
@@ -448,6 +480,9 @@ public final class TileLevelMaintainer extends AENetworkInvTile
         final boolean nowActive = this.getProxy().isActive();
         if (this.active != nowActive) {
             this.active = nowActive;
+            if (!nowActive) {
+                Arrays.fill(this.states, RowState.NONE);
+            }
             this.markForUpdate();
         }
     }

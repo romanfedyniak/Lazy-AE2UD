@@ -48,6 +48,7 @@ import lazyae2.network.PacketTerminalAmount;
 import lazyae2.network.PacketTerminalFilter;
 import lazyae2.network.PacketTerminalRow;
 import lazyae2.part.PartLevelMaintainerTerminal;
+import lazyae2.tile.RowState;
 import lazyae2.tile.TileLevelMaintainer;
 import appeng.api.config.ActionItems;
 import appeng.api.config.Settings;
@@ -128,6 +129,8 @@ public class GuiLevelMaintainerTerminal extends AEBaseGui implements IJEIGhostIn
     private static final int TOGGLE_OFF_COLOR = 0xFF4A4A4A;
     private static final int TOGGLE_HOVER_COLOR = 0x40FFFFFF;
     private static final int SLOT_LEFT = 38;
+    /** The mark in the corner of a slot that says what the row is doing. */
+    private static final int STATE_SIZE = 4;
     private static final int BATCH_LEFT = 58;
     private static final int BATCH_WIDTH = 104;
     private static final int BATCH_HEIGHT = 12;
@@ -348,12 +351,21 @@ public class GuiLevelMaintainerTerminal extends AEBaseGui implements IJEIGhostIn
                     }
 
                     final NBTTagCompound line = saved.getCompoundTag(which);
-                    machine.inv.getInventory().setStackInSlot(row,
-                            line.hasKey("f") ? stackFromNBT(line.getCompoundTag("f")) : ItemStack.EMPTY);
+                    final ItemStack filter =
+                            line.hasKey("f") ? stackFromNBT(line.getCompoundTag("f")) : ItemStack.EMPTY;
+
+                    // Only what a row is watching decides what the searches answer, and a row arrives
+                    // every time its state moves - which is often enough that searching again for it
+                    // would be work done for nothing
+                    if (!ItemStack.areItemStacksEqual(filter, machine.inv.getInventory().getStackInSlot(row))) {
+                        machine.inv.getInventory().setStackInSlot(row, filter);
+                        this.needsRefresh = true;
+                    }
+
                     machine.targets[row] = line.getLong("t");
                     machine.batches[row] = line.getLong("b");
                     machine.enabled[row] = line.getBoolean("e");
-                    this.needsRefresh = true;
+                    machine.states[row] = RowState.byIndex(line.getByte("s"));
                 }
             } catch (final NumberFormatException ignored) {
             }
@@ -647,6 +659,13 @@ public class GuiLevelMaintainerTerminal extends AEBaseGui implements IJEIGhostIn
             drawRect(SLOT_LEFT, offset, SLOT_LEFT + 16, offset + 16, 0x6A000000);
         }
 
+        // Over the veil the search draws, not under it: a colour read through a green or a black pane is
+        // not the colour it stands for
+        final int state = row.machine.states[row.row].color();
+        if (state != 0) {
+            drawRect(SLOT_LEFT, offset, SLOT_LEFT + STATE_SIZE, offset + STATE_SIZE, state);
+        }
+
         // The number this row orders at a time, unless it is the one being typed
         if (!this.isEditing(row.machine.id, row.row)) {
             this.fontRenderer.drawString(Long.toString(row.machine.batches[row.row]),
@@ -721,6 +740,11 @@ public class GuiLevelMaintainerTerminal extends AEBaseGui implements IJEIGhostIn
         lines.add(TextFormatting.GRAY + I18n.format("gui.threng.maintainer.keeping",
                 filter.what().formatAmount(row.machine.targets[row.row], AmountFormat.FULL)));
         lines.add(TextFormatting.GRAY + I18n.format("gui.threng.maintainer.wheel"));
+
+        final RowState state = row.machine.states[row.row];
+        if (state != RowState.NONE) {
+            lines.add(state.tone() + I18n.format(state.nameKey()));
+        }
         this.drawHoveringText(lines, x, y, this.fontRenderer);
     }
 
@@ -1097,6 +1121,7 @@ public class GuiLevelMaintainerTerminal extends AEBaseGui implements IJEIGhostIn
         private final long[] targets = new long[TileLevelMaintainer.ROWS];
         private final long[] batches = new long[TileLevelMaintainer.ROWS];
         private final boolean[] enabled = new boolean[TileLevelMaintainer.ROWS];
+        private final RowState[] states = new RowState[TileLevelMaintainer.ROWS];
 
         private String name = "";
         private boolean custom;
@@ -1110,6 +1135,7 @@ public class GuiLevelMaintainerTerminal extends AEBaseGui implements IJEIGhostIn
             this.inv = new ClientDCInternalInv(TileLevelMaintainer.ROWS, id, sortBy, "");
             for (int row = 0; row < TileLevelMaintainer.ROWS; row++) {
                 this.rows[row] = new Row(this, row);
+                this.states[row] = RowState.NONE;
             }
         }
 

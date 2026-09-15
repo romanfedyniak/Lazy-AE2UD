@@ -40,6 +40,12 @@ gui.threng.maintainer.type=Клік - ввести інше число
 gui.threng.maintainer.highlight=Показати, де ця машина
 gui.threng.maintainer.highlighted=Машину позначено на X: %s Y: %s Z: %s
 gui.threng.maintainer.otherDimension=Ця машина в іншому світі (%s), звідси її не позначити
+gui.threng.maintainer_state.stocked=У мережі достатньо
+gui.threng.maintainer_state.planning=Рахує план
+gui.threng.maintainer_state.crafting=Крафтиться
+gui.threng.maintainer_state.waiting=Чекає на процесор крафту
+gui.threng.maintainer_state.no_recipe=У мережі нема з чого це зробити
+gui.threng.maintainer_state.refused=Мережа відмовила
 gui.threng.wirelessMode.levelMaintainer=Підтримка рівня
 
 gui.threng.side.front=Спереду
