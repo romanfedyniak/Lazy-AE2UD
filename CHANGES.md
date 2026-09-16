@@ -40,6 +40,10 @@ All notable Lazy AE2 Unofficial Deconstructed changes are grouped by the version
   old library.
 - **An ingredient matches exactly as the script wrote it**, NBT included.
 - A machine switched off in the config keeps its script entry, so a script naming it still runs.
+- **CraftTweaker scripts keep working too**: `mods.threng.Aggregator`, `Centrifuge`, `Energizer` and `Etcher`,
+  with the old `addRecipe` and `removeRecipe`. An etching recipe that names no presses still takes redstone on
+  top and silicon below, where GroovyScript's leaves both slots empty, as each did before. The changes are made
+  after the mod's own recipes exist, in the order the script gives them, so a removal finds what it removes.
 
 ### Mass Assembly Chamber
 
