@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import io.netty.buffer.ByteBuf;
@@ -29,6 +30,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.wrapper.EmptyHandler;
 
 import lazyae2.block.BlockAssembler;
 import lazyae2.core.LazyAE2Config;
@@ -41,6 +43,7 @@ import appeng.api.networking.crafting.ICraftingMedium;
 import appeng.api.networking.crafting.ICraftingPatternDetails;
 import appeng.api.networking.crafting.ICraftingProvider;
 import appeng.api.networking.crafting.ICraftingProviderHelper;
+import appeng.api.networking.crafting.IPatternContainer;
 import appeng.api.networking.crafting.MachineIdentity;
 import appeng.api.networking.energy.IEnergyGrid;
 import appeng.api.networking.energy.IPowerUsageReporter;
@@ -76,7 +79,7 @@ import appeng.util.inv.WrapperChainedItemHandler;
  */
 public final class TileAssemblerController extends AENetworkTile
         implements BlockAssembler.IAssemblerBlock, ICraftingProvider, ICraftingMedium, IGridTickable,
-        IPowerUsageReporter {
+        IPowerUsageReporter, IPatternContainer {
 
     private static final GenericStack[] NO_EXTRAS = new GenericStack[0];
 
@@ -359,6 +362,46 @@ public final class TileAssemblerController extends AENetworkTile
             // it was active a moment ago, so there is a grid
         }
         return true;
+    }
+
+    // ---- what the pattern terminals see -------------------------------------------------------------
+
+    /** Listed while assembled: a chamber taken apart holds its patterns in modules nobody is using. */
+    @Override
+    public boolean isVisibleInTerminal() {
+        return this.assembled;
+    }
+
+    /** Every module's patterns, one after another - so a terminal draws four rows for each module. */
+    @Nonnull
+    @Override
+    public IItemHandler getTerminalPatternInventory() {
+        final IItemHandler patterns = this.getAllPatterns();
+        return patterns == null ? EmptyHandler.INSTANCE : patterns;
+    }
+
+    /** Crafting patterns only, the rule the modules keep themselves; a duplicate is refused there too. */
+    @Override
+    public boolean canAccept(@Nonnull final ItemStack pattern, @Nullable final ICraftingPatternDetails details) {
+        return details != null && details.isCraftable();
+    }
+
+    @Nonnull
+    @Override
+    public MachineIdentity getTerminalIdentity() {
+        return this.getMachineIdentity();
+    }
+
+    @Nullable
+    @Override
+    public DimensionalCoord getTerminalLocation() {
+        return new DimensionalCoord(this);
+    }
+
+    /** Both the medium and the terminal ask, and nothing here is pretended. */
+    @Override
+    public boolean isFakeCrafting() {
+        return false;
     }
 
     @Override

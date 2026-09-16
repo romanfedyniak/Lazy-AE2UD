@@ -54,6 +54,10 @@ All notable Lazy AE2 Unofficial Deconstructed changes are grouped by the version
 - **Taking a chamber apart does not throw away what it took**: it finishes that work and delivers it, and only
   takes nothing new. **Breaking the controller** hands everything it was crafting to the network at once,
   finished or not, so a job waiting for it carries on; whatever the network refuses drops.
+- **Both pattern terminals know the chamber**: the Pattern Access Terminal lists it under the controller's name
+  and picture, with every module's patterns in one entry, four rows a module, editable from there and pointing
+  at the controller; and a pattern encoded in a Pattern Terminal can be sent straight to it. It takes crafting
+  patterns only, and only while it is assembled.
 - **The Network Tool shows what a chamber draws while it crafts**, not only its idle 3 AE/t, through AE2's
   `IPowerUsageReporter` - so a network losing power to a busy chamber says where it goes.
 - **The config is `ticksPerJob` (10) and `energyPerJob` (100)** now. `jobQueueSize`, `workPerJob`,
