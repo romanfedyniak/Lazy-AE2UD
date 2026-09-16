@@ -68,12 +68,8 @@ public final class LazyAE2Config extends Configuration {
 
     private final boolean massAssemblerEnabled;
     private final double massAssemblerIdlePower;
-    private final int massAssemblerJobQueueSize;
-    private final int massAssemblerWorkPerJob;
-    private final double massAssemblerEnergyPerWorkBase;
-    private final double massAssemblerEnergyPerWorkUpgrade;
-    private final int massAssemblerWorkPerTickBase;
-    private final int massAssemblerWorkPerTickUpgrade;
+    private final int massAssemblerTicksPerJob;
+    private final double massAssemblerEnergyPerJob;
     private final int massAssemblerMaxSizeX;
     private final int massAssemblerMaxSizeY;
     private final int massAssemblerMaxSizeZ;
@@ -126,25 +122,17 @@ public final class LazyAE2Config extends Configuration {
         this.massAssemblerIdlePower = Math.max(0, this.get(MASS_ASSEMBLER, "idlePower",
                 this.legacyDouble(LEGACY_ASSEMBLER, "idlePower", 3D),
                 "Power the chamber draws while doing nothing (AE/t).").getDouble());
-        this.massAssemblerJobQueueSize = Math.max(1, this.get(MASS_ASSEMBLER, "jobQueueSize",
-                this.legacyInt(LEGACY_ASSEMBLER, "jobQueueSize", 64),
-                "How many crafting jobs the chamber queues. Lowering this can lose queued jobs.").getInt());
-        this.massAssemblerWorkPerJob = Math.max(1, this.get(MASS_ASSEMBLER, "workPerJob",
-                this.legacyInt(LEGACY_ASSEMBLER, "workPerJob", 16),
-                "How much work one crafting job takes.").getInt());
-        this.massAssemblerEnergyPerWorkBase = Math.max(0, this.get(MASS_ASSEMBLER, "energyPerWorkBase",
-                this.legacyDouble(LEGACY_ASSEMBLER, "energyPerWorkBase", 16D),
-                "Power one unit of work costs (AE).").getDouble());
-        this.massAssemblerEnergyPerWorkUpgrade = Math.max(0, this.get(MASS_ASSEMBLER, "energyPerWorkUpgrade",
-                this.legacyDouble(LEGACY_ASSEMBLER, "energyPerWorkUpgrade", 1D),
-                "Power each co-processor adds to one unit of work (AE).").getDouble());
-        this.massAssemblerWorkPerTickBase = Math.max(0, this.get(MASS_ASSEMBLER, "workPerTickBase",
-                this.legacyInt(LEGACY_ASSEMBLER, "workPerTickBase", 1),
-                "How much work the chamber does each tick with no co-processor installed. Zero makes a chamber "
-                        + "without one do nothing at all.").getInt());
-        this.massAssemblerWorkPerTickUpgrade = Math.max(1, this.get(MASS_ASSEMBLER, "workPerTickUpgrade",
-                this.legacyInt(LEGACY_ASSEMBLER, "workPerTickUpgrade", 3),
-                "How much work each co-processor adds to a tick.").getInt());
+        this.massAssemblerTicksPerJob = Math.max(1, this.get(MASS_ASSEMBLER, "ticksPerJob", 10,
+                "Ticks one craft takes, however many the chamber runs at once. Ten is what a Molecular "
+                        + "Assembler takes with no card in it.").getInt());
+        this.massAssemblerEnergyPerJob = Math.max(0, this.get(MASS_ASSEMBLER, "energyPerJob", 100D,
+                "Power one craft costs, spread over its ticks (AE). A hundred is what a Molecular Assembler "
+                        + "spends on one.").getDouble());
+        // The chamber no longer queues work or pools it, so what tuned that means nothing now
+        for (final String gone : new String[] { "jobQueueSize", "workPerJob", "energyPerWorkBase",
+                "energyPerWorkUpgrade", "workPerTickBase", "workPerTickUpgrade" }) {
+            this.getCategory(MASS_ASSEMBLER).remove(gone);
+        }
         this.massAssemblerMaxSizeX = this.readChamberSize("maxSizeX", "east to west");
         this.massAssemblerMaxSizeY = this.readChamberSize("maxSizeY", "bottom to top");
         this.massAssemblerMaxSizeZ = this.readChamberSize("maxSizeZ", "north to south");
@@ -346,28 +334,12 @@ public final class LazyAE2Config extends Configuration {
         return this.massAssemblerIdlePower;
     }
 
-    public int getMassAssemblerJobQueueSize() {
-        return this.massAssemblerJobQueueSize;
+    public int getMassAssemblerTicksPerJob() {
+        return this.massAssemblerTicksPerJob;
     }
 
-    public int getMassAssemblerWorkPerJob() {
-        return this.massAssemblerWorkPerJob;
-    }
-
-    public double getMassAssemblerEnergyPerWorkBase() {
-        return this.massAssemblerEnergyPerWorkBase;
-    }
-
-    public double getMassAssemblerEnergyPerWorkUpgrade() {
-        return this.massAssemblerEnergyPerWorkUpgrade;
-    }
-
-    public int getMassAssemblerWorkPerTickBase() {
-        return this.massAssemblerWorkPerTickBase;
-    }
-
-    public int getMassAssemblerWorkPerTickUpgrade() {
-        return this.massAssemblerWorkPerTickUpgrade;
+    public double getMassAssemblerEnergyPerJob() {
+        return this.massAssemblerEnergyPerJob;
     }
 
     public int getMassAssemblerMaxSizeX() {

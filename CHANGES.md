@@ -36,6 +36,28 @@ All notable Lazy AE2 Unofficial Deconstructed changes are grouped by the version
   modules. A pattern module takes **crafting patterns only**, through the IO port as well - the old
   mod let a processing pattern in and then never used it. **The same pattern goes in once**: a second copy of
   one already anywhere in the chamber is refused, since it would only take a slot.
+- **The chamber crafts as many things at once as it has slots**: one of its own, plus what its co-processing
+  modules add. Every craft takes 10 ticks and 100 AE, spread over those ticks - exactly a Molecular Assembler's
+  numbers, so a chamber is that many assemblers in one box. Short of power a craft slows down, as an
+  assembler's does, and the power there is goes to the oldest crafts first, so something still finishes. The
+  old mod pooled work across the whole chamber instead, which let one craft finish instantly with enough
+  co-processors and made the progress bar a pool rather than anything a craft was doing.
+- **A crafting CPU hands the chamber everything its free slots take in one go**, through AE2's new batch push
+  (`ICraftingMedium.maxCopies`), and a batch finishes, and is delivered, as one. A chamber of ten thousand slots
+  costs the server one call and one delivery per batch rather than ten thousand of each. The CPU still spends
+  one of its operations per craft, so filling a large chamber quickly still takes co-processors.
+- **What a craft makes is worked out when it starts**, so the chamber keeps no ingredients - the old mod's
+  buffer of every queued job's nine inputs is gone. Each pattern is offered to the network once, however many
+  modules hold it.
+- **What the network will not take stays in the chamber and keeps its slots**, so a chamber with nowhere to put
+  its results stops taking work until there is; it offers them again every second.
+- **Taking a chamber apart does not throw away what it took**: it finishes that work and delivers it, and only
+  takes nothing new. **Breaking the controller** hands everything it was crafting to the network at once,
+  finished or not, so a job waiting for it carries on; whatever the network refuses drops.
+- **The config is `ticksPerJob` (10) and `energyPerJob` (100)** now. `jobQueueSize`, `workPerJob`,
+  `workPerTickBase`, `workPerTickUpgrade`, `energyPerWorkBase` and `energyPerWorkUpgrade` described the pooled
+  work and are removed, so a value tuned in them is not carried over. A chamber the old mod saved keeps its
+  queued jobs, each starting over as one craft, and everything in its output buffer is delivered.
 - **Co-processing modules come in five tiers**, 1x, 4x, 16x, 64x and 256x, each made with AE2's co-processing
   unit of the same size in place of the plain one. A tier's worth is how many more crafts the chamber runs at
   once, and its tooltip says so. The old mod had one module, and a chamber it saved keeps it as 1x.

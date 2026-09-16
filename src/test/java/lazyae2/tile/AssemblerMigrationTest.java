@@ -28,9 +28,14 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.FMLInjectionData;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.registries.RegistryBuilder;
 
 import lazyae2.core.LazyAE2Config;
+import appeng.api.stacks.AEKeyType;
+import appeng.api.stacks.AEKeyTypes;
+import appeng.core.api.AEItemKeyType;
 
 /**
  * A chamber the old mod saved, written out by hand in the shape its library gave it, read into this one.
@@ -48,6 +53,11 @@ final class AssemblerMigrationTest {
         home.set(null, config);
         LazyAE2Config.init(config);
         fakeServerSide();
+        if (GameRegistry.findRegistry(AEKeyType.class) == null) {
+            new RegistryBuilder<AEKeyType>().setName(AEKeyTypes.REGISTRY_NAME).setType(AEKeyType.class)
+                    .setIDRange(0, 127).create();
+            AEKeyTypes.register(new AEItemKeyType());
+        }
 
         // A tile writes the id it was registered under, and nothing registers these outside a game
         TileEntity.register("threng:TileBigAssemblerCore", TileAssemblerController.class);
@@ -134,11 +144,26 @@ final class AssemblerMigrationTest {
         final NBTTagCompound multiBlock = new NBTTagCompound();
         multiBlock.setTag("ChildDirs", new NBTTagCompound());
         multiBlock.setBoolean("Formed", true);
+
+        final NBTTagList jobs = new NBTTagList();
+        jobs.appendTag(job(new ItemStack(Items.CAKE), new ItemStack(Items.BUCKET, 3)));
+        jobs.appendTag(job(new ItemStack(Items.STICK, 4)));
         final NBTTagCompound queue = new NBTTagCompound();
-        queue.setTag("Queue", new NBTTagList());
+        queue.setByteArray("JobSlots", new byte[] { 3 });
+        queue.setTag("Queue", jobs);
+
+        final NBTTagList buffer = new NBTTagList();
+        buffer.appendTag(new NBTTagCompound());
+        buffer.appendTag(new ItemStack(Items.DIAMOND, 2).writeToNBT(new NBTTagCompound()));
+        final NBTTagCompound outputs = new NBTTagCompound();
+        outputs.setTag("Items", buffer);
+
         final NBTTagCompound saved = tile("threng:TileBigAssemblerCore");
         saved.setTag("MultiBlock", multiBlock);
         saved.setTag("JobQueue", queue);
+        saved.setTag("OutputBuffer", outputs);
+        saved.setTag("CraftingBuffer", new NBTTagCompound());
+        saved.setInteger("CpuCount", 3);
         saved.setInteger("Work", 7);
         saved.setTag("aeproxy", new NBTTagCompound());
 
@@ -149,12 +174,31 @@ final class AssemblerMigrationTest {
         // Its walls are found again once the world around it has loaded; until then it is not assembled
         assertFalse(controller.isAssembled());
         assertTrue(written.getBoolean("legacyAssembled"));
-        assertTrue(written.getCompoundTag("legacyWork").hasKey("JobQueue"));
-        assertEquals(7, written.getCompoundTag("legacyWork").getInteger("Work"));
+
+        final NBTTagList work = written.getTagList("work", 10);
+        assertEquals(3, work.tagCount(), "two jobs and the output buffer");
+        assertEquals(1, work.getCompoundTagAt(0).getInteger("copies"));
+        assertEquals(0, work.getCompoundTagAt(0).getDouble("progress"), 1e-9, "a queued job starts over");
+        assertEquals(2, work.getCompoundTagAt(0).getTagList("outputs", 10).tagCount(), "the cake and the buckets");
+        assertEquals(0, work.getCompoundTagAt(2).getInteger("copies"), "what was already made holds no slot");
+        assertEquals(1, work.getCompoundTagAt(2).getDouble("progress"), 1e-9);
 
         final TileAssemblerController again = new TileAssemblerController();
         again.readFromNBT(written);
-        assertTrue(again.writeToNBT(new NBTTagCompound()).getBoolean("legacyAssembled"));
+        assertEquals(3, again.writeToNBT(new NBTTagCompound()).getTagList("work", 10).tagCount());
+    }
+
+    /** One job of the old queue: what it makes, and the nine slots of what it leaves behind. */
+    private static NBTTagCompound job(final ItemStack result, final ItemStack... left) {
+        final NBTTagList remaining = new NBTTagList();
+        for (int slot = 0; slot < 9; slot++) {
+            remaining.appendTag((slot < left.length ? left[slot] : ItemStack.EMPTY).writeToNBT(new NBTTagCompound()));
+        }
+        final NBTTagCompound tag = new NBTTagCompound();
+        tag.setInteger("Index", 0);
+        tag.setTag("Remaining", remaining);
+        tag.setTag("Result", result.writeToNBT(new NBTTagCompound()));
+        return tag;
     }
 
     private static NBTTagCompound tile(final String id) {

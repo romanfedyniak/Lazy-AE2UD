@@ -218,7 +218,11 @@ public final class BlockAssembler extends Block {
     public void breakBlock(final World world, final BlockPos pos, final IBlockState state) {
         final TileEntity tile = world.getTileEntity(pos);
         if (tile instanceof TileAssemblerController) {
-            ((TileAssemblerController) tile).disassemble();
+            final NonNullList<ItemStack> drops = NonNullList.create();
+            ((TileAssemblerController) tile).onBroken(drops);
+            for (final ItemStack drop : drops) {
+                Block.spawnAsEntity(world, pos, drop);
+            }
         } else if (tile instanceof TileAssemblerPart) {
             final TileAssemblerController controller = ((TileAssemblerPart) tile).getController();
             if (controller != null) {
