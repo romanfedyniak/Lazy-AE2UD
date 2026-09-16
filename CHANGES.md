@@ -29,6 +29,18 @@ All notable Lazy AE2 Unofficial Deconstructed changes are grouped by the version
   makes, and the arrow says so when hovered - in HEI's own words, so it is already translated. Only with a
   recipe viewer installed.
 
+### Scripts
+
+- **GroovyScript works with the mod again.** GroovyScript's own support for Lazy AE2 was written against the
+  old mod's library and crashed without it; the mod now brings its own, which GroovyScript prefers, under the
+  same names - `mods.threng` or `mods.lazyae2`, with `aggregator`, `centrifuge`, `energizer` and `etcher` - and
+  the same methods: `recipeBuilder()`, `removeByInput`, `removeByOutput`, `removeAll`, `streamRecipes`, `add`
+  and `remove`, taken from GroovyScript's built-in Lazy AE2 support (`CleanroomMC/GroovyScript`). A script
+  written for the old mod runs unchanged, unless it reached into a recipe's own fields, which belonged to the
+  old library.
+- **An ingredient matches exactly as the script wrote it**, NBT included.
+- A machine switched off in the config keeps its script entry, so a script naming it still runs.
+
 ### Mass Assembly Chamber
 
 - **The chamber's blocks are back** - frame, vent, controller, IO port, pattern module and co-processing
