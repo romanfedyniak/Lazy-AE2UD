@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
@@ -248,6 +249,11 @@ public final class TileAssemblerController extends AENetworkTile
         } catch (final GridAccessException ignored) {
             return 0;
         }
+    }
+
+    /** How many crafts of each thing are being made, and how many are done and wait for room. */
+    public void countCrafts(final Map<AEKey, Long> working, final Map<AEKey, Long> waiting) {
+        this.work.countCrafts(working, waiting);
     }
 
     /** How many of the chamber's slots its work holds. */

@@ -96,6 +96,10 @@ gui.threng.assembler.busy=Crafting %s of %s at once
 gui.threng.assembler.rate=%s crafts a second
 gui.threng.assembler.power=Drawing %s
 gui.threng.assembler.patterns=Patterns: %s in %s slots
+gui.threng.assembler.working=In progress
+gui.threng.assembler.waiting=Waiting for room in the network
+gui.threng.assembler.crafts=%s — %s crafts
+gui.threng.assembler.moreKinds=…and %s more
 gui.threng.assembler.modules=Pattern modules: %s
 
 probe.threng.making=Making

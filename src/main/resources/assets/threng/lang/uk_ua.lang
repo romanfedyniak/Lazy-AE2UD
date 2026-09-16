@@ -96,6 +96,10 @@ gui.threng.assembler.busy=Крафтить %s з %s одночасно
 gui.threng.assembler.rate=%s крафтів за секунду
 gui.threng.assembler.power=Споживає %s
 gui.threng.assembler.patterns=Шаблонів: %s у %s слотах
+gui.threng.assembler.working=В роботі
+gui.threng.assembler.waiting=Чекає місця в мережі
+gui.threng.assembler.crafts=%s — крафтів: %s
+gui.threng.assembler.moreKinds=…і ще %s
 gui.threng.assembler.modules=Модулів шаблонів: %s
 
 probe.threng.making=Виготовляє

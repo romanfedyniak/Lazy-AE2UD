@@ -16,16 +16,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.util.Constants;
 
 import lazyae2.block.BlockAssembler;
 import lazyae2.container.ContainerAssembler;
+import lazyae2.network.PacketAssemblerWork;
 import lazyae2.tile.TileAssemblerController;
 import lazyae2.tile.TileAssemblerPatterns;
 import appeng.api.config.Settings;
@@ -84,6 +88,8 @@ public final class GuiAssembler extends AEBaseGui {
 
     private final ContainerAssembler container;
     private final MEGuiTooltipTextField search;
+    @Nullable
+    private PacketAssemblerWork work;
     private final RepoSearch outputSearch = new RepoSearch();
 
     /** Each module the server told about, by position, and the order the chamber keeps them in. */
@@ -274,10 +280,37 @@ public final class GuiAssembler extends AEBaseGui {
 
     private List<String> slotsTooltip() {
         final double craftsPerSecond = this.container.busy * 20D / Math.max(1, this.container.ticksPerJob);
-        return Arrays.asList(
+        final List<String> lines = new ArrayList<>(Arrays.asList(
                 I18n.format("gui.threng.assembler.busy", this.container.busy, this.container.parallel),
                 I18n.format("gui.threng.assembler.rate", String.format("%.1f", craftsPerSecond)),
-                I18n.format("gui.threng.assembler.power", Platform.formatPowerLong(this.container.power, true)));
+                I18n.format("gui.threng.assembler.power", Platform.formatPowerLong(this.container.power, true))));
+        if (this.work != null) {
+            listCrafts(lines, "gui.threng.assembler.working", this.work.getWorking(), this.work.getWorkingKinds());
+            listCrafts(lines, "gui.threng.assembler.waiting", this.work.getWaiting(), this.work.getWaitingKinds());
+        }
+        return lines;
+    }
+
+    /** One of the two lists of what the chamber holds: a heading, a line a kind, and how many kinds are left out. */
+    private static void listCrafts(final List<String> lines, final String heading, final List<GenericStack> crafts,
+            final int kinds) {
+        if (crafts.isEmpty()) {
+            return;
+        }
+        lines.add("");
+        lines.add(TextFormatting.GRAY + I18n.format(heading));
+        for (final GenericStack craft : crafts) {
+            lines.add(I18n.format("gui.threng.assembler.crafts", craft.what().getDisplayName().getFormattedText(),
+                    craft.amount()));
+        }
+        if (kinds > crafts.size()) {
+            lines.add(TextFormatting.GRAY + I18n.format("gui.threng.assembler.moreKinds", kinds - crafts.size()));
+        }
+    }
+
+    /** What the chamber is crafting, sent every half second while the window is open. */
+    public void postWork(final PacketAssemblerWork work) {
+        this.work = work;
     }
 
     private void drawBarText(final int left, final int width, final String text) {

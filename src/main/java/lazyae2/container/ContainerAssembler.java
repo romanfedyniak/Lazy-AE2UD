@@ -8,9 +8,13 @@
 package lazyae2.container;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.annotation.Nullable;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -24,9 +28,12 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import lazyae2.core.LazyAE2Config;
 import lazyae2.network.ModNetwork;
 import lazyae2.network.PacketAssemblerPatterns;
+import lazyae2.network.PacketAssemblerWork;
 import lazyae2.tile.TileAssemblerController;
 import lazyae2.tile.TileAssemblerPatterns;
 import appeng.client.me.SlotDisconnected;
+import appeng.api.stacks.AEKey;
+import appeng.api.stacks.GenericStack;
 import appeng.container.AEBaseContainer;
 import appeng.container.guisync.GuiSync;
 import appeng.container.slot.AppEngSlot;
@@ -48,12 +55,20 @@ import static appeng.helpers.ItemStackHelper.stackWriteToNBT;
  */
 public final class ContainerAssembler extends AEBaseContainer {
 
+    /** How many kinds of craft each of the window's two lists names before it says how many more there are. */
+    public static final int LISTED_KINDS = 10;
+    /** How often the lists are counted again, in ticks: a chamber can hold thousands of batches. */
+    private static final int WORK_LIST_TICKS = 10;
+
     /** How many modules go into one packet, which keeps any one packet small however large the chamber. */
     private static final int MODULES_PER_PACKET = 8;
 
     private final TileAssemblerController controller;
     /** Each module by its position, with what the window was last told it holds. */
     private final Map<Long, Tracker> trackers = new LinkedHashMap<>();
+    @Nullable
+    private PacketAssemblerWork sentWork;
+    private int workListIn;
 
     @GuiSync(40)
     public int busy;
@@ -89,6 +104,7 @@ public final class ContainerAssembler extends AEBaseContainer {
         if (Platform.isServer()) {
             this.updateNumbers();
             this.sendPatterns();
+            this.sendWork();
         }
         super.detectAndSendChanges();
     }
@@ -113,6 +129,34 @@ public final class ContainerAssembler extends AEBaseContainer {
         }
         this.patterns = filled;
         this.patternSlots = slots;
+    }
+
+    private void sendWork() {
+        if (this.workListIn-- > 0) {
+            return;
+        }
+        this.workListIn = WORK_LIST_TICKS;
+
+        final Map<AEKey, Long> working = new HashMap<>();
+        final Map<AEKey, Long> waiting = new HashMap<>();
+        this.controller.countCrafts(working, waiting);
+        final PacketAssemblerWork work = new PacketAssemblerWork(top(working), working.size(), top(waiting),
+                waiting.size());
+        if (!work.equals(this.sentWork)) {
+            this.sentWork = work;
+            ModNetwork.CHANNEL.sendTo(work, (EntityPlayerMP) this.getPlayerInv().player);
+        }
+    }
+
+    /** The kinds with the most crafts, most first. */
+    private static List<GenericStack> top(final Map<AEKey, Long> crafts) {
+        final List<GenericStack> sorted = new ArrayList<>(crafts.size());
+        for (final Map.Entry<AEKey, Long> entry : crafts.entrySet()) {
+            sorted.add(new GenericStack(entry.getKey(), entry.getValue()));
+        }
+        sorted.sort(Comparator.comparingLong(GenericStack::amount).reversed()
+                .thenComparing(stack -> stack.what().getId().toString()));
+        return sorted.size() > LISTED_KINDS ? new ArrayList<>(sorted.subList(0, LISTED_KINDS)) : sorted;
     }
 
     private void sendPatterns() {

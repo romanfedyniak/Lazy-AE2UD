@@ -9,6 +9,9 @@ package lazyae2.tile;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Nullable;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -39,6 +42,9 @@ public final class AssemblerWork {
 
         /** How many crafts it stands for, which is how many of the chamber's slots it holds. */
         final int copies;
+        /** What the crafts make, for the window's list; none for work carried over with no crafts. */
+        @Nullable
+        final AEKey result;
         /** Everything it hands back, results and emptied containers, already multiplied by the copies. */
         final List<GenericStack> outputs;
         /** From 0 to 1. */
@@ -46,8 +52,10 @@ public final class AssemblerWork {
         /** The tick before which a refused delivery is not tried again. */
         long retryAt;
 
-        Batch(final int copies, final List<GenericStack> outputs, final double progress) {
+        Batch(final int copies, @Nullable final AEKey result, final List<GenericStack> outputs,
+                final double progress) {
             this.copies = copies;
+            this.result = result;
             this.outputs = outputs;
             this.progress = progress;
         }
@@ -70,14 +78,27 @@ public final class AssemblerWork {
     }
 
     public void add(final int copies, final List<GenericStack> outputs) {
-        this.batches.add(new Batch(copies, new ArrayList<>(outputs), 0));
+        this.batches.add(new Batch(copies, outputs.isEmpty() ? null : outputs.get(0).what(),
+                new ArrayList<>(outputs), 0));
         this.busy += copies;
     }
 
     /** Work that is already done: it holds no slot and only waits to be delivered. */
     public void addFinished(final List<GenericStack> outputs) {
         if (!outputs.isEmpty()) {
-            this.batches.add(new Batch(0, new ArrayList<>(outputs), 1));
+            this.batches.add(new Batch(0, null, new ArrayList<>(outputs), 1));
+        }
+    }
+
+    /**
+     * How many crafts of each thing the work holds, counted into the first map while they are made and into
+     * the second once they are done and wait for the network to take them.
+     */
+    public void countCrafts(final Map<AEKey, Long> working, final Map<AEKey, Long> waiting) {
+        for (final Batch batch : this.batches) {
+            if (batch.copies > 0 && batch.result != null) {
+                (batch.isFinished() ? waiting : working).merge(batch.result, (long) batch.copies, Long::sum);
+            }
         }
     }
 
@@ -188,6 +209,11 @@ public final class AssemblerWork {
             final NBTTagCompound tag = new NBTTagCompound();
             tag.setInteger("copies", batch.copies);
             tag.setDouble("progress", batch.progress);
+            if (batch.result != null) {
+                final NBTTagCompound result = new NBTTagCompound();
+                batch.result.toTagGeneric(result);
+                tag.setTag("result", result);
+            }
             final NBTTagList outputs = new NBTTagList();
             for (final GenericStack output : batch.outputs) {
                 final NBTTagCompound stack = new NBTTagCompound();
@@ -213,7 +239,10 @@ public final class AssemblerWork {
                     outputs.add(output);
                 }
             }
-            final Batch batch = new Batch(tag.getInteger("copies"), outputs, tag.getDouble("progress"));
+            // Saved before batches named their result, the result was the first output
+            final AEKey result = tag.hasKey("result") ? AEKey.fromTagGeneric(tag.getCompoundTag("result"))
+                    : outputs.isEmpty() ? null : outputs.get(0).what();
+            final Batch batch = new Batch(tag.getInteger("copies"), result, outputs, tag.getDouble("progress"));
             this.batches.add(batch);
             this.busy += batch.copies;
         }

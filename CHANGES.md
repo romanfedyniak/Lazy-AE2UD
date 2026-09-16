@@ -124,6 +124,10 @@ All notable Lazy AE2 Unofficial Deconstructed changes are grouped by the version
   out of how many the chamber can, and how many pattern slots are filled; the first one's tooltip gives the
   crafts a second and the power drawn. The old mod's picture of the job in progress is gone: out of hundreds
   of crafts at once, it showed one.
+- **The first bar's tooltip lists what the chamber is crafting**: a line for each thing it makes with how many
+  crafts of it are running, most first, and under it, apart, the crafts that are done and wait for the network
+  to take them - which is what a full bar with nothing moving is waiting on. Ten lines a list, and how many
+  kinds more.
 - **How large a chamber may be is a config line**, per axis, walls included - `massAssembler.maxSizeX`, `Y`
   and `Z`, 8 by default, which is the 8 × 8 × 8 the old mod allowed. **`massAssembler.requireSingleChunk`**
   keeps a chamber inside one chunk, as AE2's own `craftingCPU.requireSingleChunk` does for crafting CPUs. The

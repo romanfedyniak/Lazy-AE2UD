@@ -10,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -165,5 +166,40 @@ final class AssemblerWorkTest {
 
         assertEquals(7, loaded.getBusy());
         assertEquals(work.powerWanted(TICKS, ENERGY), loaded.powerWanted(TICKS, ENERGY), 1e-9);
+    }
+
+    @Test
+    void craftsAreCountedByWhatTheyMakeAndWhetherTheyWaitForRoom() {
+        final AssemblerWork work = new AssemblerWork();
+        work.add(16, Arrays.asList(new GenericStack(gear, 32), new GenericStack(bucket, 16)));
+        work.add(4, make(gear, 8));
+        work.add(3, make(bucket, 3));
+        work.addFinished(make(gear, 100));
+
+        // A batch that finished and that the network would not take waits for room
+        final AssemblerWork done = new AssemblerWork();
+        done.add(3, make(bucket, 3));
+        for (int tick = 0; tick < TICKS; tick++) {
+            done.spend(done.powerWanted(TICKS, ENERGY), TICKS, ENERGY);
+        }
+        done.deliver((what, amount) -> 0, TICKS);
+
+        final Map<AEKey, Long> working = new HashMap<>();
+        final Map<AEKey, Long> waiting = new HashMap<>();
+        work.countCrafts(working, waiting);
+        assertEquals(20L, working.get(gear), "crafts, not items, and the emptied buckets are not what is made");
+        assertEquals(3L, working.get(bucket));
+        assertTrue(waiting.isEmpty(), "work carried over with no crafts is not listed");
+
+        working.clear();
+        done.countCrafts(working, waiting);
+        assertTrue(working.isEmpty());
+        assertEquals(3L, waiting.get(bucket));
+
+        final AssemblerWork loaded = new AssemblerWork();
+        loaded.readFromNBT(work.writeToNBT());
+        working.clear();
+        loaded.countCrafts(working, waiting);
+        assertEquals(20L, working.get(gear), "a saved batch keeps what it makes");
     }
 }
