@@ -67,10 +67,19 @@ All notable Lazy AE2 Unofficial Deconstructed changes are grouped by the version
   too small or too large, that the controller stands on an edge, that a block belongs to another chamber, or
   that there is no pattern module inside. The old mod said only that assembly failed. A chamber that
   assembles says how large it is and how many crafts it runs at once.
-- **Assembly is still a click on the controller**, and a second click takes the chamber apart, as before - but
-  the controller's tooltip now says so, and clicking any other block of a chamber that is not assembled says to
-  click the controller rather than doing nothing. A click with a block in hand places the block, so a chamber
-  can be built against its own walls.
+- **Assembly is still a click on the controller**, with an empty hand; once assembled, a click on any block of
+  the chamber opens its window, and a sneaking click on the controller takes the chamber apart. The controller's
+  tooltip says so, and clicking any other block of a chamber that is not assembled says to click the controller
+  rather than doing nothing. A click with a block in hand places the block, so a chamber can be built against
+  its own walls.
+- **The window lists every pattern of every module** under a heading of its own, four rows a module, on the
+  Pattern Access Terminal's frame and scrolling the same way, as tall as the terminal style allows - the old
+  mod showed one module a page. Patterns go in and out with the same clicks as in that terminal, and follow
+  the module's rules. **The search reads what a pattern makes**, in the terminals' grammar: a module with
+  nothing that matches is left out and what matches is marked. **Two bars** say how many crafts are running
+  out of how many the chamber can, and how many pattern slots are filled; the first one's tooltip gives the
+  crafts a second and the power drawn. The old mod's picture of the job in progress is gone: out of hundreds
+  of crafts at once, it showed one.
 - **How large a chamber may be is a config line**, per axis, walls included - `massAssembler.maxSizeX`, `Y`
   and `Z`, 8 by default, which is the 8 × 8 × 8 the old mod allowed. **`massAssembler.requireSingleChunk`**
   keeps a chamber inside one chunk, as AE2's own `craftingCPU.requireSingleChunk` does for crafting CPUs. The

@@ -71,7 +71,7 @@ gui.threng.io.input=Приймає предмети
 gui.threng.io.output=Віддає предмети
 gui.threng.io.omni=В обидва боки
 
-tooltip.threng.assembler.controller=Правий клік порожньою рукою складає камеру навколо нього
+tooltip.threng.assembler.controller=Правий клік порожньою рукою складає камеру навколо нього, з Shift - розбирає
 tooltip.threng.assembler.parallel=Крафтів одночасно: +%s
 
 chat.threng.assembler.assembled=Камеру масової збірки складено: %s × %s × %s блоків, %s крафтів одночасно, модулів шаблонів: %s.
@@ -88,3 +88,12 @@ chat.threng.assembler.refused.secondController=Не складено: на %s, %
 chat.threng.assembler.refused.needsModule=Не складено: всередині, на %s, %s, %s, можуть бути лише модулі й повітря.
 chat.threng.assembler.refused.otherChamber=Не складено: блок на %s, %s, %s належить іншій камері.
 chat.threng.assembler.refused.noPatterns=Не складено: усередині камери потрібен хоча б один модуль шаблонів.
+
+gui.threng.assembler.title=Камера масової збірки
+gui.threng.assembler.search=Пошук за тим, що робить шаблон
+gui.threng.assembler.module=Модуль шаблонів %s
+gui.threng.assembler.busy=Крафтить %s з %s одночасно
+gui.threng.assembler.rate=%s крафтів за секунду
+gui.threng.assembler.power=Споживає %s
+gui.threng.assembler.patterns=Шаблонів: %s у %s слотах
+gui.threng.assembler.modules=Модулів шаблонів: %s

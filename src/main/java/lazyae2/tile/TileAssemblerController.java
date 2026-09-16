@@ -239,6 +239,29 @@ public final class TileAssemblerController extends AENetworkTile
         }
     }
 
+    /** How many of the chamber's slots its work holds. */
+    public int getBusy() {
+        return this.work.getBusy();
+    }
+
+    /** The chamber's pattern modules that are loaded, in the order they were found; none while it is not assembled. */
+    public List<TileAssemblerPatterns> getPatternModules() {
+        if (!this.assembled) {
+            return Collections.emptyList();
+        }
+        final List<TileAssemblerPatterns> modules = new ArrayList<>(this.patternModules.size());
+        for (final BlockPos at : this.patternModules) {
+            if (!this.world.isBlockLoaded(at)) {
+                continue;
+            }
+            final TileEntity tile = this.world.getTileEntity(at);
+            if (tile instanceof TileAssemblerPatterns) {
+                modules.add((TileAssemblerPatterns) tile);
+            }
+        }
+        return modules;
+    }
+
     /** Every pattern slot of the chamber, module after module, or null while it is not assembled. */
     @Nullable
     public IItemHandler getAllPatterns() {
@@ -246,14 +269,8 @@ public final class TileAssemblerController extends AENetworkTile
             return null;
         }
         final List<IItemHandler> handlers = new ArrayList<>(this.patternModules.size());
-        for (final BlockPos at : this.patternModules) {
-            if (!this.world.isBlockLoaded(at)) {
-                continue;
-            }
-            final TileEntity tile = this.world.getTileEntity(at);
-            if (tile instanceof TileAssemblerPatterns) {
-                handlers.add(((TileAssemblerPatterns) tile).getPatterns());
-            }
+        for (final TileAssemblerPatterns module : this.getPatternModules()) {
+            handlers.add(module.getPatterns());
         }
         return new WrapperChainedItemHandler(handlers.toArray(new IItemHandler[0]));
     }

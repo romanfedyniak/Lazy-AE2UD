@@ -33,8 +33,10 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
+import lazyae2.LazyAE2;
 import lazyae2.core.LazyAE2Config;
 import lazyae2.core.LazyAE2Tab;
+import lazyae2.core.ModGuiHandler;
 import lazyae2.core.Registration;
 import lazyae2.tile.TileAssemblerController;
 import lazyae2.tile.TileAssemblerIoPort;
@@ -206,9 +208,17 @@ public final class BlockAssembler extends Block {
         }
 
         final TileEntity tile = world.getTileEntity(pos);
-        if (tile instanceof TileAssemblerController) {
+        final TileAssemblerController controller = tile instanceof TileAssemblerController
+                ? (TileAssemblerController) tile
+                : tile instanceof TileAssemblerPart ? ((TileAssemblerPart) tile).getController() : null;
+
+        if (controller != null && controller.isAssembled() && !(tile == controller && player.isSneaking())) {
+            final BlockPos at = controller.getPos();
+            player.openGui(LazyAE2.instance, ModGuiHandler.ASSEMBLER, world, at.getX(), at.getY(), at.getZ());
+        } else if (tile instanceof TileAssemblerController) {
+            // Assembled, only a sneaking click gets here, and it takes the chamber apart
             ((TileAssemblerController) tile).toggleAssembly(player);
-        } else if (tile instanceof IAssemblerBlock && !((IAssemblerBlock) tile).isAssembled()) {
+        } else {
             player.sendMessage(message("chat.threng.assembler.clickController", TextFormatting.GRAY));
         }
         return true;

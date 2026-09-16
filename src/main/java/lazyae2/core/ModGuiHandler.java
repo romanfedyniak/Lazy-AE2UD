@@ -20,6 +20,7 @@ import net.minecraftforge.fml.common.network.IGuiHandler;
 
 import lazyae2.block.BlockMachine;
 import lazyae2.client.gui.GuiAggregator;
+import lazyae2.client.gui.GuiAssembler;
 import lazyae2.client.gui.GuiCentrifuge;
 import lazyae2.client.gui.GuiEnergizer;
 import lazyae2.client.gui.GuiLevelMaintainer;
@@ -28,6 +29,7 @@ import lazyae2.client.gui.GuiPau;
 import lazyae2.client.gui.GuiEtcher;
 import lazyae2.client.gui.GuiWirelessLevelMaintainerTerminal;
 import lazyae2.container.ContainerAggregator;
+import lazyae2.container.ContainerAssembler;
 import lazyae2.container.ContainerCentrifuge;
 import lazyae2.container.ContainerEnergizer;
 import lazyae2.container.ContainerLevelMaintainer;
@@ -37,6 +39,7 @@ import lazyae2.container.ContainerEtcher;
 import lazyae2.container.ContainerWirelessLevelMaintainerTerminal;
 import lazyae2.part.PartLevelMaintainerTerminal;
 import lazyae2.tile.TileAggregator;
+import lazyae2.tile.TileAssemblerController;
 import lazyae2.tile.TileCentrifuge;
 import lazyae2.tile.TileEnergizer;
 import lazyae2.tile.TileLevelMaintainer;
@@ -65,6 +68,9 @@ public final class ModGuiHandler implements IGuiHandler {
     /** The same terminal carried: x is the slot it sits in, and y says whether that is a bauble slot. */
     public static final int WIRELESS_TERMINAL = 24;
 
+    /** A Mass Assembly Chamber, opened at its controller whichever of its blocks was clicked. */
+    public static final int ASSEMBLER = 32;
+
     @Nullable
     @Override
     public Object getServerGuiElement(final int id, final EntityPlayer player, final World world, final int x, final int y,
@@ -88,6 +94,9 @@ public final class ModGuiHandler implements IGuiHandler {
         if (BlockMachine.Type.of(id) == BlockMachine.Type.LEVEL_MAINTAINER && tile instanceof TileLevelMaintainer) {
             return withContext(new ContainerLevelMaintainer(player.inventory, (TileLevelMaintainer) tile),
                     world, x, y, z);
+        }
+        if (id == ASSEMBLER && tile instanceof TileAssemblerController) {
+            return withContext(new ContainerAssembler(player.inventory, (TileAssemblerController) tile), world, x, y, z);
         }
         if (id >= TERMINAL && id < TERMINAL + EnumFacing.VALUES.length) {
             final PartLevelMaintainerTerminal terminal = terminalAt(world, x, y, z, id - TERMINAL);
@@ -131,6 +140,10 @@ public final class ModGuiHandler implements IGuiHandler {
         if (BlockMachine.Type.of(id) == BlockMachine.Type.LEVEL_MAINTAINER && tile instanceof TileLevelMaintainer) {
             return new GuiLevelMaintainer(withContext(
                     new ContainerLevelMaintainer(player.inventory, (TileLevelMaintainer) tile), world, x, y, z));
+        }
+        if (id == ASSEMBLER && tile instanceof TileAssemblerController) {
+            return new GuiAssembler(
+                    withContext(new ContainerAssembler(player.inventory, (TileAssemblerController) tile), world, x, y, z));
         }
         if (id >= TERMINAL && id < TERMINAL + EnumFacing.VALUES.length) {
             final PartLevelMaintainerTerminal terminal = terminalAt(world, x, y, z, id - TERMINAL);

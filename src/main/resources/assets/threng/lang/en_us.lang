@@ -71,7 +71,7 @@ gui.threng.io.input=Takes items in
 gui.threng.io.output=Lets items out
 gui.threng.io.omni=Both ways
 
-tooltip.threng.assembler.controller=Right-click with an empty hand to assemble the chamber around it
+tooltip.threng.assembler.controller=Right-click with an empty hand to assemble the chamber around it; sneak-right-click to take it apart
 tooltip.threng.assembler.parallel=Crafts at once: +%s
 
 chat.threng.assembler.assembled=Mass Assembly Chamber assembled: %s × %s × %s blocks, %s crafts at once, %s pattern modules.
@@ -88,3 +88,12 @@ chat.threng.assembler.refused.secondController=Not assembled: there is a second 
 chat.threng.assembler.refused.needsModule=Not assembled: inside, at %s, %s, %s, only modules and air may stand.
 chat.threng.assembler.refused.otherChamber=Not assembled: the block at %s, %s, %s belongs to another chamber.
 chat.threng.assembler.refused.noPatterns=Not assembled: the chamber needs at least one pattern module inside.
+
+gui.threng.assembler.title=Mass Assembly Chamber
+gui.threng.assembler.search=Search what a pattern makes
+gui.threng.assembler.module=Pattern module %s
+gui.threng.assembler.busy=Crafting %s of %s at once
+gui.threng.assembler.rate=%s crafts a second
+gui.threng.assembler.power=Drawing %s
+gui.threng.assembler.patterns=Patterns: %s in %s slots
+gui.threng.assembler.modules=Pattern modules: %s
