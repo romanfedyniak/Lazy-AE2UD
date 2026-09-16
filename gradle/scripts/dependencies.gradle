@@ -65,6 +65,8 @@ dependencies {
     implementation 'mezz:jei:4.34.0'
     implementation rfg.deobf('curse.maven:top-245211:2667280')
     implementation rfg.deobf('curse.maven:hwyla-253449:2568751')
+    compileOnly rfg.deobf('maven.modrinth:opencomputers:J90kUiyR') // 1.8.10
+    testImplementation rfg.deobf('maven.modrinth:opencomputers:J90kUiyR')
     compileOnly rfg.deobf('curse.maven:baubles-227083:2518667')
     compileOnly rfg.deobf('curse.maven:mouse-tweaks-unofficial-461660:5876158')
     implementation rfg.deobf('CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.20.716')

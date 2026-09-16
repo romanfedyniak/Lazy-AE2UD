@@ -21,6 +21,7 @@ import lazyae2.core.LazyAE2Config;
 import lazyae2.core.ModGuiBridges;
 import lazyae2.core.ModGuiHandler;
 import lazyae2.core.Registration;
+import lazyae2.integration.opencomputers.MaintainerDriver;
 import lazyae2.network.ModNetwork;
 import lazyae2.recipe.LazyRecipes;
 import lazyae2.tile.AssemblerStructure;
@@ -60,5 +61,8 @@ public final class LazyAE2 {
         Registration.registerUpgrades();
         Registration.registerRecipes();
         LazyRecipes.registerDefaults();
+        if (Loader.isModLoaded("opencomputers")) {
+            MaintainerDriver.register();
+        }
     }
 }

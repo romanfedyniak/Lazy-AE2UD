@@ -29,6 +29,19 @@ All notable Lazy AE2 Unofficial Deconstructed changes are grouped by the version
   makes, and the arrow says so when hovered - in HEI's own words, so it is already translated. Only with a
   recipe viewer installed.
 
+### OpenComputers
+
+- **The ME Level Maintainer is a component again**, `me_level_maintainer`, beside the machine or in an Adapter.
+  A program written for the old mod runs unchanged: `isRequestValid`, `clearRequest`, `getRequestItem`,
+  `setRequestItem` from a database, and the getters and setters of the quantity and the batch size, with rows
+  numbered from 0.
+- **A row that keeps something other than an item** answers `getRequestItem` with nil, and has calls of its own:
+  `setRequestFluid(index, name, …)` takes a fluid by name, in millibuckets, and `getRequest(index)` gives
+  everything about a row in one table - its type, name, label, quantity, batch size, whether it is switched on,
+  what it is doing, and a `key` that `setRequestKey(index, key, …)` takes back, so a program can copy any row,
+  of any kind of thing, without knowing what it holds.
+- **`isRequestEnabled` and `setRequestEnabled`** switch a row on and off, as the button beside it does.
+
 ### The One Probe and Waila
 
 - **Looking at a machine says what it is doing**, in The One Probe and in Waila alike. The old mod showed
