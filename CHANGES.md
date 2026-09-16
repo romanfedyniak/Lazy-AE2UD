@@ -54,6 +54,8 @@ All notable Lazy AE2 Unofficial Deconstructed changes are grouped by the version
 - **Taking a chamber apart does not throw away what it took**: it finishes that work and delivers it, and only
   takes nothing new. **Breaking the controller** hands everything it was crafting to the network at once,
   finished or not, so a job waiting for it carries on; whatever the network refuses drops.
+- **The Network Tool shows what a chamber draws while it crafts**, not only its idle 3 AE/t, through AE2's
+  `IPowerUsageReporter` - so a network losing power to a busy chamber says where it goes.
 - **The config is `ticksPerJob` (10) and `energyPerJob` (100)** now. `jobQueueSize`, `workPerJob`,
   `workPerTickBase`, `workPerTickUpgrade`, `energyPerWorkBase` and `energyPerWorkUpgrade` described the pooled
   work and are removed, so a value tuned in them is not carried over. A chamber the old mod saved keeps its

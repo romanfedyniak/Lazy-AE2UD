@@ -43,6 +43,7 @@ import appeng.api.networking.crafting.ICraftingProvider;
 import appeng.api.networking.crafting.ICraftingProviderHelper;
 import appeng.api.networking.crafting.MachineIdentity;
 import appeng.api.networking.energy.IEnergyGrid;
+import appeng.api.networking.energy.IPowerUsageReporter;
 import appeng.api.networking.events.MENetworkChannelsChanged;
 import appeng.api.networking.events.MENetworkCraftingPatternChange;
 import appeng.api.networking.events.MENetworkEventSubscribe;
@@ -60,6 +61,7 @@ import appeng.core.MultiblockLimits;
 import appeng.hooks.TickHandler;
 import appeng.me.GridAccessException;
 import appeng.me.helpers.MachineSource;
+import appeng.me.helpers.PowerUsageMeter;
 import appeng.tile.grid.AENetworkTile;
 import appeng.util.Platform;
 import appeng.util.inv.WrapperChainedItemHandler;
@@ -73,12 +75,14 @@ import appeng.util.inv.WrapperChainedItemHandler;
  * finish, and are delivered, as one batch.
  */
 public final class TileAssemblerController extends AENetworkTile
-        implements BlockAssembler.IAssemblerBlock, ICraftingProvider, ICraftingMedium, IGridTickable {
+        implements BlockAssembler.IAssemblerBlock, ICraftingProvider, ICraftingMedium, IGridTickable,
+        IPowerUsageReporter {
 
     private static final GenericStack[] NO_EXTRAS = new GenericStack[0];
 
     private final AssemblerWork work = new AssemblerWork();
     private final IActionSource source = new MachineSource(this);
+    private final PowerUsageMeter powerUsage = new PowerUsageMeter();
 
     private boolean assembled;
     @Nullable
@@ -378,6 +382,7 @@ public final class TileAssemblerController extends AENetworkTile
             final IEnergyGrid grid = this.getProxy().getEnergy();
             final double wanted = this.work.powerWanted(ticks, energy);
             final double got = wanted > 0 ? grid.extractAEPower(wanted, Actionable.MODULATE, PowerMultiplier.CONFIG) : 0;
+            this.powerUsage.record(this.world, got, PowerMultiplier.CONFIG);
             final boolean moved = this.work.spend(got, ticks, energy);
             changed = this.work.deliver(this::store, this.world.getTotalWorldTime()) || moved;
         } catch (final GridAccessException ignored) {
@@ -388,6 +393,12 @@ public final class TileAssemblerController extends AENetworkTile
             this.saveChanges();
         }
         return this.work.isEmpty() ? TickRateModulation.SLEEP : TickRateModulation.SAME;
+    }
+
+    /** What the crafts took over the last second, which the Network Tool adds to the idle drain. */
+    @Override
+    public double getActivePowerUsage() {
+        return this.powerUsage.average(this.world);
     }
 
     @MENetworkEventSubscribe
