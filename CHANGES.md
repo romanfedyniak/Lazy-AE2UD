@@ -29,6 +29,32 @@ All notable Lazy AE2 Unofficial Deconstructed changes are grouped by the version
   makes, and the arrow says so when hovered - in HEI's own words, so it is already translated. Only with a
   recipe viewer installed.
 
+### Mass Assembly Chamber
+
+- **The chamber's blocks are back** - frame, vent, controller, IO port, pattern module and co-processing
+  module - with the old mod's recipes, and a chamber a world holds keeps its blocks and every pattern in its
+  modules. A pattern module takes **crafting patterns only**, through the IO port as well - the old
+  mod let a processing pattern in and then never used it. **The same pattern goes in once**: a second copy of
+  one already anywhere in the chamber is refused, since it would only take a slot.
+- **Co-processing modules come in five tiers**, 1x, 4x, 16x, 64x and 256x, each made with AE2's co-processing
+  unit of the same size in place of the plain one. A tier's worth is how many more crafts the chamber runs at
+  once, and its tooltip says so. The old mod had one module, and a chamber it saved keeps it as 1x.
+- **A failed assembly says why**, in chat: which block at which coordinates is the wrong one, that the box is
+  too small or too large, that the controller stands on an edge, that a block belongs to another chamber, or
+  that there is no pattern module inside. The old mod said only that assembly failed. A chamber that
+  assembles says how large it is and how many crafts it runs at once.
+- **Assembly is still a click on the controller**, and a second click takes the chamber apart, as before - but
+  the controller's tooltip now says so, and clicking any other block of a chamber that is not assembled says to
+  click the controller rather than doing nothing. A click with a block in hand places the block, so a chamber
+  can be built against its own walls.
+- **How large a chamber may be is a config line**, per axis, walls included - `massAssembler.maxSizeX`, `Y`
+  and `Z`, 8 by default, which is the 8 × 8 × 8 the old mod allowed. **`massAssembler.requireSingleChunk`**
+  keeps a chamber inside one chunk, as AE2's own `craftingCPU.requireSingleChunk` does for crafting CPUs. The
+  controller's tooltip gives the size in force, and on a server it is the server's.
+- A chamber the old mod saved assembled never wrote down where its walls are, so it is **assembled again when
+  its controller loads**, and taken apart if its walls no longer stand. A chamber is checked the same way every
+  time it loads, so one that lost a wall while nobody was near is not left assembled.
+
 ### ME Level Maintainer Terminal
 
 - **A window that lists every ME Level Maintainer on the network**, each with its five rows under it, all of

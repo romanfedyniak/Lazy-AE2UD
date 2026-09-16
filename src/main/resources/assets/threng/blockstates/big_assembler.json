@@ -1,0 +1,64 @@
+{
+  "variants": {
+    "active=false,type=controller": {
+      "model": "threng:big_assembler_controller"
+    },
+    "active=false,type=frame": {
+      "model": "threng:big_assembler_frame"
+    },
+    "active=false,type=io_port": {
+      "model": "threng:big_assembler_io_port"
+    },
+    "active=false,type=module_cpu": {
+      "model": "threng:big_assembler_module_cpu"
+    },
+    "active=false,type=module_cpu_16x": {
+      "model": "threng:big_assembler_module_cpu_16x"
+    },
+    "active=false,type=module_cpu_256x": {
+      "model": "threng:big_assembler_module_cpu_256x"
+    },
+    "active=false,type=module_cpu_4x": {
+      "model": "threng:big_assembler_module_cpu_4x"
+    },
+    "active=false,type=module_cpu_64x": {
+      "model": "threng:big_assembler_module_cpu_64x"
+    },
+    "active=false,type=module_pattern": {
+      "model": "threng:big_assembler_module_pattern"
+    },
+    "active=false,type=vent": {
+      "model": "threng:big_assembler_vent"
+    },
+    "active=true,type=controller": {
+      "model": "threng:big_assembler_controller_active"
+    },
+    "active=true,type=frame": {
+      "model": "threng:big_assembler_frame_active"
+    },
+    "active=true,type=io_port": {
+      "model": "threng:big_assembler_io_port_active"
+    },
+    "active=true,type=module_cpu": {
+      "model": "threng:big_assembler_module_cpu_active"
+    },
+    "active=true,type=module_cpu_16x": {
+      "model": "threng:big_assembler_module_cpu_16x_active"
+    },
+    "active=true,type=module_cpu_256x": {
+      "model": "threng:big_assembler_module_cpu_256x_active"
+    },
+    "active=true,type=module_cpu_4x": {
+      "model": "threng:big_assembler_module_cpu_4x_active"
+    },
+    "active=true,type=module_cpu_64x": {
+      "model": "threng:big_assembler_module_cpu_64x_active"
+    },
+    "active=true,type=module_pattern": {
+      "model": "threng:big_assembler_module_pattern_active"
+    },
+    "active=true,type=vent": {
+      "model": "threng:big_assembler_vent_active"
+    }
+  }
+}

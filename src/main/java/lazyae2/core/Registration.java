@@ -24,12 +24,18 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 
 import lazyae2.Tags;
+import lazyae2.block.BlockAssembler;
 import lazyae2.block.BlockMachine;
+import lazyae2.item.ItemBlockAssembler;
 import lazyae2.item.ItemBlockMachine;
 import lazyae2.item.ItemMaterial;
 import lazyae2.item.ItemPartTerminal;
 import lazyae2.part.PartLevelMaintainerTerminal;
 import lazyae2.tile.TileAggregator;
+import lazyae2.tile.TileAssemblerController;
+import lazyae2.tile.TileAssemblerIoPort;
+import lazyae2.tile.TileAssemblerPart;
+import lazyae2.tile.TileAssemblerPatterns;
 import lazyae2.tile.TileCentrifuge;
 import lazyae2.tile.TileEnergizer;
 import lazyae2.tile.TileEtcher;
@@ -53,6 +59,7 @@ public final class Registration {
     public static final String MATERIAL = "material";
     public static final String MACHINE = "machine";
     public static final String TERMINAL = "level_maintainer_terminal";
+    public static final String ASSEMBLER = "big_assembler";
 
     @Nullable
     public static ItemMaterial material;
@@ -60,6 +67,8 @@ public final class Registration {
     public static BlockMachine machine;
     @Nullable
     public static ItemPartTerminal terminal;
+    @Nullable
+    public static BlockAssembler assembler;
 
     private Registration() {
     }
@@ -79,6 +88,22 @@ public final class Registration {
         GameRegistry.registerTileEntity(TilePau.class, new ResourceLocation(Tags.MOD_ID, "TileFastCraftingBus"));
         GameRegistry.registerTileEntity(TileLevelMaintainer.class,
                 new ResourceLocation(Tags.MOD_ID, "TileLevelMaintainer"));
+
+        if (LazyAE2Config.instance().isMassAssemblerEnabled()) {
+            assembler = new BlockAssembler();
+            assembler.setRegistryName(Tags.MOD_ID, ASSEMBLER);
+            assembler.setTranslationKey(Tags.MOD_ID + "." + ASSEMBLER);
+            event.getRegistry().register(assembler);
+
+            GameRegistry.registerTileEntity(TileAssemblerController.class,
+                    new ResourceLocation(Tags.MOD_ID, "TileBigAssemblerCore"));
+            GameRegistry.registerTileEntity(TileAssemblerPart.class,
+                    new ResourceLocation(Tags.MOD_ID, "TileBigAssemblerPart"));
+            GameRegistry.registerTileEntity(TileAssemblerPatterns.class,
+                    new ResourceLocation(Tags.MOD_ID, "TileBigAssemblerPatternStore"));
+            GameRegistry.registerTileEntity(TileAssemblerIoPort.class,
+                    new ResourceLocation(Tags.MOD_ID, "TileBigAssemblerIoPort"));
+        }
     }
 
     @SubscribeEvent
@@ -91,6 +116,9 @@ public final class Registration {
 
         if (machine != null) {
             event.getRegistry().register(new ItemBlockMachine(machine).setRegistryName(machine.getRegistryName()));
+        }
+        if (assembler != null) {
+            event.getRegistry().register(new ItemBlockAssembler(assembler).setRegistryName(assembler.getRegistryName()));
         }
 
         if (LazyAE2Config.instance().isLevelMaintainerTerminalEnabled()) {

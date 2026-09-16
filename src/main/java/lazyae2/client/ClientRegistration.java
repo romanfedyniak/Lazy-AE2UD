@@ -18,6 +18,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
 import lazyae2.Tags;
+import lazyae2.block.BlockAssembler;
 import lazyae2.block.BlockMachine;
 import lazyae2.core.Registration;
 import lazyae2.item.ItemMaterial;
@@ -54,6 +55,14 @@ public final class ClientRegistration {
         if (Registration.terminal != null) {
             ModelLoader.setCustomModelResourceLocation(Registration.terminal, 0, new ModelResourceLocation(
                     new ResourceLocation(Tags.MOD_ID, "part/" + Registration.TERMINAL), "inventory"));
+        }
+
+        if (Registration.assembler != null) {
+            final Item item = Item.getItemFromBlock(Registration.assembler);
+            for (final BlockAssembler.Type type : BlockAssembler.Type.all()) {
+                ModelLoader.setCustomModelResourceLocation(item, type.getMeta(), new ModelResourceLocation(
+                        new ResourceLocation(Tags.MOD_ID, Registration.ASSEMBLER + "_" + type.getName()), "inventory"));
+            }
         }
 
         if (Registration.machine != null) {

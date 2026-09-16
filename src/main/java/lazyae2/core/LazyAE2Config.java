@@ -74,6 +74,10 @@ public final class LazyAE2Config extends Configuration {
     private final double massAssemblerEnergyPerWorkUpgrade;
     private final int massAssemblerWorkPerTickBase;
     private final int massAssemblerWorkPerTickUpgrade;
+    private final int massAssemblerMaxSizeX;
+    private final int massAssemblerMaxSizeY;
+    private final int massAssemblerMaxSizeZ;
+    private final boolean massAssemblerSingleChunk;
 
     private LazyAE2Config(final File file) {
         super(file);
@@ -141,6 +145,12 @@ public final class LazyAE2Config extends Configuration {
         this.massAssemblerWorkPerTickUpgrade = Math.max(1, this.get(MASS_ASSEMBLER, "workPerTickUpgrade",
                 this.legacyInt(LEGACY_ASSEMBLER, "workPerTickUpgrade", 3),
                 "How much work each co-processor adds to a tick.").getInt());
+        this.massAssemblerMaxSizeX = this.readChamberSize("maxSizeX", "east to west");
+        this.massAssemblerMaxSizeY = this.readChamberSize("maxSizeY", "bottom to top");
+        this.massAssemblerMaxSizeZ = this.readChamberSize("maxSizeZ", "north to south");
+        this.massAssemblerSingleChunk = this.get(MASS_ASSEMBLER, "requireSingleChunk", false,
+                "Whether a chamber has to fit inside one chunk. A chamber across a chunk border can be left "
+                        + "half loaded, which is what this rules out.").getBoolean();
 
         this.setCategoryComment("upgrades.cards", "How many cards of a kind fit in each machine. Zero refuses "
                 + "the card there outright.");
@@ -154,6 +164,12 @@ public final class LazyAE2Config extends Configuration {
         this.patternPoints.put(PAU, Math.max(0, this.get("upgrades.points", "patterns." + PAU, 0).getInt()));
 
         this.dropLegacy();
+    }
+
+    private int readChamberSize(final String key, final String axis) {
+        return Math.max(3, this.get(MASS_ASSEMBLER, key, 8,
+                "The most blocks a chamber may measure " + axis + ", walls included. Three is the smallest "
+                        + "chamber there is: one block inside.").getInt());
     }
 
     private Processor readProcessor(final String section, final String legacyPrefix, final String machine,
@@ -352,6 +368,22 @@ public final class LazyAE2Config extends Configuration {
 
     public int getMassAssemblerWorkPerTickUpgrade() {
         return this.massAssemblerWorkPerTickUpgrade;
+    }
+
+    public int getMassAssemblerMaxSizeX() {
+        return this.massAssemblerMaxSizeX;
+    }
+
+    public int getMassAssemblerMaxSizeY() {
+        return this.massAssemblerMaxSizeY;
+    }
+
+    public int getMassAssemblerMaxSizeZ() {
+        return this.massAssemblerMaxSizeZ;
+    }
+
+    public boolean isMassAssemblerSingleChunk() {
+        return this.massAssemblerSingleChunk;
     }
 
     /**

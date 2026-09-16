@@ -21,6 +21,7 @@ import lazyae2.core.ModGuiHandler;
 import lazyae2.core.Registration;
 import lazyae2.network.ModNetwork;
 import lazyae2.recipe.LazyRecipes;
+import lazyae2.tile.AssemblerStructure;
 
 @Mod(modid = Tags.MOD_ID, name = Tags.MOD_NAME, version = Tags.VERSION, dependencies = LazyAE2.DEPENDENCIES)
 public final class LazyAE2 {
@@ -38,6 +39,7 @@ public final class LazyAE2 {
         LazyAE2Config.init(event.getModConfigurationDirectory());
         ModNetwork.init();
         Registration.registerTerminal();
+        AssemblerStructure.registerLimit();
     }
 
     @Mod.EventHandler

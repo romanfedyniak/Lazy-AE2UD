@@ -1,0 +1,6 @@
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "threng:blocks/big_assembler/module_cpu_64x_active"
+  }
+}

@@ -25,6 +25,17 @@ tile.threng.machine.energizer.name=Кристалічний енергетик
 tile.threng.machine.pau.name=Блок попередньої збірки
 tile.threng.machine.level_maintainer.name=Підтримка рівня ME
 
+tile.threng.big_assembler.frame.name=Каркас масового збирача
+tile.threng.big_assembler.vent.name=Вентиляція масового збирача
+tile.threng.big_assembler.controller.name=Контролер масового збирача
+tile.threng.big_assembler.io_port.name=Порт вводу/виводу масового збирача
+tile.threng.big_assembler.module_pattern.name=Модуль шаблонів масового збирача
+tile.threng.big_assembler.module_cpu.name=Модуль обробки масового збирача (1x)
+tile.threng.big_assembler.module_cpu_4x.name=Модуль обробки масового збирача (4x)
+tile.threng.big_assembler.module_cpu_16x.name=Модуль обробки масового збирача (16x)
+tile.threng.big_assembler.module_cpu_64x.name=Модуль обробки масового збирача (64x)
+tile.threng.big_assembler.module_cpu_256x.name=Модуль обробки масового збирача (256x)
+
 gui.threng.energy=%s / %s FE
 gui.threng.energy.cost=%s FE
 
@@ -59,3 +70,21 @@ gui.threng.io.none=Закрито
 gui.threng.io.input=Приймає предмети
 gui.threng.io.output=Віддає предмети
 gui.threng.io.omni=В обидва боки
+
+tooltip.threng.assembler.controller=Правий клік порожньою рукою складає камеру навколо нього
+tooltip.threng.assembler.parallel=Крафтів одночасно: +%s
+
+chat.threng.assembler.assembled=Камеру масової збірки складено: %s × %s × %s блоків, %s крафтів одночасно, модулів шаблонів: %s.
+chat.threng.assembler.disassembled=Камеру масової збірки розібрано.
+chat.threng.assembler.clickController=Ця камера не складена. Клацніть правою кнопкою порожньою рукою по її контролеру.
+chat.threng.assembler.refused.tooLarge=Не складено: камера більша за %s × %s × %s блоків. Камера, що торкається іншої, рахується разом з нею.
+chat.threng.assembler.refused.tooSmall=Не складено: блоки тут утворюють %s × %s × %s, а камера щонайменше 3 × 3 × 3.
+chat.threng.assembler.refused.acrossChunks=Не складено: камера має вміщатися в один чанк.
+chat.threng.assembler.refused.controllerOnEdge=Не складено: контролер має стояти в стіні, а не на ребрі.
+chat.threng.assembler.refused.unloaded=Не складено: блок на %s, %s, %s не завантажений.
+chat.threng.assembler.refused.needsFrame=Не складено: на ребрі на %s, %s, %s має стояти каркас масового збирача.
+chat.threng.assembler.refused.needsWall=Не складено: у стіні на %s, %s, %s має стояти вентиляція, порт вводу/виводу або контролер.
+chat.threng.assembler.refused.secondController=Не складено: на %s, %s, %s стоїть другий контролер.
+chat.threng.assembler.refused.needsModule=Не складено: всередині, на %s, %s, %s, можуть бути лише модулі й повітря.
+chat.threng.assembler.refused.otherChamber=Не складено: блок на %s, %s, %s належить іншій камері.
+chat.threng.assembler.refused.noPatterns=Не складено: усередині камери потрібен хоча б один модуль шаблонів.

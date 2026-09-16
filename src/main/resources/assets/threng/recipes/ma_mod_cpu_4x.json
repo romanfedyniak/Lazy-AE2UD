@@ -1,0 +1,42 @@
+{
+  "conditions": [
+    {
+      "type": "threng:enabled",
+      "machine": "massAssembler"
+    },
+    {
+      "type": "threng:item_exists",
+      "item": "appliedenergistics2:crafting_accelerator_4x"
+    }
+  ],
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "FAF",
+    "CPC",
+    "FXF"
+  ],
+  "key": {
+    "F": {
+      "item": "threng:big_assembler",
+      "data": 0
+    },
+    "A": {
+      "item": "appliedenergistics2:molecular_assembler"
+    },
+    "C": {
+      "item": "appliedenergistics2:part",
+      "data": 16
+    },
+    "P": {
+      "item": "threng:material",
+      "data": 6
+    },
+    "X": {
+      "item": "appliedenergistics2:crafting_accelerator_4x"
+    }
+  },
+  "result": {
+    "item": "threng:big_assembler",
+    "data": 6
+  }
+}

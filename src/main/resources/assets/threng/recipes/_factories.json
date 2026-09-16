@@ -1,5 +1,6 @@
 {
     "conditions": {
-        "enabled": "lazyae2.core.EnabledCondition"
+        "enabled": "lazyae2.core.EnabledCondition",
+        "item_exists": "lazyae2.core.ItemExistsCondition"
     }
 }

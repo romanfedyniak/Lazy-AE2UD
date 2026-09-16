@@ -25,6 +25,17 @@ tile.threng.machine.energizer.name=Crystal Energizer
 tile.threng.machine.pau.name=Preemptive Assembly Unit
 tile.threng.machine.level_maintainer.name=ME Level Maintainer
 
+tile.threng.big_assembler.frame.name=Mass Assembler Frame
+tile.threng.big_assembler.vent.name=Mass Assembler Vent
+tile.threng.big_assembler.controller.name=Mass Assembler Controller
+tile.threng.big_assembler.io_port.name=Mass Assembler IO Port
+tile.threng.big_assembler.module_pattern.name=Mass Assembler Pattern Module
+tile.threng.big_assembler.module_cpu.name=Mass Assembler Co-Processing Module (1x)
+tile.threng.big_assembler.module_cpu_4x.name=Mass Assembler Co-Processing Module (4x)
+tile.threng.big_assembler.module_cpu_16x.name=Mass Assembler Co-Processing Module (16x)
+tile.threng.big_assembler.module_cpu_64x.name=Mass Assembler Co-Processing Module (64x)
+tile.threng.big_assembler.module_cpu_256x.name=Mass Assembler Co-Processing Module (256x)
+
 gui.threng.energy=%s / %s FE
 gui.threng.energy.cost=%s FE
 
@@ -59,3 +70,21 @@ gui.threng.io.none=Closed
 gui.threng.io.input=Takes items in
 gui.threng.io.output=Lets items out
 gui.threng.io.omni=Both ways
+
+tooltip.threng.assembler.controller=Right-click with an empty hand to assemble the chamber around it
+tooltip.threng.assembler.parallel=Crafts at once: +%s
+
+chat.threng.assembler.assembled=Mass Assembly Chamber assembled: %s × %s × %s blocks, %s crafts at once, %s pattern modules.
+chat.threng.assembler.disassembled=Mass Assembly Chamber taken apart.
+chat.threng.assembler.clickController=This chamber is not assembled. Right-click its controller with an empty hand.
+chat.threng.assembler.refused.tooLarge=Not assembled: the chamber is larger than %s × %s × %s blocks. A chamber touching another one counts as one with it.
+chat.threng.assembler.refused.tooSmall=Not assembled: the blocks here make %s × %s × %s, and a chamber is at least 3 × 3 × 3.
+chat.threng.assembler.refused.acrossChunks=Not assembled: the chamber has to fit inside one chunk.
+chat.threng.assembler.refused.controllerOnEdge=Not assembled: the controller has to be in a wall, not on an edge.
+chat.threng.assembler.refused.unloaded=Not assembled: the block at %s, %s, %s is not loaded.
+chat.threng.assembler.refused.needsFrame=Not assembled: the edge at %s, %s, %s needs a Mass Assembler Frame.
+chat.threng.assembler.refused.needsWall=Not assembled: the wall at %s, %s, %s needs a vent, an IO port or the controller.
+chat.threng.assembler.refused.secondController=Not assembled: there is a second controller at %s, %s, %s.
+chat.threng.assembler.refused.needsModule=Not assembled: inside, at %s, %s, %s, only modules and air may stand.
+chat.threng.assembler.refused.otherChamber=Not assembled: the block at %s, %s, %s belongs to another chamber.
+chat.threng.assembler.refused.noPatterns=Not assembled: the chamber needs at least one pattern module inside.
