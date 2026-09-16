@@ -2,9 +2,9 @@ itemGroup.threng=Lazy AE2
 
 item.threng.material.fluix_steel.name=Злиток мінливої сталі
 item.threng.material.steel_process_dust.name=Вуглецево-мінлива сполука
-item.threng.material.steel_process_ingot.name=Залізний злиток у мінливому покритті
+item.threng.material.steel_process_ingot.name=Залізний злиток, вкритий мінливом
 item.threng.material.coal_dust.name=Вугільний пил
-item.threng.material.machine_core.name=Мінливий логічний блок
+item.threng.material.machine_core.name=Мінливий логічний модуль
 item.threng.material.space_gem.name=Резонансний кристал
 item.threng.material.parallel_processor.name=Масивно-паралельний процесор
 item.threng.material.spec_core.name=Ядро спекуляції (1x)
@@ -16,14 +16,14 @@ item.threng.material.spec_core_32.name=Ядро спекуляції (32x)
 item.threng.material.spec_core_64.name=Ядро спекуляції (64x)
 item.threng.material.spec_processor.name=Спекулятивний процесор
 
-item.threng.part.level_maintainer_terminal.name=Термінал підтримки рівня ME
+item.threng.part.level_maintainer_terminal.name=МЕ Термінал підтримки рівня
 
 tile.threng.machine.aggregator.name=Мінливий агрегатор
 tile.threng.machine.centrifuge.name=Імпульсна центрифуга
-tile.threng.machine.etcher.name=Травильник схем ME
-tile.threng.machine.energizer.name=Кристалічний енергетик
+tile.threng.machine.etcher.name=МЕ Травильник схем
+tile.threng.machine.energizer.name=Кристалічний енерджайзер
 tile.threng.machine.pau.name=Блок попередньої збірки
-tile.threng.machine.level_maintainer.name=Підтримка рівня ME
+tile.threng.machine.level_maintainer.name=МЕ Підтримка рівня
 
 tile.threng.big_assembler.frame.name=Каркас масового збирача
 tile.threng.big_assembler.vent.name=Вентиляція масового збирача
@@ -43,20 +43,20 @@ gui.threng.pau.toMachine=В машину
 gui.threng.pau.fromMachine=З машини
 gui.threng.maintainer.batch=Скільки замовляти за раз
 gui.threng.maintainer.keeping=Тримає %s
-gui.threng.maintainer.on=Увімкнено - клік вимикає рядок
-gui.threng.maintainer.off=Вимкнено - клік вмикає рядок
-gui.threng.maintainer.wheel=Коліщатком на слоті - скільки тримати
-gui.threng.maintainer_terminal.name=Термінал підтримки рівня ME
-gui.threng.maintainer.type=Клік - ввести інше число
+gui.threng.maintainer.on=Увімкнено — клік вимикає рядок
+gui.threng.maintainer.off=Вимкнено — клік вмикає рядок
+gui.threng.maintainer.wheel=Покрутіть коліщатко миші на слоті — скільки тримати
+gui.threng.maintainer_terminal.name=МЕ Термінал підтримки рівня
+gui.threng.maintainer.type=Клацніть, щоб ввести інше число
 gui.threng.maintainer.highlight=Показати, де ця машина
 gui.threng.maintainer.highlighted=Машину позначено на X: %s Y: %s Z: %s
-gui.threng.maintainer.otherDimension=Ця машина в іншому світі (%s), звідси її не позначити
+gui.threng.maintainer.otherDimension=Ця машина в іншому вимірі (%s), звідси її не позначити
 gui.threng.maintainer_state.stocked=У мережі достатньо
 gui.threng.maintainer_state.planning=Рахує план
 gui.threng.maintainer_state.crafting=Крафтиться
 gui.threng.maintainer_state.waiting=Чекає на процесор крафту
-gui.threng.maintainer_state.no_recipe=У мережі нема з чого це зробити
-gui.threng.maintainer_state.refused=Мережа відмовила
+gui.threng.maintainer_state.no_recipe=Ніщо в мережі це не виготовляє
+gui.threng.maintainer_state.refused=Мережа відхилила
 gui.threng.wirelessMode.levelMaintainer=Підтримка рівня
 
 gui.threng.side.front=Спереду
@@ -71,7 +71,7 @@ gui.threng.io.input=Приймає предмети
 gui.threng.io.output=Віддає предмети
 gui.threng.io.omni=В обидва боки
 
-tooltip.threng.assembler.controller=Правий клік порожньою рукою складає камеру навколо нього, з Shift - розбирає
+tooltip.threng.assembler.controller=Клацніть правою кнопкою порожньою рукою, щоб скласти камеру навколо нього, з Shift — розібрати
 tooltip.threng.assembler.parallel=Крафтів одночасно: +%s
 
 chat.threng.assembler.assembled=Камеру масової збірки складено: %s × %s × %s блоків, %s крафтів одночасно, модулів шаблонів: %s.
@@ -90,7 +90,7 @@ chat.threng.assembler.refused.otherChamber=Не складено: блок на 
 chat.threng.assembler.refused.noPatterns=Не складено: усередині камери потрібен хоча б один модуль шаблонів.
 
 gui.threng.assembler.title=Камера масової збірки
-gui.threng.assembler.search=Пошук за тим, що робить шаблон
+gui.threng.assembler.search=Шукати, що виготовляє шаблон
 gui.threng.assembler.module=Модуль шаблонів %s
 gui.threng.assembler.busy=Крафтить %s з %s одночасно
 gui.threng.assembler.rate=%s крафтів за секунду
@@ -102,7 +102,7 @@ probe.threng.making=Виготовляє
 probe.threng.progress=Прогрес
 probe.threng.assembler.notAssembled=Не зібрана
 probe.threng.assembler.size=Розмір
-probe.threng.assembler.crafting=Крафтів іде
+probe.threng.assembler.crafting=Крафти виконуються
 probe.threng.assembler.patterns=Шаблони
 probe.threng.pau.target=Передає інгредієнти в
 probe.threng.pau.noTarget=Не стоїть біля машини
