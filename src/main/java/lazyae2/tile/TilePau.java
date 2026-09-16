@@ -299,7 +299,9 @@ public final class TilePau extends AENetworkInvTile
         return this.identifyNeighbour().getIcon();
     }
 
-    private MachineIdentity identifyNeighbour() {
+    /** The machine the unit hands ingredients to, or null while it stands against none. */
+    @Nullable
+    public MachineIdentity getNeighbour() {
         for (final RelativeSide side : RelativeSide.all()) {
             if (!this.sides.get(side).allowsOutput()) {
                 continue;
@@ -309,6 +311,14 @@ public final class TilePau extends AENetworkInvTile
             if (identity != MachineIdentity.NOTHING) {
                 return identity;
             }
+        }
+        return null;
+    }
+
+    private MachineIdentity identifyNeighbour() {
+        final MachineIdentity neighbour = this.getNeighbour();
+        if (neighbour != null) {
+            return neighbour;
         }
         return new MachineIdentity("tile.threng.machine.pau.name", BlockMachine.Type.PAU.newStack(1));
     }

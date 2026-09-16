@@ -119,6 +119,11 @@ public final class TileCentrifuge extends TileProcessor {
     }
 
     @Override
+    public ItemStack getWorkOutput() {
+        return this.recipe == null ? ItemStack.EMPTY : this.recipe.getOutput();
+    }
+
+    @Override
     protected boolean recomputeCanWork() {
         final PurifyRecipe found = LazyRecipes.findCentrifuge(this.input.getStackInSlot(0));
         if (found == null) {

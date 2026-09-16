@@ -114,6 +114,14 @@ public final class TileAssemblerController extends AENetworkTile
         return this.assembled ? this.parallel : 0;
     }
 
+    /** How large the chamber is, walls included, or null while that is not known. */
+    @Nullable
+    public BlockPos getSize() {
+        return this.assembled && this.min != null && this.max != null
+                ? this.max.subtract(this.min).add(1, 1, 1)
+                : null;
+    }
+
     public int getPatternModuleCount() {
         return this.patternModules.size();
     }
@@ -135,7 +143,7 @@ public final class TileAssemblerController extends AENetworkTile
             return;
         }
         this.assemble(outcome.layout);
-        final BlockPos size = outcome.layout.max.subtract(outcome.layout.min).add(1, 1, 1);
+        final BlockPos size = this.getSize();
         player.sendMessage(BlockAssembler.message("chat.threng.assembler.assembled", TextFormatting.GREEN,
                 size.getX(), size.getY(), size.getZ(), this.parallel, this.patternModules.size()));
     }

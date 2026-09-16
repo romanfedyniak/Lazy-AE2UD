@@ -97,3 +97,12 @@ gui.threng.assembler.rate=%s крафтів за секунду
 gui.threng.assembler.power=Споживає %s
 gui.threng.assembler.patterns=Шаблонів: %s у %s слотах
 gui.threng.assembler.modules=Модулів шаблонів: %s
+
+probe.threng.making=Виготовляє
+probe.threng.progress=Прогрес
+probe.threng.assembler.notAssembled=Не зібрана
+probe.threng.assembler.size=Розмір
+probe.threng.assembler.crafting=Крафтів іде
+probe.threng.assembler.patterns=Шаблони
+probe.threng.pau.target=Передає інгредієнти в
+probe.threng.pau.noTarget=Не стоїть біля машини

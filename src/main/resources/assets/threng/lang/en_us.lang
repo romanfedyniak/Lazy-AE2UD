@@ -97,3 +97,12 @@ gui.threng.assembler.rate=%s crafts a second
 gui.threng.assembler.power=Drawing %s
 gui.threng.assembler.patterns=Patterns: %s in %s slots
 gui.threng.assembler.modules=Pattern modules: %s
+
+probe.threng.making=Making
+probe.threng.progress=Progress
+probe.threng.assembler.notAssembled=Not assembled
+probe.threng.assembler.size=Size
+probe.threng.assembler.crafting=Crafts running
+probe.threng.assembler.patterns=Patterns
+probe.threng.pau.target=Hands ingredients to
+probe.threng.pau.noTarget=Not facing a machine

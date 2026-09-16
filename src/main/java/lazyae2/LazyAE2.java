@@ -10,8 +10,10 @@ package lazyae2;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLInterModComms;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
@@ -40,6 +42,14 @@ public final class LazyAE2 {
         ModNetwork.init();
         Registration.registerTerminal();
         AssemblerStructure.registerLimit();
+        // Named rather than referenced, so neither probe's classes load without it
+        if (Loader.isModLoaded("theoneprobe")) {
+            FMLInterModComms.sendFunctionMessage("theoneprobe", "getTheOneProbe",
+                    "lazyae2.integration.theoneprobe.LazyAE2Probe");
+        }
+        if (Loader.isModLoaded("waila")) {
+            FMLInterModComms.sendMessage("waila", "register", "lazyae2.integration.waila.LazyAE2Waila.register");
+        }
     }
 
     @Mod.EventHandler

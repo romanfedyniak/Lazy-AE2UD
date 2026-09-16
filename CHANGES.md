@@ -29,6 +29,17 @@ All notable Lazy AE2 Unofficial Deconstructed changes are grouped by the version
   makes, and the arrow says so when hovered - in HEI's own words, so it is already translated. Only with a
   recipe viewer installed.
 
+### The One Probe and Waila
+
+- **Looking at a machine says what it is doing**, in The One Probe and in Waila alike. The old mod showed
+  nothing of its own in either.
+  - A Fluix Aggregator, Pulse Centrifuge, ME Circuit Etcher or Crystal Energizer: what it is making, and how far
+    along it is. Its energy is left to the probe, which already reads it.
+  - Any block of a Mass Assembly Chamber: whether it is assembled, how large it is, how many crafts are running
+    out of how many it can, and how many of its pattern slots are filled.
+  - An ME Level Maintainer: how many rows are in each state, in the colours its window gives them.
+  - A Preemptive Assembly Unit: the machine it hands ingredients to, or that it faces none.
+
 ### Scripts
 
 - **GroovyScript works with the mod again.** GroovyScript's own support for Lazy AE2 was written against the

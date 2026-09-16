@@ -96,6 +96,11 @@ public abstract class TileProcessor extends AEBaseInvTile
     protected abstract boolean recomputeCanWork();
 
     /**
+     * What the recipe in the slots makes, or nothing while there is none.
+     */
+    public abstract ItemStack getWorkOutput();
+
+    /**
      * Called once the work counter has run its course: the inputs are spent and the output appears.
      */
     protected abstract void finishWork();

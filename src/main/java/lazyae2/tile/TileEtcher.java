@@ -130,6 +130,11 @@ public final class TileEtcher extends TileProcessor {
     }
 
     @Override
+    public ItemStack getWorkOutput() {
+        return this.recipe == null ? ItemStack.EMPTY : this.recipe.getOutput();
+    }
+
+    @Override
     protected boolean recomputeCanWork() {
         final EtchRecipe found = LazyRecipes.findEtcher(this.slots());
         if (found == null) {

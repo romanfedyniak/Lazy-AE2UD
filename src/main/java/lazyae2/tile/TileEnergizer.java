@@ -130,6 +130,11 @@ public final class TileEnergizer extends TileProcessor {
     }
 
     @Override
+    public ItemStack getWorkOutput() {
+        return this.recipe == null ? ItemStack.EMPTY : this.recipe.getOutput();
+    }
+
+    @Override
     protected boolean recomputeCanWork() {
         final EnergizeRecipe found = LazyRecipes.findEnergizer(this.input.getStackInSlot(0));
         if (found == null) {
