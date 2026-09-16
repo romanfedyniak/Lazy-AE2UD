@@ -7,6 +7,7 @@
 
 package lazyae2.client.gui;
 
+import java.awt.Rectangle;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,6 +19,9 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
+import org.lwjgl.input.Mouse;
+
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -37,7 +41,9 @@ import appeng.api.config.TerminalStyle;
 import appeng.api.stacks.AEKey;
 import appeng.api.stacks.GenericStack;
 import appeng.client.gui.AEBaseGui;
+import appeng.client.gui.widgets.GuiImgButton;
 import appeng.client.gui.widgets.GuiScrollbar;
+import appeng.client.gui.widgets.GuiSettingsDrawer;
 import appeng.client.gui.widgets.MEGuiTooltipTextField;
 import appeng.client.me.ClientDCInternalInv;
 import appeng.client.me.SlotDisconnected;
@@ -101,6 +107,9 @@ public final class GuiAssembler extends AEBaseGui {
 
     private int rows = 6;
 
+    private final GuiSettingsDrawer settings = new GuiSettingsDrawer();
+    private final GuiImgButton terminalStyle = new GuiImgButton(0, 0, Settings.TERMINAL_STYLE, null);
+
     public GuiAssembler(final InventoryPlayer inventoryPlayer, final TileAssemblerController controller) {
         this(new ContainerAssembler(inventoryPlayer, controller));
     }
@@ -138,6 +147,11 @@ public final class GuiAssembler extends AEBaseGui {
 
         this.search.x = this.guiLeft + SEARCH_LEFT;
         this.search.y = this.guiTop + SEARCH_TOP;
+
+        // How tall the window is, shared with every terminal, as the Pattern Access Terminal keeps it
+        this.settings.attach(this.buttonList, this.guiLeft - 18, this.guiTop + 8);
+        this.terminalStyle.set(style);
+        this.buttonList.add(this.settings.take(this.terminalStyle));
 
         for (final Object slot : this.inventorySlots.inventorySlots) {
             if (slot instanceof AppEngSlot) {
@@ -324,6 +338,28 @@ public final class GuiAssembler extends AEBaseGui {
         GlStateManager.scale(0.5, 0.5, 1);
         this.drawItem(0, 0, stack);
         GlStateManager.popMatrix();
+    }
+
+    @Override
+    protected void actionPerformed(final GuiButton button) throws IOException {
+        if (this.settings.actionPerformed(button)) {
+            return;
+        }
+        if (button == this.terminalStyle) {
+            final Enum<?> next = Platform.rotateEnum(this.terminalStyle.getCurrentValue(), Mouse.isButtonDown(1),
+                    Settings.TERMINAL_STYLE.getPossibleValues());
+            AEClientConfig.instance().getConfigManager().putSetting(Settings.TERMINAL_STYLE, next);
+            this.refreshLayout();
+            return;
+        }
+        super.actionPerformed(button);
+    }
+
+    @Override
+    public List<Rectangle> getJEIExclusionArea() {
+        final List<Rectangle> area = new ArrayList<>(2);
+        this.settings.addExclusionAreas(area);
+        return area;
     }
 
     @Override
