@@ -12,6 +12,8 @@ All notable Lazy AE2 Unofficial Deconstructed changes are grouped by the version
 
 ## Unreleased
 
+- **The jar is called `lazyae2-ud`.** It was named `threng`, after the mod id, which says neither which mod it is
+  nor that it is this fork.
 - **Rewritten from scratch in Java.** LibNine, the library the original was built on, is gone, so it no longer has
   to be installed. Every window, tile and recipe is written against AE2 Unofficial Deconstructed instead.
 - **Every machine can be switched off**, in `config/lazy_ae2.cfg`, which takes its blocks and their recipes with
