@@ -360,8 +360,7 @@ public final class TileAssemblerController extends AENetworkTile
 
         final List<GenericStack> outputs = new ArrayList<>();
         outputs.add(new GenericStack(resultKey, (long) result.getCount() * copies));
-        for (int slot = 0; slot < table.getSizeInventory(); slot++) {
-            final ItemStack left = Platform.getRemainingItem(details, slot, table.getStackInSlot(slot), true);
+        for (final ItemStack left : Platform.getRemainingItems(details, table, this.world, true)) {
             final AEItemKey leftKey = left.isEmpty() ? null : AEItemKey.of(left);
             if (leftKey != null) {
                 outputs.add(new GenericStack(leftKey, (long) left.getCount() * copies));
