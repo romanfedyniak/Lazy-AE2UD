@@ -58,6 +58,7 @@ gui.threng.maintainer_state.waiting=Чекає на процесор крафт�
 gui.threng.maintainer_state.no_recipe=Ніщо в мережі це не виготовляє
 gui.threng.maintainer_state.refused=Мережа відхилила
 gui.threng.wirelessMode.levelMaintainer=Підтримка рівня
+key.threng.open_wireless_level_maintainer_terminal.desc=Відкрити бездротовий термінал підтримки рівня
 
 gui.threng.side.front=Спереду
 gui.threng.side.back=Ззаду

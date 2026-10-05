@@ -58,6 +58,7 @@ gui.threng.maintainer_state.waiting=Waiting for a crafting processor
 gui.threng.maintainer_state.no_recipe=Nothing on the network makes this
 gui.threng.maintainer_state.refused=The network turned this down
 gui.threng.wirelessMode.levelMaintainer=Level Maintainer
+key.threng.open_wireless_level_maintainer_terminal.desc=Open Wireless Level Maintainer Terminal
 
 gui.threng.side.front=Front
 gui.threng.side.back=Back
