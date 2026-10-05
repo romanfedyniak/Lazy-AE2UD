@@ -40,10 +40,11 @@ public abstract class ContainerProcessor extends AEBaseContainer implements IMac
     public int work;
     @GuiSync(21)
     public int maxWork = 1;
+    // Long, since an int goes to the client as a window property, which is a short.
     @GuiSync(22)
-    public int energy;
+    public long energy;
     @GuiSync(23)
-    public int maxEnergy = 1;
+    public long maxEnergy = 1;
     @GuiSync(24)
     public YesNo autoExport = YesNo.NO;
 
@@ -78,11 +79,11 @@ public abstract class ContainerProcessor extends AEBaseContainer implements IMac
         return this.maxEnergy <= 0 ? 0F : Math.min(1F, (float) this.energy / this.maxEnergy);
     }
 
-    public int getEnergyStored() {
+    public long getEnergyStored() {
         return this.energy;
     }
 
-    public int getMaxEnergyStored() {
+    public long getMaxEnergyStored() {
         return this.maxEnergy;
     }
 
