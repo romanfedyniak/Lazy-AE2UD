@@ -62,6 +62,8 @@ public final class ContainerAssembler extends AEBaseContainer {
 
     /** How many modules go into one packet, which keeps any one packet small however large the chamber. */
     private static final int MODULES_PER_PACKET = 8;
+    /** A shift-click naming no module: the position it stands for lies past the world's edge. */
+    private static final long NO_MODULE = Long.MIN_VALUE;
 
     private final TileAssemblerController controller;
     /** Each module by its position, with what the window was last told it holds. */
@@ -223,25 +225,36 @@ public final class ContainerAssembler extends AEBaseContainer {
     @Override
     public void doAction(final EntityPlayerMP player, final InventoryAction action, final int slot, final long id) {
         final Tracker tracker = this.trackers.get(id);
-        if (tracker == null) {
-            super.doAction(player, action, slot, id);
-            return;
-        }
-        final IItemHandlerModifiable inventory = tracker.server;
 
         if (action == InventoryAction.PLACE_SINGLE) {
-            // Shift-click in the player's inventory: slot is theirs, and the pattern goes wherever it fits
+            // Shift-click in the player's inventory: slot is theirs, and the pattern goes into the named module
+            // if it fits there, else into any module of the chamber, shown in the window or not
             if (slot < 0 || slot >= this.inventorySlots.size()
                     || !(this.inventorySlots.get(slot) instanceof AppEngSlot)) {
                 return;
             }
             final AppEngSlot playerSlot = (AppEngSlot) this.inventorySlots.get(slot);
             if (playerSlot.isPlayerSide() && playerSlot.getHasStack()) {
-                playerSlot.putStack(ItemHandlerHelper.insertItem(inventory, playerSlot.getStack(), false));
+                ItemStack rest = playerSlot.getStack();
+                if (tracker != null) {
+                    rest = ItemHandlerHelper.insertItem(tracker.server, rest, false);
+                }
+                for (final TileAssemblerPatterns module : this.controller.getPatternModules()) {
+                    if (rest.isEmpty()) {
+                        break;
+                    }
+                    rest = ItemHandlerHelper.insertItem(module.getPatterns(), rest, false);
+                }
+                playerSlot.putStack(rest);
                 this.detectAndSendChanges();
             }
             return;
         }
+        if (tracker == null) {
+            super.doAction(player, action, slot, id);
+            return;
+        }
+        final IItemHandlerModifiable inventory = tracker.server;
         if (slot < 0 || slot >= inventory.getSlots()) {
             return;
         }
@@ -290,19 +303,25 @@ public final class ContainerAssembler extends AEBaseContainer {
         this.updateHeld(player);
     }
 
-    /** Shift-click in the player's inventory: the window asks the server to put it in the first free slot. */
+    /**
+     * Shift-click in the player's inventory: the window asks the server to put it in the first free slot it shows,
+     * or, with none shown, anywhere in the chamber.
+     */
     @Override
     public ItemStack transferStackInSlot(final EntityPlayer player, final int index) {
         if (Platform.isClient() && this.inventorySlots.get(index) instanceof AppEngSlot) {
             final AppEngSlot playerSlot = (AppEngSlot) this.inventorySlots.get(index);
-            if (playerSlot.isPlayerSide()) {
+            if (playerSlot.isPlayerSide() && playerSlot.getHasStack()) {
+                long module = NO_MODULE;
                 for (final Object slot : this.inventorySlots) {
                     if (slot instanceof SlotDisconnected && !((SlotDisconnected) slot).getHasStack()) {
-                        NetworkHandler.instance().sendToServer(new PacketInventoryAction(InventoryAction.PLACE_SINGLE,
-                                playerSlot.slotNumber, ((SlotDisconnected) slot).getSlot().getId()));
-                        return ItemStack.EMPTY;
+                        module = ((SlotDisconnected) slot).getSlot().getId();
+                        break;
                     }
                 }
+                NetworkHandler.instance().sendToServer(new PacketInventoryAction(InventoryAction.PLACE_SINGLE,
+                        playerSlot.slotNumber, module));
+                return ItemStack.EMPTY;
             }
         }
         return super.transferStackInSlot(player, index);
