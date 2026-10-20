@@ -313,7 +313,7 @@ public final class TileAssemblerController extends AENetworkTile
             }
             final ICraftingPatternDetails details =
                     ((ICraftingPatternItem) stack.getItem()).getPatternForItem(stack, this.world);
-            if (details != null && details.isCraftable()) {
+            if (TileAssemblerPatterns.isTableRecipe(stack, details)) {
                 helper.addCraftingOption(this, details);
             }
         }
@@ -348,7 +348,8 @@ public final class TileAssemblerController extends AENetworkTile
     @Override
     public boolean pushPattern(final ICraftingPatternDetails details, final InventoryCrafting table,
             final GenericStack[] extraInputs, final int copies) {
-        if (copies < 1 || extraInputs.length > 0 || !details.isCraftable() || copies > this.maxCopies(details)
+        if (copies < 1 || extraInputs.length > 0 || !TileAssemblerPatterns.isTableRecipe(details.getPattern(), details)
+                || copies > this.maxCopies(details)
                 || !this.getProxy().isActive()) {
             return false;
         }
@@ -396,7 +397,7 @@ public final class TileAssemblerController extends AENetworkTile
     /** Crafting patterns only, the rule the modules keep themselves; a duplicate is refused there too. */
     @Override
     public boolean canAccept(@Nonnull final ItemStack pattern, @Nullable final ICraftingPatternDetails details) {
-        return details != null && details.isCraftable();
+        return TileAssemblerPatterns.isTableRecipe(pattern, details);
     }
 
     @Nonnull

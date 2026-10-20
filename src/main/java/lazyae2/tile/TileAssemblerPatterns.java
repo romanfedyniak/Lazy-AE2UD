@@ -9,6 +9,8 @@ package lazyae2.tile;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
@@ -18,6 +20,8 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 
 import appeng.api.implementations.ICraftingPatternItem;
 import appeng.api.networking.crafting.ICraftingPatternDetails;
+import appeng.api.patterns.PatternEncodingMode;
+import appeng.api.patterns.PatternEncodingModes;
 import appeng.tile.inventory.AppEngInternalInventory;
 import appeng.util.inv.IAEAppEngInventory;
 import appeng.util.inv.InvOperation;
@@ -36,7 +40,6 @@ public final class TileAssemblerPatterns extends TileAssemblerPart implements IA
             return true;
         }
 
-        /** A chamber is a crafting table many times over, so a processing pattern has no use here. */
         @Override
         public boolean allowInsert(final IItemHandler inv, final int slot, final ItemStack stack) {
             if (!(stack.getItem() instanceof ICraftingPatternItem) || TileAssemblerPatterns.this.world == null) {
@@ -44,9 +47,22 @@ public final class TileAssemblerPatterns extends TileAssemblerPart implements IA
             }
             final ICraftingPatternDetails details = ((ICraftingPatternItem) stack.getItem())
                     .getPatternForItem(stack, TileAssemblerPatterns.this.world);
-            return details != null && details.isCraftable() && !TileAssemblerPatterns.this.holdsAlready(stack);
+            return isTableRecipe(stack, details) && !TileAssemblerPatterns.this.holdsAlready(stack);
         }
     });
+
+    /**
+     * A chamber is a crafting table many times over, so it runs crafting patterns only: no processing pattern,
+     * and none an addon encodes for a table of its own - an Extended Crafting table or an arcane workbench also
+     * call their patterns craftable.
+     */
+    public static boolean isTableRecipe(final ItemStack pattern, @Nullable final ICraftingPatternDetails details) {
+        if (details == null || !details.isCraftable()) {
+            return false;
+        }
+        final PatternEncodingMode mode = PatternEncodingModes.forPattern(pattern);
+        return mode != null && PatternEncodingModes.CRAFTING.equals(mode.getId());
+    }
 
     /**
      * Whether the same encoded pattern is already in the chamber - every module of it once assembled, only this
