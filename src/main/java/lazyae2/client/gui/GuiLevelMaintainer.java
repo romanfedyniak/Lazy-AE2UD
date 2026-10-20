@@ -257,7 +257,7 @@ public final class GuiLevelMaintainer extends AEBaseGui implements IJEIGhostIngr
         }
         // Through AE2's own drawing, so that what a click on this slot would do is said here as it is said
         // on every other filter slot of the mod - and always as the last lines
-        this.drawSlotTooltip(lines, x, y);
+        this.drawSlotTooltip(stack, lines, x, y);
     }
 
     /**
