@@ -12,6 +12,8 @@ All notable Lazy AE2 Unofficial Deconstructed changes are grouped by the version
 
 ## Unreleased
 
+- **Requires AE2UD 1.6.0 or newer.** AE2UD shares its mod id with AE2 and AE2 UEL, so the version range is
+  what keeps the game from starting with either of them in its place.
 - **The jar is called `lazyae2-ud`.** It was named `threng`, after the mod id, which says neither which mod it is
   nor that it is this fork.
 - **Rewritten from scratch in Java.** LibNine, the library the original was built on, is gone, so it no longer has

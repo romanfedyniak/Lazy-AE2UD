@@ -29,8 +29,7 @@ import lazyae2.tile.AssemblerStructure;
 @Mod(modid = Tags.MOD_ID, name = Tags.MOD_NAME, version = Tags.VERSION, dependencies = LazyAE2.DEPENDENCIES)
 public final class LazyAE2 {
 
-    // No version range until AE2UD 1.6.0 is tagged: a JitPack build of a commit reports a bare hash, which sorts below it
-    static final String DEPENDENCIES = "required-after:appliedenergistics2";
+    static final String DEPENDENCIES = "required-after:appliedenergistics2@[1.6.0,)";
 
     public static final Logger LOG = LogManager.getLogger(Tags.MOD_ID);
 
