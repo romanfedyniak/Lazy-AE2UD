@@ -10,6 +10,11 @@ All notable Lazy AE2 Unofficial Deconstructed changes are grouped by the version
   over.
 - Back up the world before installing or updating the mod.
 
+## Unreleased
+
+- **A wrench takes a machine or an assembler block into the inventory**, with what it held, as it does AE2UD's own
+  blocks; whatever does not fit lands at the player's feet. Everything used to drop on the ground.
+
 ## 1.0.0 - 2026-10-24
 
 - **Requires AE2UD 1.6.0 or newer.** AE2UD shares its mod id with AE2 and AE2 UEL, so the version range is

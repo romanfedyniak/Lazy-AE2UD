@@ -203,8 +203,7 @@ public final class BlockMachine extends Block {
 
         final ItemStack held = player.getHeldItem(hand);
         if (player.isSneaking() && Platform.isWrench(player, held, pos)) {
-            this.dropBlockAsItem(world, pos, state, 0);
-            world.setBlockToAir(pos);
+            Dismantling.dismantle(this, world, pos, state, player);
             return true;
         }
 
@@ -250,9 +249,7 @@ public final class BlockMachine extends Block {
         if (tile instanceof AEBaseInvTile) {
             final NonNullList<ItemStack> drops = NonNullList.create();
             ((AEBaseInvTile) tile).getDrops(world, pos, drops);
-            for (final ItemStack drop : drops) {
-                Block.spawnAsEntity(world, pos, drop);
-            }
+            Dismantling.drop(world, pos, drops);
         }
         super.breakBlock(world, pos, state);
     }

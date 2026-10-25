@@ -195,8 +195,7 @@ public final class BlockAssembler extends Block {
         final ItemStack held = player.getHeldItem(hand);
         if (player.isSneaking() && Platform.isWrench(player, held, pos)) {
             if (!world.isRemote) {
-                this.dropBlockAsItem(world, pos, state, 0);
-                world.setBlockToAir(pos);
+                Dismantling.dismantle(this, world, pos, state, player);
             }
             return true;
         }
@@ -230,9 +229,7 @@ public final class BlockAssembler extends Block {
         if (tile instanceof TileAssemblerController) {
             final NonNullList<ItemStack> drops = NonNullList.create();
             ((TileAssemblerController) tile).onBroken(drops);
-            for (final ItemStack drop : drops) {
-                Block.spawnAsEntity(world, pos, drop);
-            }
+            Dismantling.drop(world, pos, drops);
         } else if (tile instanceof TileAssemblerPart) {
             final TileAssemblerController controller = ((TileAssemblerPart) tile).getController();
             if (controller != null) {
@@ -241,9 +238,7 @@ public final class BlockAssembler extends Block {
             if (tile instanceof TileAssemblerPatterns) {
                 final NonNullList<ItemStack> drops = NonNullList.create();
                 ((TileAssemblerPatterns) tile).getDrops(world, pos, drops);
-                for (final ItemStack drop : drops) {
-                    Block.spawnAsEntity(world, pos, drop);
-                }
+                Dismantling.drop(world, pos, drops);
             }
         }
         super.breakBlock(world, pos, state);
