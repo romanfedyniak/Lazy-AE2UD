@@ -10,6 +10,11 @@ All notable Lazy AE2 Unofficial Deconstructed changes are grouped by the version
   over.
 - Back up the world before installing or updating the mod.
 
+## 1.0.2 - 2026-10-27
+
+- **A placed machine or assembler gives its network node to whoever placed it**, so it joins a secured network
+  by that player's rights. It was placed with no owner and a security station refused it.
+
 ## 1.0.1 - 2026-10-26
 
 - **A wrench takes a machine or an assembler block into the inventory**, with what it held, as it does AE2UD's own
