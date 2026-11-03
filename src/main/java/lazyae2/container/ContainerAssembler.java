@@ -40,7 +40,6 @@ import appeng.container.slot.AppEngSlot;
 import appeng.core.sync.network.NetworkHandler;
 import appeng.core.sync.packets.PacketInventoryAction;
 import appeng.helpers.InventoryAction;
-import appeng.tile.inventory.AppEngInternalInventory;
 import appeng.util.InventoryAdaptor;
 import appeng.util.Platform;
 
@@ -190,8 +189,7 @@ public final class ContainerAssembler extends AEBaseContainer {
             final NBTTagCompound tag = new NBTTagCompound();
             for (int slot = 0; slot < tracker.server.getSlots(); slot++) {
                 final ItemStack now = tracker.server.getStackInSlot(slot);
-                if (clear || !ItemStack.areItemStacksEqual(now, tracker.client.getStackInSlot(slot))) {
-                    tracker.client.setStackInSlot(slot, now.isEmpty() ? ItemStack.EMPTY : now.copy());
+                if (tracker.changed(slot, now) || clear) {
                     final NBTTagCompound item = new NBTTagCompound();
                     if (!now.isEmpty()) {
                         stackWriteToNBT(now, item);
@@ -236,10 +234,15 @@ public final class ContainerAssembler extends AEBaseContainer {
             final AppEngSlot playerSlot = (AppEngSlot) this.inventorySlots.get(slot);
             if (playerSlot.isPlayerSide() && playerSlot.getHasStack()) {
                 ItemStack rest = playerSlot.getStack();
+                // Refused once here, not again by every empty slot of every module
+                final List<TileAssemblerPatterns> modules = this.controller.getPatternModules();
+                if (modules.isEmpty() || !modules.get(0).accepts(rest)) {
+                    return;
+                }
                 if (tracker != null) {
                     rest = ItemHandlerHelper.insertItem(tracker.server, rest, false);
                 }
-                for (final TileAssemblerPatterns module : this.controller.getPatternModules()) {
+                for (final TileAssemblerPatterns module : modules) {
                     if (rest.isEmpty()) {
                         break;
                     }
@@ -330,11 +333,28 @@ public final class ContainerAssembler extends AEBaseContainer {
     private static final class Tracker {
 
         final IItemHandlerModifiable server;
-        final AppEngInternalInventory client;
+        /**
+         * The stack each slot held when the window was last told, and its count. A pattern is put in and taken
+         * out whole, so a slot that still holds the same stack object holds the same pattern: thousands of
+         * patterns are not compared tag by tag every tick.
+         */
+        private final ItemStack[] sent;
+        private final int[] counts;
 
         Tracker(final IItemHandlerModifiable server) {
             this.server = server;
-            this.client = new AppEngInternalInventory(null, server.getSlots());
+            this.sent = new ItemStack[server.getSlots()];
+            this.counts = new int[server.getSlots()];
+        }
+
+        /** Whether the slot changed since the window was last told, remembering it as told. */
+        boolean changed(final int slot, final ItemStack now) {
+            if (now == this.sent[slot] && now.getCount() == this.counts[slot]) {
+                return false;
+            }
+            this.sent[slot] = now;
+            this.counts[slot] = now.getCount();
+            return true;
         }
     }
 }

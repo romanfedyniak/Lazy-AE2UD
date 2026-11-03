@@ -42,14 +42,20 @@ public final class TileAssemblerPatterns extends TileAssemblerPart implements IA
 
         @Override
         public boolean allowInsert(final IItemHandler inv, final int slot, final ItemStack stack) {
-            if (!(stack.getItem() instanceof ICraftingPatternItem) || TileAssemblerPatterns.this.world == null) {
-                return false;
-            }
-            final ICraftingPatternDetails details = ((ICraftingPatternItem) stack.getItem())
-                    .getPatternForItem(stack, TileAssemblerPatterns.this.world);
-            return isTableRecipe(stack, details) && !TileAssemblerPatterns.this.holdsAlready(stack);
+            // A slot holds one pattern: a taken one refuses before the chamber is searched for a copy
+            return inv.getStackInSlot(slot).isEmpty() && TileAssemblerPatterns.this.accepts(stack);
         }
     });
+
+    /** Whether the chamber takes this pattern into an empty slot: a table recipe it does not hold yet. */
+    public boolean accepts(final ItemStack stack) {
+        if (!(stack.getItem() instanceof ICraftingPatternItem) || this.world == null) {
+            return false;
+        }
+        final ICraftingPatternDetails details = ((ICraftingPatternItem) stack.getItem())
+                .getPatternForItem(stack, this.world);
+        return isTableRecipe(stack, details) && !this.holdsAlready(stack);
+    }
 
     /**
      * A chamber is a crafting table many times over, so it runs crafting patterns only: no processing pattern,
@@ -71,8 +77,8 @@ public final class TileAssemblerPatterns extends TileAssemblerPart implements IA
      */
     private boolean holdsAlready(final ItemStack pattern) {
         final TileAssemblerController controller = this.getController();
-        final IItemHandler patterns = controller == null ? null : controller.getAllPatterns();
-        return contains(patterns == null ? this.patterns : patterns, pattern);
+        return controller != null && controller.isAssembled() ? controller.holds(pattern)
+                : contains(this.patterns, pattern);
     }
 
     private static boolean contains(final IItemHandler inventory, final ItemStack pattern) {
@@ -94,7 +100,7 @@ public final class TileAssemblerPatterns extends TileAssemblerPart implements IA
             final ItemStack removed, final ItemStack added) {
         final TileAssemblerController controller = this.getController();
         if (controller != null) {
-            controller.onPatternsChanged();
+            controller.onPatternChanged(removed, added);
         }
         this.saveChanges();
     }

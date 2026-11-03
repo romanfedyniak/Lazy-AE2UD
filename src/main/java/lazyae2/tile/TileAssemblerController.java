@@ -10,6 +10,7 @@ package lazyae2.tile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -99,6 +100,15 @@ public final class TileAssemblerController extends AENetworkTile
     /** Set by a chamber the old mod saved assembled, which never wrote down where its walls are. */
     private boolean legacyAssembled;
 
+    /**
+     * How many copies of each pattern the loaded modules hold, counted once when first asked and then kept by
+     * every slot change - a chamber of thousands of patterns is asked on every pattern put into it. Null until
+     * asked, and again once the chamber is assembled or taken apart.
+     */
+    @Nullable
+    private Map<AEItemKey, Integer> held;
+    private int heldModules;
+
     public TileAssemblerController() {
         this.getProxy().setFlags(GridFlags.REQUIRE_CHANNEL);
         this.getProxy().setIdlePowerUsage(LazyAE2Config.instance().getMassAssemblerIdlePower());
@@ -163,6 +173,7 @@ public final class TileAssemblerController extends AENetworkTile
                 ((TileAssemblerPart) tile).setControllerPos(this.pos);
             }
         }
+        this.held = null;
         this.onPatternsChanged();
         this.saveChanges();
         this.markForUpdate();
@@ -203,6 +214,7 @@ public final class TileAssemblerController extends AENetworkTile
         this.max = null;
         this.parallel = 0;
         this.patternModules = Collections.emptyList();
+        this.held = null;
         this.onPatternsChanged();
         this.saveChanges();
         this.markForUpdate();
@@ -277,6 +289,42 @@ public final class TileAssemblerController extends AENetworkTile
             }
         }
         return modules;
+    }
+
+    /** Whether a loaded module of the assembled chamber holds this pattern. */
+    boolean holds(final ItemStack pattern) {
+        final List<TileAssemblerPatterns> modules = this.getPatternModules();
+        Map<AEItemKey, Integer> held = this.held;
+        if (held == null || this.heldModules != modules.size()) {
+            // A module's chunk came or went (a chamber may cross a chunk border): counted again
+            held = new HashMap<>();
+            for (final TileAssemblerPatterns module : modules) {
+                final IItemHandler inventory = module.getPatterns();
+                for (int slot = 0; slot < inventory.getSlots(); slot++) {
+                    final ItemStack stack = inventory.getStackInSlot(slot);
+                    if (!stack.isEmpty()) {
+                        held.merge(AEItemKey.of(stack), 1, Integer::sum);
+                    }
+                }
+            }
+            this.held = held;
+            this.heldModules = modules.size();
+        }
+        return held.containsKey(AEItemKey.of(pattern));
+    }
+
+    /** A module's slot changed: the counts follow it, then the network hears of it. */
+    void onPatternChanged(final ItemStack removed, final ItemStack added) {
+        final Map<AEItemKey, Integer> held = this.held;
+        if (held != null) {
+            if (!removed.isEmpty()) {
+                held.computeIfPresent(AEItemKey.of(removed), (key, count) -> count > 1 ? count - 1 : null);
+            }
+            if (!added.isEmpty()) {
+                held.merge(AEItemKey.of(added), 1, Integer::sum);
+            }
+        }
+        this.onPatternsChanged();
     }
 
     /** Every pattern slot of the chamber, module after module, or null while it is not assembled. */
