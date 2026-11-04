@@ -10,6 +10,12 @@ All notable Lazy AE2 Unofficial Deconstructed changes are grouped by the version
   over.
 - Back up the world before installing or updating the mod.
 
+## 1.0.3 - 2026-11-04
+
+- **Shift-clicking patterns into a big Mass Assembly Chamber no longer freezes the server.** Each slot used to scan
+  every pattern the chamber held; now the chamber keeps a count of what it holds and checks a pattern once. The
+  window also syncs faster.
+
 ## 1.0.2 - 2026-10-27
 
 - **A placed machine or assembler gives its network node to whoever placed it**, so it joins a secured network
