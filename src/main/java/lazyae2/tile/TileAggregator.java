@@ -19,6 +19,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 import lazyae2.block.BlockMachine;
 import lazyae2.core.LazyAE2Config;
@@ -54,7 +55,7 @@ public final class TileAggregator extends TileProcessor {
         super(LazyAE2Config.instance().getAggregator(), IoMode.OMNI);
         this.upgrades = new MachineUpgradeInventory(BlockMachine.Type.AGGREGATOR, this, UPGRADE_SLOTS);
         this.inventory = new WrapperChainedItemHandler(this.input, this.output, this.upgrades);
-        this.insertOnly = new WrapperFilteredItemHandler(this.input, SlotFilters.INSERT_ONLY);
+        this.insertOnly = new WrapperFilteredItemHandler(this.input, SlotFilters.INSERT_BESIDE_ITS_KIND);
         this.extractOnly = new WrapperFilteredItemHandler(this.output, SlotFilters.EXTRACT_ONLY);
         this.both = new WrapperChainedItemHandler(this.insertOnly, this.extractOnly);
     }
@@ -134,6 +135,7 @@ public final class TileAggregator extends TileProcessor {
 
     @Override
     protected boolean recomputeCanWork() {
+        this.joinSplitStacks();
         final AggregatorRecipe found = LazyRecipes.findAggregator(this.slots());
         if (found == null) {
             this.recipe = null;
@@ -144,6 +146,32 @@ public final class TileAggregator extends TileProcessor {
             this.resetWork();
         }
         return found.fits(this.output.getStackInSlot(0));
+    }
+
+    /**
+     * One thing in two slots (put there before automation was kept beside its kind, or by hand) matches no recipe and
+     * leaves no room for the last ingredient: move the later stack onto the earlier one.
+     */
+    private void joinSplitStacks() {
+        for (int to = 0; to < TriItemRecipe.SLOTS; to++) {
+            for (int from = to + 1; from < TriItemRecipe.SLOTS; from++) {
+                final ItemStack target = this.input.getStackInSlot(to);
+                final ItemStack source = this.input.getStackInSlot(from);
+                if (!ItemHandlerHelper.canItemStacksStack(target, source)) {
+                    continue;
+                }
+                final int moved = Math.min(source.getCount(), target.getMaxStackSize() - target.getCount());
+                if (moved <= 0) {
+                    continue;
+                }
+                final ItemStack grown = target.copy();
+                grown.grow(moved);
+                final ItemStack shrunk = source.copy();
+                shrunk.shrink(moved);
+                this.input.setStackInSlot(to, grown);
+                this.input.setStackInSlot(from, shrunk.isEmpty() ? ItemStack.EMPTY : shrunk);
+            }
+        }
     }
 
     @Override
