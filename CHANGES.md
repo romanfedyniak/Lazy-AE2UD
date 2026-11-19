@@ -10,7 +10,7 @@ All notable Lazy AE2 Unofficial Deconstructed changes are grouped by the version
   over.
 - Back up the world before installing or updating the mod.
 
-## Unreleased
+## 1.0.4 - 2026-11-19
 
 - **The Fluix Aggregator no longer stops for good with one ingredient missing.** An interface or a pipe puts each
   thing into the first slot that takes it, so a thing left over in one slot got a second slot of its own, and the last
